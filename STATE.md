@@ -42,13 +42,13 @@
 - [x] Visual Overhaul (2026-11-24): Bright Editorial Cyber-Tech Bento (Blue Edition) palette, `contrast-check.py` WCAG AA verification, clean copy free of dev milestone labels, mobile bottom dock pill calibration.
 - [x] Motion Engine & Two-Block Layout Overhaul (2026-11-24): Installed `gsap` + `lenis`, built `src/lib/motion-engine.js`, refactored `#about` into Blok A + Blok B with strict `4:5` Spotlight lock and Core Stack kinetic marquee, fixed `.skip-link` visibility leak (`:focus-visible` only), added Hero scroll-scrubbing, 3D folder fanning, sliding Showcase tab pill + card pop-in + spring dialogs, Polaroid center explosion + hover straighten/lift, 3D Find Me ID card tilt, and Guestbook new comment pop-in; verified across `1280px`, `375px`, and `/admin`.
 - [x] Repo Structure & Audit Cleanup (2026-11-24): Fixed misplaced `workflows/supabase-keepalive.yml` -> `.github/workflows/supabase-keepalive.yml` (with dual JWT / `sb_publishable` header support), tightened `safeUrl` validation, prevented null append in Find Me list, preserved `scrollTarget` + unique row IDs in `profile-editor.js`, cleaned Showcase modal metadata separator, and verified `vite build` + headless browser audit.
+- [x] Supabase Connection, Secrets & Role Grants (2026-11-24): Configured local gitignored `.env` (`VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` via publishable key) and set GitHub Actions repository secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`) on `tiosydn5/portfolio-project`. Added Section 10 explicit least-privilege PostgreSQL `GRANT` statements in `supabase/schema.sql` after live REST/SDK probing detected PostgreSQL `42501 permission denied` for `anon`.
 
 ## Active / Next Action (User Activation Checklist)
-1. Supabase SQL schema + admin auth account confirmed ready by owner.
-2. Supply `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` in local `.env` (never committed) and/or hosting environment variables to activate live Supabase reads/writes and `/admin` login.
-3. Configure GitHub Repository Secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`) so `.github/workflows/supabase-keepalive.yml` executes cleanly every 3 days.
-4. Optionally run `supabase/seed.sql` or sign in at `/admin` (`/admin.html`) to upload real assets and manage content, then configure deployment target if hosting statically.
+1. Run the Section 10 PostgreSQL `GRANT` statements from `supabase/schema.sql` in the live Supabase SQL Editor so `anon` and `authenticated` roles can pass table-level privilege checks before RLS evaluation.
+2. Push local `main` commits to `origin/main` so `.github/workflows/supabase-keepalive.yml` goes live on GitHub Actions.
+3. Optionally run `supabase/seed.sql` or sign in at `/admin` (`/admin.html`) to upload real assets and manage content, then configure deployment target (Vercel / Netlify / Cloudflare Pages / GitHub Pages).
 
 ## Known Issues / Blockers
-- `.env` is intentionally absent in the repo until `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are supplied locally / in hosting settings; live Supabase auth/writes require `.env` configuration.
-- GitHub Actions repository secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`) are not yet configured on `tiosydn5/portfolio-project`.
+- Live Supabase tables on project `brqnldutafuopflizrph` currently return `42501 permission denied` to `anon` until the explicit `GRANT` block in `supabase/schema.sql` is executed in Supabase SQL Editor.
+- Local `main` is ahead of `origin/main` (pending `git push`).

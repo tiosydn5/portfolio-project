@@ -283,3 +283,34 @@ DROP POLICY IF EXISTS "Admin delete portfolio-media" ON storage.objects;
 CREATE POLICY "Admin delete portfolio-media"
   ON storage.objects FOR DELETE
   USING (bucket_id = 'portfolio-media' AND public.is_portfolio_admin());
+
+-- -----------------------------------------------------------------------------
+-- 10. Explicit PostgreSQL Role Grants (Required alongside RLS)
+-- -----------------------------------------------------------------------------
+GRANT USAGE ON SCHEMA public TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.is_portfolio_admin() TO anon, authenticated;
+
+REVOKE ALL ON TABLE public.site_profile FROM anon;
+GRANT SELECT ON TABLE public.site_profile TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.site_profile TO authenticated;
+
+REVOKE ALL ON TABLE public.showcase_items FROM anon;
+GRANT SELECT ON TABLE public.showcase_items TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.showcase_items TO authenticated;
+
+REVOKE ALL ON TABLE public.timeline_entries FROM anon;
+GRANT SELECT ON TABLE public.timeline_entries TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.timeline_entries TO authenticated;
+
+REVOKE ALL ON TABLE public.polaroid_photos FROM anon;
+GRANT SELECT ON TABLE public.polaroid_photos TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.polaroid_photos TO authenticated;
+
+REVOKE ALL ON TABLE public.guestbook_comments FROM anon;
+GRANT SELECT, INSERT ON TABLE public.guestbook_comments TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.guestbook_comments TO authenticated;
+
+REVOKE ALL ON TABLE public.contact_messages FROM anon;
+GRANT INSERT ON TABLE public.contact_messages TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.contact_messages TO authenticated;
+

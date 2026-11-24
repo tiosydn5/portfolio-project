@@ -53,3 +53,8 @@
 - **Documentation Sync**: Updated `STATE.md` (`reference/1000535039.mp4`, connected GitHub repo status, activation checklist) and `CHANGELOG.md`.
 - **Files touched**: `.github/workflows/supabase-keepalive.yml` (moved from `workflows/supabase-keepalive.yml`), `src/lib/sanitize.js`, `src/components/contact-guestbook.js`, `src/components/showcase.js`, `src/admin/profile-editor.js`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-24 — [Supabase Integration & Security] Explicit PostgreSQL Role GRANTs & Keep-Alive Secrets
+- **Live Probe & Root-Cause Fix**: Verified live connection to Supabase project (`brqnldutafuopflizrph`) using the publishable key (`sb_publishable_...`), confirming `portfolio-media` storage access while detecting PostgreSQL `42501 permission denied` on public tables due to missing explicit `GRANT` statements alongside RLS policies.
+- **Schema Hardening**: Added Section 10 in `supabase/schema.sql` (`GRANT USAGE ON SCHEMA public`, `GRANT EXECUTE ON FUNCTION public.is_portfolio_admin()`, least-privilege `REVOKE/GRANT` for `anon`—including `INSERT`-only on `contact_messages`—and `authenticated` CRUD grants).
+- **Environment & Secrets**: Configured local gitignored `.env` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`), configured GitHub repository secrets `SUPABASE_URL` and `SUPABASE_ANON_KEY`, and verified `npm run build` + `vite preview` fallback & `/admin` status.
+- **Files touched**: `supabase/schema.sql`, `STATE.md`, `CHANGELOG.md`.
