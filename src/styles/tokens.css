@@ -1,0 +1,56 @@
+:root {
+  /* Legacy Dark Cyber Surface (Preserved for /admin Operate Mode) */
+  --bg-dark-canvas: #07090E;
+  --bg-dark-bento: #0E121B;
+  --bg-dark-elevated: #151B28;
+  --border-dark: rgba(148, 163, 184, 0.16);
+  --border-dark-control: #64748B;
+  --border-dark-hover: rgba(59, 130, 246, 0.55);
+  --text-dark-primary: #F8FAFC;
+  --text-dark-secondary: #94A3B8;
+  --text-dark-muted: #7B8CA4;
+
+  /* Bright Editorial Cyber-Tech Bento (Blue Edition) */
+  --bg-canvas: #F4F6FA;
+  --bg-card-white: #FFFFFF;
+  --bg-card-sky: #DBEAFE;
+  --bg-card-periwinkle: #E0E7FF;
+  --bg-card-cobalt: #2563EB;
+  --bg-card-obsidian: #0B0F19;
+  --text-ink: #0B0F19;
+  --text-ink-muted: #475569;
+  --text-ink-pastel: #334155;
+  --border-ink: #0F172A;
+  --border-subtle: #CBD5E1;
+
+  /* Light Technical Surface Alias (Dialogs / Secondary) */
+  --bg-light-canvas: #F4F6FA;
+  --bg-light-card: #FFFFFF;
+  --border-light: rgba(15, 23, 42, 0.14);
+  --border-light-control: #0F172A;
+  --text-light-primary: #0B0F19;
+  --text-light-secondary: #475569;
+
+  /* Brand Accent : Signal Cobalt */
+  --accent-primary: #2563EB;
+  --accent-fill-hover: #1D4ED8;
+  --accent-hover: #3B82F6;
+  --accent-signal: #60A5FA;
+  --accent-tint: rgba(37, 99, 235, 0.12);
+
+  /* Status */
+  --status-live: #10B981;
+  --status-live-ink: #065F46;
+  --status-danger: #EF4444;
+  --status-danger-ink: #B91C1C;
+
+  /* Typography */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Poppins", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Motion & Radii */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --radius-bento: 26px;
+  --radius-inner: 14px;
+}

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin CMS | Satrio Portfolio</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Poppins:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+  </head>
+  <body>
+    <header class="border-b border-[rgba(148,163,184,0.16)] bg-[#0E121B]">
+      <div class="max-w-6xl mx-auto px-4 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div class="min-w-0">
+          <p class="font-mono-tabular text-xs text-[#60A5FA]">OPERATE MODE · PRIVATE CMS</p>
+          <h1 class="font-display text-xl sm:text-2xl font-bold text-[#F8FAFC]">
+            Portfolio Admin CMS
+          </h1>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <span
+            id="admin-user-email"
+            class="font-mono-tabular text-xs px-3 py-1.5 rounded-lg bg-[#151B28] border border-[rgba(148,163,184,0.2)] text-[#94A3B8]"
+            hidden
+          ></span>
+          <a href="/" class="admin-btn-secondary text-sm">
+            Buka Portfolio
+          </a>
+          <button
+            id="admin-logout-btn"
+            type="button"
+            class="admin-btn-danger text-sm"
+            hidden
+          >
+            Keluar
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
+      <!-- Auth Gate (Visible when unauthenticated; workspace stays hidden & unmounted) -->
+      <section
+        id="admin-auth-gate"
+        class="max-w-xl mx-auto space-y-6"
+        aria-label="Autentikasi Admin"
+      >
+        <div class="admin-panel p-6 flex items-start gap-3">
+          <span
+            id="admin-supabase-dot"
+            class="mt-1.5 w-2.5 h-2.5 rounded-full bg-[#60A5FA] shrink-0"
+            aria-hidden="true"
+          ></span>
+          <div class="space-y-1 min-w-0">
+            <p class="font-mono-tabular text-xs text-[#7B8CA4]">SUPABASE STATUS</p>
+            <p id="admin-supabase-status" class="text-base font-medium text-[#F8FAFC]">
+              Memeriksa konfigurasi koneksi...
+            </p>
+            <p id="admin-supabase-hint" class="text-sm text-[#94A3B8]"></p>
+          </div>
+        </div>
+
+        <div id="admin-env-guide" class="admin-panel p-6 space-y-3" hidden>
+          <h2 class="font-display text-lg font-bold text-[#F8FAFC]">
+            Langkah Aktivasi Supabase
+          </h2>
+          <ol class="list-decimal list-inside space-y-2 text-sm text-[#94A3B8]">
+            <li>Buat proyek Supabase baru dan jalankan <code class="font-mono-tabular text-[#60A5FA]">supabase/schema.sql</code> (ganti <code class="font-mono-tabular text-[#60A5FA]">&lt;ADMIN_EMAIL&gt;</code> dengan email admin).</li>
+            <li>Nonaktifkan public sign-up pada Authentication -> Providers -> Email, lalu buat 1 user admin.</li>
+            <li>Salin <code class="font-mono-tabular text-[#60A5FA]">.env.example</code> menjadi <code class="font-mono-tabular text-[#60A5FA]">.env</code> dan isi <code class="font-mono-tabular text-[#60A5FA]">VITE_SUPABASE_URL</code> serta <code class="font-mono-tabular text-[#60A5FA]">VITE_SUPABASE_ANON_KEY</code>.</li>
+            <li>Jalankan ulang server Vite agar variabel env terbaca.</li>
+          </ol>
+        </div>
+
+        <form id="admin-login-form" class="admin-panel p-6 sm:p-7 space-y-5" novalidate>
+          <div class="pb-3 border-b border-[rgba(148,163,184,0.16)]">
+            <h2 class="font-display text-xl font-bold text-[#F8FAFC]">
+              Masuk Admin CMS
+            </h2>
+            <p class="text-sm text-[#94A3B8] mt-1">
+              Hanya akun email terdaftar pada policy RLS PostgreSQL yang diizinkan mengubah data.
+            </p>
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="admin-login-email" class="block text-sm font-medium text-[#F8FAFC]">
+              Email Admin
+            </label>
+            <input
+              id="admin-login-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="admin@domain.com"
+              class="admin-input"
+            />
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="admin-login-password" class="block text-sm font-medium text-[#F8FAFC]">
+              Password
+            </label>
+            <input
+              id="admin-login-password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="Masukkan password akun Supabase"
+              class="admin-input"
+            />
+          </div>
+
+          <p
+            id="admin-login-error"
+            role="alert"
+            class="text-sm text-[#FCA5A5]"
+            hidden
+          ></p>
+
+          <button
+            id="admin-login-submit"
+            type="submit"
+            class="admin-btn-primary w-full"
+          >
+            Masuk ke Dashboard
+          </button>
+        </form>
+      </section>
+
+      <!-- Authenticated Operate-Mode CMS Workspace (Strictly hidden until logged in) -->
+      <section
+        id="admin-workspace"
+        class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
+        aria-label="Workspace Pengelolaan Konten"
+        hidden
+      >
+        <aside class="lg:col-span-3 admin-panel p-3">
+          <nav
+            id="admin-nav"
+            aria-label="Modul CMS"
+            class="flex lg:flex-col gap-1.5 overflow-x-auto pb-1 lg:pb-0"
+          >
+            <button
+              type="button"
+              class="admin-nav-btn"
+              data-admin-module="profile"
+              aria-current="page"
+            >
+              <span>Profile &amp; Hero</span>
+            </button>
+            <button
+              type="button"
+              class="admin-nav-btn"
+              data-admin-module="showcase"
+            >
+              <span>Showcase Manager</span>
+            </button>
+            <button
+              type="button"
+              class="admin-nav-btn"
+              data-admin-module="timeline"
+            >
+              <span>Timeline Manager</span>
+            </button>
+            <button
+              type="button"
+              class="admin-nav-btn"
+              data-admin-module="polaroid"
+            >
+              <span>Polaroid Gallery</span>
+            </button>
+            <button
+              type="button"
+              class="admin-nav-btn"
+              data-admin-module="moderation"
+            >
+              <span>Guestbook &amp; Inbox</span>
+            </button>
+          </nav>
+        </aside>
+
+        <div class="lg:col-span-9 space-y-5 min-w-0">
+          <div
+            id="admin-toast"
+            aria-live="polite"
+            class="admin-panel px-4 py-3 text-sm font-medium"
+            hidden
+          ></div>
+
+          <div id="admin-module-mount" class="space-y-6"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Accessible Confirmation Dialog (Replaces window.confirm) -->
+    <dialog
+      id="admin-confirm-dialog"
+      class="admin-dialog"
+      aria-labelledby="admin-confirm-title"
+    >
+      <div class="admin-panel p-6 space-y-4">
+        <div class="space-y-2">
+          <h2 id="admin-confirm-title" class="font-display text-lg font-bold text-[#F8FAFC]">
+            Konfirmasi Penghapusan
+          </h2>
+          <p id="admin-confirm-message" class="text-sm text-[#94A3B8]"></p>
+        </div>
+        <div class="flex flex-wrap justify-end gap-3 pt-2">
+          <button
+            id="admin-confirm-cancel"
+            type="button"
+            class="admin-btn-secondary text-sm"
+          >
+            Batal
+          </button>
+          <button
+            id="admin-confirm-ok"
+            type="button"
+            class="admin-btn-danger text-sm"
+          >
+            Hapus Permanen
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/admin/admin-main.js"></script>
+  </body>
+</html>

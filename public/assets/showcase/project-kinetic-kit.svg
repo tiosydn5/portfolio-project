@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" fill="none">
+  <rect width="640" height="400" fill="#0E121B"/>
+  <rect x="32" y="32" width="576" height="336" rx="14" fill="#151B28" stroke="#60A5FA" stroke-opacity="0.4"/>
+  <rect x="64" y="68" width="248" height="264" rx="12" fill="#07090E" stroke="#64748B" stroke-opacity="0.5"/>
+  <rect x="92" y="102" width="192" height="24" rx="6" fill="#2563EB"/>
+  <rect x="92" y="148" width="192" height="80" rx="8" fill="#151B28" stroke="#3B82F6" stroke-opacity="0.45"/>
+  <rect x="92" y="248" width="88" height="44" rx="8" fill="#0E121B" stroke="#64748B"/>
+  <rect x="196" y="248" width="88" height="44" rx="8" fill="#0E121B" stroke="#64748B"/>
+  <rect x="342" y="68" width="234" height="122" rx="12" fill="#07090E" stroke="#60A5FA" stroke-opacity="0.45"/>
+  <polygon points="442,102 442,158 492,130" fill="#2563EB" stroke="#60A5FA" stroke-width="2"/>
+  <rect x="342" y="210" width="234" height="122" rx="12" fill="#07090E" stroke="#64748B" stroke-opacity="0.45"/>
+  <text x="366" y="256" fill="#F8FAFC" font-family="monospace" font-size="16">60FPS COMPOSITED</text>
+  <text x="366" y="286" fill="#7B8CA4" font-family="monospace" font-size="13">STUDIO · INTERACTION KIT</text>
+</svg>

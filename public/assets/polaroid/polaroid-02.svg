@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" width="480" height="360" fill="none">
+  <rect width="480" height="360" fill="#07090E"/>
+  <rect x="24" y="24" width="432" height="312" rx="12" fill="#0E121B" stroke="#60A5FA" stroke-opacity="0.4"/>
+  <path d="M56 232C120 232 146 96 220 96C294 96 312 208 424 208" stroke="#60A5FA" stroke-width="3.5"/>
+  <circle cx="220" cy="96" r="8" fill="#2563EB" stroke="#F8FAFC" stroke-width="2"/>
+  <circle cx="312" cy="172" r="7" fill="#2563EB" stroke="#F8FAFC" stroke-width="2"/>
+  <text x="48" y="294" fill="#94A3B8" font-family="monospace" font-size="13">FRAME 02 · BEZIER MOTION CURVE</text>
+</svg>

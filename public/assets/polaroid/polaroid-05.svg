@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" width="480" height="360" fill="none">
+  <rect width="480" height="360" fill="#0B1120"/>
+  <rect x="24" y="24" width="432" height="312" rx="12" fill="#151B28" stroke="#2563EB" stroke-opacity="0.5"/>
+  <rect x="56" y="64" width="110" height="164" rx="10" fill="#07090E"/>
+  <rect x="184" y="64" width="110" height="164" rx="10" fill="#2563EB"/>
+  <rect x="312" y="64" width="110" height="164" rx="10" fill="#F3F6FA"/>
+  <text x="56" y="294" fill="#94A3B8" font-family="monospace" font-size="13">FRAME 05 · TECHNICAL COBALT PALETTE</text>
+</svg>

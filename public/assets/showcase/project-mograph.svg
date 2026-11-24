@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" fill="none">
+  <rect width="640" height="400" fill="#07090E"/>
+  <rect x="28" y="28" width="584" height="344" rx="14" fill="#0E121B" stroke="#2563EB" stroke-opacity="0.5"/>
+  <path d="M80 264C160 264 180 116 260 116C340 116 360 248 440 248C500 248 530 144 568 144" stroke="#60A5FA" stroke-width="3.5"/>
+  <circle cx="160" cy="212" r="7" fill="#2563EB" stroke="#F8FAFC" stroke-width="2"/>
+  <circle cx="260" cy="116" r="7" fill="#2563EB" stroke="#F8FAFC" stroke-width="2"/>
+  <circle cx="440" cy="248" r="7" fill="#2563EB" stroke="#F8FAFC" stroke-width="2"/>
+  <rect x="64" y="302" width="512" height="34" rx="8" fill="#151B28" stroke="#64748B" stroke-opacity="0.45"/>
+  <rect x="92" y="313" width="144" height="12" rx="4" fill="#2563EB"/>
+  <rect x="260" y="313" width="196" height="12" rx="4" fill="#60A5FA" fill-opacity="0.6"/>
+  <text x="56" y="72" fill="#F8FAFC" font-family="sans-serif" font-weight="700" font-size="22">KINETIC TIMELINE CURVE</text>
+  <text x="56" y="98" fill="#7B8CA4" font-family="monospace" font-size="13">STUDIO · MOTION GRAPHICS</text>
+</svg>

@@ -1,0 +1,198 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    overflow-x: clip;
+    background-color: var(--bg-dark-canvas);
+    color: var(--text-dark-primary);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  .font-mono-tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  a[href],
+  button,
+  summary,
+  select,
+  label[for],
+  input[type="checkbox"],
+  input[type="file"] {
+    cursor: pointer;
+  }
+
+  :disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-signal);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .admin-panel {
+    background-color: var(--bg-dark-bento);
+    border: 1px solid var(--border-dark);
+    border-radius: 16px;
+    min-width: 0;
+  }
+
+  .admin-row {
+    border-bottom: 1px solid var(--border-dark);
+  }
+
+  .admin-row:last-child {
+    border-bottom: 0;
+  }
+
+  .admin-input {
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 13px;
+    scroll-margin-bottom: 110px;
+    border-radius: 10px;
+    background-color: var(--bg-dark-elevated);
+    border: 1px solid var(--border-dark-control);
+    color: var(--text-dark-primary);
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: border-color 0.15s ease;
+  }
+
+  .admin-input::placeholder {
+    color: var(--text-dark-muted);
+  }
+
+  .admin-input:hover:not(:disabled) {
+    border-color: #94A3B8;
+  }
+
+  .admin-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 10px;
+    background-color: var(--accent-primary);
+    color: #F8FAFC;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border: 1px solid transparent;
+    transition: background-color 0.15s ease;
+  }
+
+  .admin-btn-primary:hover:not(:disabled) {
+    background-color: var(--accent-fill-hover);
+  }
+
+  .admin-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 10px;
+    background-color: var(--bg-dark-elevated);
+    color: var(--text-dark-primary);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    border: 1px solid var(--border-dark-control);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .admin-btn-secondary:hover:not(:disabled) {
+    border-color: var(--accent-signal);
+    background-color: #1A2233;
+  }
+
+  .admin-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 10px;
+    background-color: #B91C1C;
+    color: #F8FAFC;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 1px solid transparent;
+    transition: background-color 0.15s ease;
+  }
+
+  .admin-btn-danger:hover:not(:disabled) {
+    background-color: #991B1B;
+  }
+
+  .admin-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-dark-secondary);
+    background-color: transparent;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .admin-nav-btn:hover {
+    color: var(--text-dark-primary);
+    background-color: var(--bg-dark-elevated);
+  }
+
+  .admin-nav-btn[aria-current="page"] {
+    background-color: var(--accent-primary);
+    color: #F8FAFC;
+    font-weight: 600;
+  }
+
+  .admin-dialog {
+    margin: auto;
+    padding: 0;
+    border: 0;
+    width: min(460px, calc(100vw - 24px));
+    border-radius: 16px;
+    background: transparent;
+  }
+
+  .admin-dialog::backdrop {
+    background-color: rgba(7, 9, 14, 0.8);
+  }
+}
+
+[hidden]:not([hidden="until-found"]) {
+  display: none !important;
+}

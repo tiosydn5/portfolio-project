@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" fill="none">
+  <rect width="640" height="400" fill="#07090E"/>
+  <rect x="32" y="32" width="576" height="336" rx="14" fill="#0E121B" stroke="#3B82F6" stroke-opacity="0.48"/>
+  <rect x="76" y="88" width="488" height="164" rx="12" fill="#151B28" stroke="#64748B" stroke-opacity="0.4"/>
+  <text x="108" y="186" fill="#F8FAFC" font-family="sans-serif" font-weight="700" font-size="44">KINETIC / 60</text>
+  <rect x="76" y="274" width="160" height="36" rx="8" fill="#2563EB"/>
+  <text x="156" y="297" text-anchor="middle" fill="#F8FAFC" font-family="monospace" font-size="12">MOTION HONOR</text>
+  <text x="260" y="297" fill="#7B8CA4" font-family="monospace" font-size="13">STUDIO · TYPOGRAPHY</text>
+</svg>

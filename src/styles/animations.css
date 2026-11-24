@@ -1,0 +1,281 @@
+/* ============================================================================
+ * GPU-Composited Motion & Interactive Mechanics (GSAP + Touch Fallbacks)
+ * Only transforms, opacity, clip-path, and locally scoped CSS variables.
+ * Never animate width, height, top, left, or inherited CSS custom properties.
+ * ============================================================================ */
+
+/* Hero 3-Layer Parallax */
+.hero-section-clip {
+  overflow-x: clip;
+}
+
+.hero-frame-left,
+.hero-frame-right,
+.hero-title-rise,
+.hero-cutout-fg,
+.hero-radial-depth {
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Cursor / Touch Spotlight Alter-Ego Layer (GSAP quickTo + Scoped Paint Boundary) */
+.spotlight-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  touch-action: pan-y;
+  background-color: var(--bg-dark-elevated);
+}
+
+.spotlight-alter {
+  --spot-x: 50%;
+  --spot-y: 44%;
+  --spot-r: 0px;
+  position: absolute;
+  inset: 0;
+  contain: layout paint;
+  clip-path: circle(var(--spot-r) at var(--spot-x) var(--spot-y));
+  pointer-events: none;
+}
+
+/* 3D Interactive Tech Folders (Spacious 12-Col Fan-Out) */
+.folder-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  min-height: 244px;
+  padding: 0;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: #FFFFFF;
+  perspective: 1000px;
+}
+
+.folder-backplate {
+  position: relative;
+  width: 100%;
+  height: 192px;
+  border-radius: 20px;
+  background-color: #0B0F19;
+  border: 1.5px solid #0F172A;
+}
+
+.folder-tab-ear {
+  position: absolute;
+  top: -15px;
+  left: 18px;
+  width: 94px;
+  height: 19px;
+  border-top-left-radius: 11px;
+  border-top-right-radius: 11px;
+  background-color: #1E293B;
+  border-top: 1.5px solid #0F172A;
+  border-left: 1.5px solid #0F172A;
+  border-right: 1.5px solid #0F172A;
+}
+
+.folder-sheets {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 28px;
+  height: 132px;
+  pointer-events: none;
+}
+
+.folder-sheet {
+  position: absolute;
+  bottom: 0;
+  width: 62%;
+  height: 118px;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  border: 1.5px solid #0F172A;
+  box-shadow: 0 10px 18px -12px rgba(15, 23, 42, 0.42);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.folder-sheet[data-slot="0"] {
+  left: 4%;
+  transform: translate3d(0, 12px, 0) rotate(-4deg);
+  z-index: 1;
+}
+
+.folder-sheet[data-slot="1"] {
+  left: 19%;
+  transform: translate3d(0, 6px, 0) rotate(0deg);
+  z-index: 2;
+}
+
+.folder-sheet[data-slot="2"] {
+  right: 4%;
+  transform: translate3d(0, 14px, 0) rotate(5deg);
+  z-index: 1;
+}
+
+.folder-flap {
+  position: relative;
+  z-index: 4;
+  margin-top: 54px;
+  height: 138px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 16px 16px 20px 20px;
+  background-color: #2563EB;
+  border: 1.5px solid #0F172A;
+  color: #FFFFFF;
+  transform-origin: bottom center;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: background-color 0.2s ease;
+}
+
+.folder-card:hover .folder-flap,
+.folder-card:focus-visible .folder-flap {
+  background-color: #1D4ED8;
+}
+
+/* Touch Device Semi-Peek State (No Hover Trap : R-03) */
+@media (hover: none) {
+  .folder-card .folder-flap {
+    transform: rotateX(-16deg);
+  }
+
+  .folder-card .folder-sheet[data-slot="0"] {
+    transform: translate3d(-12px, -26px, 0) rotate(-8deg);
+  }
+
+  .folder-card .folder-sheet[data-slot="1"] {
+    transform: translate3d(0, -34px, 0) rotate(0deg);
+  }
+
+  .folder-card .folder-sheet[data-slot="2"] {
+    transform: translate3d(12px, -24px, 0) rotate(8deg);
+  }
+}
+
+/* Kinetic Typography Bridge */
+.kinetic-bridge-band {
+  position: relative;
+  overflow-x: clip;
+  background-color: var(--bg-canvas);
+}
+
+.kinetic-bridge-word,
+.kinetic-bridge-sub {
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* Exploding Photo Stack (Polaroid Scatter Desktop / Snap-Deck Mobile) */
+.polaroid-stage {
+  position: relative;
+}
+
+.polaroid-card {
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--border-ink);
+  border-radius: 16px;
+  padding: 10px 10px 16px;
+  text-align: left;
+  color: var(--text-ink);
+  box-shadow: 0 12px 24px -16px rgba(15, 23, 42, 0.32);
+  will-change: transform;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.polaroid-card:hover,
+.polaroid-card:focus-visible {
+  border-color: var(--accent-primary);
+  box-shadow: 0 22px 36px -16px rgba(37, 99, 235, 0.38);
+}
+
+/* Mobile (< 768px): Horizontal Snap-Scroll Deck */
+@media (max-width: 767px) {
+  .polaroid-stage {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 8px 4px 16px;
+  }
+
+  .polaroid-card {
+    position: static;
+    flex: 0 0 80%;
+    max-width: 280px;
+    scroll-snap-align: center;
+    transform: none !important;
+  }
+}
+
+/* Tablet (768px..1023px): Clean 3-column angled Polaroid grid */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .polaroid-stage {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    padding: 16px 4px;
+  }
+
+  .polaroid-card {
+    position: static;
+    width: 100%;
+    transform: rotate(0deg);
+  }
+
+  .polaroid-stage.is-scattered .polaroid-card {
+    transform: rotate(calc(var(--scatter-rot, 0deg) * 0.45));
+  }
+
+  .polaroid-stage.is-scattered .polaroid-card:hover,
+  .polaroid-stage.is-scattered .polaroid-card:focus-visible {
+    z-index: 20;
+    transform: translate3d(0, -6px, 0) rotate(0deg) scale(1.03);
+  }
+}
+
+/* Desktop (>= 1024px): Center-Stacked Stage Driven by GSAP Scatter & Hover */
+@media (min-width: 1024px) {
+  .polaroid-stage {
+    min-height: 600px;
+  }
+
+  .polaroid-card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 224px;
+    margin-left: -112px;
+    margin-top: -120px;
+    z-index: var(--stack-z, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-frame-left,
+  .hero-frame-right,
+  .hero-title-rise,
+  .hero-cutout-fg,
+  .hero-radial-depth,
+  .kinetic-bridge-word,
+  .kinetic-bridge-sub {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .folder-card:hover .folder-flap,
+  .folder-card:focus-visible .folder-flap {
+    transform: none !important;
+  }
+
+  .polaroid-card {
+    transition: border-color 0.15s ease !important;
+  }
+}

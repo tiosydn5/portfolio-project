@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 700" width="560" height="700" fill="none">
+  <defs>
+    <linearGradient id="rimGrad" x1="280" y1="60" x2="280" y2="660" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60A5FA" stop-opacity="0.85"/>
+      <stop offset="55%" stop-color="#2563EB" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#0E121B" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="torsoFill" x1="280" y1="90" x2="280" y2="700" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1A2233"/>
+      <stop offset="65%" stop-color="#0E121B"/>
+      <stop offset="100%" stop-color="#07090E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Subtle technical datum ticks (calibration markers) -->
+  <g stroke="#3B82F6" stroke-opacity="0.35" stroke-width="1.2">
+    <path d="M60 110H92M76 94V126"/>
+    <path d="M468 110H500M484 94V126"/>
+    <line x1="120" y1="68" x2="440" y2="68" stroke-dasharray="4 6"/>
+  </g>
+
+  <!-- Stylised technical 3/4 cutout silhouette (honest placeholder until /admin upload) -->
+  <path
+    d="M280 96
+       C234 96 198 132 198 182
+       C198 228 228 264 246 276
+       L246 310
+       C190 322 126 358 106 422
+       L82 560
+       L74 700
+       L486 700
+       L478 560
+       L454 422
+       C434 358 370 322 314 310
+       L314 276
+       C332 264 362 228 362 182
+       C362 132 326 96 280 96Z"
+    fill="url(#torsoFill)"
+    stroke="url(#rimGrad)"
+    stroke-width="2.5"
+  />
+
+  <!-- Structural collar / technical jacket seam lines -->
+  <path d="M236 316L280 398L324 316" stroke="#60A5FA" stroke-opacity="0.55" stroke-width="2"/>
+  <path d="M280 398V640" stroke="#94A3B8" stroke-opacity="0.22" stroke-width="1.5" stroke-dasharray="5 5"/>
+  <path d="M164 390L198 540M396 390L362 540" stroke="#60A5FA" stroke-opacity="0.28" stroke-width="1.5"/>
+
+  <!-- Visor / head geometry cue -->
+  <path d="M232 172H328L318 194H242L232 172Z" fill="#2563EB" fill-opacity="0.28" stroke="#60A5FA" stroke-opacity="0.75" stroke-width="1.5"/>
+
+  <!-- Honest placeholder tag -->
+  <g transform="translate(154, 594)">
+    <rect width="252" height="36" rx="8" fill="#0E121B" fill-opacity="0.92" stroke="#3B82F6" stroke-opacity="0.45"/>
+    <text x="126" y="22" text-anchor="middle" fill="#94A3B8" font-family="monospace" font-size="11.5" letter-spacing="1.4">
+      HERO CUTOUT · UPLOAD VIA /ADMIN
+    </text>
+  </g>
+</svg>

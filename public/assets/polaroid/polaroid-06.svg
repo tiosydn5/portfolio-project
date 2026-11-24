@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" width="480" height="360" fill="none">
+  <rect width="480" height="360" fill="#07090E"/>
+  <rect x="24" y="24" width="432" height="312" rx="12" fill="#0E121B" stroke="#60A5FA" stroke-opacity="0.45"/>
+  <circle cx="240" cy="156" r="76" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 6"/>
+  <circle cx="240" cy="156" r="42" stroke="#60A5FA" stroke-width="2"/>
+  <circle cx="240" cy="156" r="6" fill="#60A5FA"/>
+  <text x="48" y="294" fill="#94A3B8" font-family="monospace" font-size="13">FRAME 06 · JAKARTA WIB TELEMETRY</text>
+</svg>

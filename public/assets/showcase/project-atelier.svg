@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" fill="none">
+  <rect width="640" height="400" fill="#0B1120"/>
+  <rect x="28" y="28" width="584" height="344" rx="14" fill="#151B28" stroke="#3B82F6" stroke-opacity="0.45"/>
+  <rect x="52" y="56" width="240" height="22" rx="6" fill="#2563EB" fill-opacity="0.25" stroke="#60A5FA"/>
+  <rect x="52" y="96" width="320" height="14" rx="4" fill="#94A3B8" fill-opacity="0.3"/>
+  <rect x="52" y="122" width="260" height="14" rx="4" fill="#94A3B8" fill-opacity="0.2"/>
+  <rect x="52" y="168" width="166" height="164" rx="10" fill="#0E121B" stroke="#64748B" stroke-opacity="0.5"/>
+  <rect x="236" y="168" width="166" height="164" rx="10" fill="#0E121B" stroke="#60A5FA" stroke-opacity="0.55"/>
+  <rect x="420" y="168" width="168" height="164" rx="10" fill="#0E121B" stroke="#64748B" stroke-opacity="0.5"/>
+  <path d="M266 258L304 220L334 246L374 206" stroke="#60A5FA" stroke-width="3" stroke-linecap="square"/>
+  <text x="52" y="362" fill="#7B8CA4" font-family="monospace" font-size="13">STUDIO · WEB ARCHITECTURE</text>
+</svg>

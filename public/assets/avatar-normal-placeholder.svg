@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 600" width="480" height="600" fill="none">
+  <defs>
+    <linearGradient id="bgNormal" x1="0" y1="0" x2="480" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#151B28"/>
+      <stop offset="100%" stop-color="#0E121B"/>
+    </linearGradient>
+    <linearGradient id="bustNormal" x1="240" y1="92" x2="240" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#222B3F"/>
+      <stop offset="100%" stop-color="#111622"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="480" height="600" fill="url(#bgNormal)"/>
+
+  <!-- Framing registration corner ticks (aligned with alter-ego layer) -->
+  <g stroke="#94A3B8" stroke-opacity="0.24" stroke-width="1.5">
+    <path d="M28 52V28H52"/>
+    <path d="M428 28H452V52"/>
+    <path d="M28 548V572H52"/>
+    <path d="M428 572H452V548"/>
+  </g>
+
+  <!-- Silhouette matching alter-ego pixel coordinates -->
+  <path
+    d="M240 104
+       C198 104 166 138 166 184
+       C166 226 194 260 212 272
+       L212 304
+       C160 316 106 350 88 410
+       L66 530
+       L60 600
+       L420 600
+       L414 530
+       L392 410
+       C374 350 320 316 268 304
+       L268 272
+       C286 260 314 226 314 184
+       C314 138 282 104 240 104Z"
+    fill="url(#bustNormal)"
+    stroke="#94A3B8"
+    stroke-opacity="0.32"
+    stroke-width="2"
+  />
+
+  <!-- Clean blazer / collar lines -->
+  <path d="M202 310L240 388L278 310" stroke="#94A3B8" stroke-opacity="0.45" stroke-width="2"/>
+  <path d="M240 388V580" stroke="#94A3B8" stroke-opacity="0.2" stroke-width="1.5"/>
+  <rect x="200" y="168" width="80" height="22" rx="4" stroke="#94A3B8" stroke-opacity="0.35" stroke-width="1.5"/>
+
+  <text x="240" y="556" text-anchor="middle" fill="#7B8CA4" font-family="monospace" font-size="11" letter-spacing="1.4">
+    NORMAL LAYER · UPLOAD VIA /ADMIN
+  </text>
+</svg>

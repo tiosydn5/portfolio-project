@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" fill="none">
+  <rect width="640" height="400" fill="#0B1120"/>
+  <rect x="32" y="32" width="576" height="336" rx="14" fill="#151B28" stroke="#60A5FA" stroke-opacity="0.5"/>
+  <polygon points="320,86 352,150 422,160 370,210 384,280 320,246 256,280 270,210 218,160 288,150" fill="#2563EB" fill-opacity="0.3" stroke="#60A5FA" stroke-width="2.5"/>
+  <rect x="190" y="302" width="260" height="28" rx="6" fill="#0E121B" stroke="#64748B"/>
+  <text x="320" y="321" text-anchor="middle" fill="#F8FAFC" font-family="monospace" font-size="12">STUDIO · UI/UX RECOGNITION</text>
+</svg>

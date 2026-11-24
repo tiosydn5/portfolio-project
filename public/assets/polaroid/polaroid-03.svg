@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" width="480" height="360" fill="none">
+  <rect width="480" height="360" fill="#F3F6FA"/>
+  <rect x="24" y="24" width="432" height="312" rx="12" fill="#FFFFFF" stroke="#0B1120" stroke-opacity="0.16"/>
+  <text x="52" y="138" fill="#0B1120" font-family="sans-serif" font-weight="700" font-size="64">Ag</text>
+  <rect x="166" y="84" width="256" height="72" rx="8" fill="#0E121B"/>
+  <text x="186" y="128" fill="#60A5FA" font-family="monospace" font-size="20">SPACE GROTESK</text>
+  <line x1="52" y1="202" x2="422" y2="202" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="52" y="294" fill="#475569" font-family="monospace" font-size="13">FRAME 03 · TYPE SPECIMEN</text>
+</svg>
