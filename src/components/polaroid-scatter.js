@@ -5,7 +5,7 @@ import {
   resumeSmoothScroll,
   ScrollTrigger,
 } from '../lib/motion-engine.js';
-import { createEl, safeUrl } from '../lib/sanitize.js';
+import { assetUrl, createEl, safeUrl } from '../lib/sanitize.js';
 
 function parsePx(value, fallback = 0) {
   const num = parseFloat(String(value || ''));
@@ -94,7 +94,7 @@ export function initPolaroidScatter({ photos = [] }) {
     if (!item) return;
 
     if (lbImg) {
-      lbImg.src = safeUrl(item.image_url) || '/assets/polaroid/polaroid-01.svg';
+      lbImg.src = safeUrl(item.image_url) || assetUrl('/assets/polaroid/polaroid-01.svg');
       lbImg.alt = item.caption;
       if (animateSwap && !prefersReducedMotion()) {
         gsap.fromTo(
@@ -234,7 +234,7 @@ export function initPolaroidScatter({ photos = [] }) {
       createEl('img', {
         className: 'w-full h-auto aspect-[4/3] object-cover block select-none',
         attrs: {
-          src: safeUrl(photo.image_url) || '/assets/polaroid/polaroid-01.svg',
+          src: safeUrl(photo.image_url) || assetUrl('/assets/polaroid/polaroid-01.svg'),
           alt: photo.caption,
           width: '480',
           height: '360',

@@ -4,7 +4,7 @@ import {
   prefersReducedMotion,
   resumeSmoothScroll,
 } from '../lib/motion-engine.js';
-import { createEl, createSvgIcon, safeUrl } from '../lib/sanitize.js';
+import { assetUrl, createEl, createSvgIcon, safeUrl } from '../lib/sanitize.js';
 
 const CATEGORY_META = {
   project: {
@@ -197,7 +197,8 @@ export function initShowcase({ items = [] }) {
     pauseSmoothScroll();
 
     if (modalImg) {
-      modalImg.src = safeUrl(item.thumbnail_url) || '/assets/showcase/project-atelier.svg';
+      modalImg.src =
+        safeUrl(item.thumbnail_url) || assetUrl('/assets/showcase/project-atelier.svg');
       modalImg.alt = `Pratinjau visual ${item.title}`;
     }
 
@@ -403,7 +404,7 @@ export function initShowcase({ items = [] }) {
       const img = createEl('img', {
         className: 'showcase-thumb-img w-full h-auto aspect-[16/10] object-cover block',
         attrs: {
-          src: safeUrl(item.thumbnail_url) || '/assets/showcase/project-atelier.svg',
+          src: safeUrl(item.thumbnail_url) || assetUrl('/assets/showcase/project-atelier.svg'),
           alt: `Thumbnail ${item.title}`,
           width: '640',
           height: '400',

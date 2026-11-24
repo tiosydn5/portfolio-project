@@ -1,4 +1,24 @@
 const SVG_NS = 'http://www.w3.org/2000/svg';
+const RAW_BASE_URL =
+  (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
+const NORMALIZED_BASE_URL = RAW_BASE_URL.endsWith('/') ? RAW_BASE_URL : `${RAW_BASE_URL}/`;
+
+/**
+ * Prefix local /assets/... paths with Vite's BASE_URL so both root deploys (Vercel/Netlify)
+ * and subpath deploys (GitHub Pages /portfolio-project/) resolve cleanly.
+ */
+export function assetUrl(rawPath) {
+  if (typeof rawPath !== 'string') return '';
+  const trimmed = rawPath.trim();
+  if (!trimmed) return '';
+  if (trimmed.startsWith('/assets/')) {
+    return `${NORMALIZED_BASE_URL}${trimmed.slice(1)}`;
+  }
+  if (trimmed.startsWith('./assets/')) {
+    return `${NORMALIZED_BASE_URL}${trimmed.slice(2)}`;
+  }
+  return trimmed;
+}
 
 /**
  * Validate URLs so only safe web protocols or local static asset paths are used in href/src.
@@ -9,8 +29,12 @@ export function safeUrl(rawUrl) {
   const trimmed = rawUrl.trim();
   if (!trimmed) return null;
 
-  if (trimmed.startsWith('/assets/') || trimmed.startsWith('./assets/')) {
-    return trimmed;
+  if (
+    trimmed.startsWith('/assets/') ||
+    trimmed.startsWith('./assets/') ||
+    (NORMALIZED_BASE_URL !== '/' && trimmed.startsWith(`${NORMALIZED_BASE_URL}assets/`))
+  ) {
+    return assetUrl(trimmed);
   }
 
   try {

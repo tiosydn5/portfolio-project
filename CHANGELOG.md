@@ -64,3 +64,8 @@
 - **Live Verification**: Confirmed `200 OK` REST reads on `site_profile`, `showcase_items`, `timeline_entries`, `polaroid_photos`, and `guestbook_comments` plus `401` read lock on `contact_messages` after role grants were executed, verified `npm run build` + Playwright live-connected browser audit, and pushed to `origin/main`.
 - **Files touched**: `vercel.json`, `netlify.toml`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-24 — [GitHub Pages Build & Subpath Support] Automated Vite Build Deploy + %BASE_URL% Asset Resolution
+- **Root Cause Fixed**: GitHub Pages was configured in legacy branch mode (`main` root), serving raw uncompiled `index.html` (`/src/main.js`) under subpath `/portfolio-project/`.
+- **Subpath-Safe Assets & Routing**: Added `VITE_BASE_PATH` support in `vite.config.js`, `%BASE_URL%` prefixes in `index.html` and `admin.html`, and `assetUrl()` / `safeUrl()` base-prefix resolution in `src/lib/sanitize.js` (plus `showcase.js` and `polaroid-scatter.js`) so both `/` (Vercel/Netlify) and `/portfolio-project/` (GitHub Pages) resolve CSS, JS, and SVG assets cleanly.
+- **Automated Pages Deployment**: Added `.github/workflows/deploy-pages.yml` (`npm ci && npm run build` with `VITE_BASE_PATH`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, plus `/admin` redirect shim) and switched GitHub Pages build mode to `workflow`.
+- **Files touched**: `.github/workflows/deploy-pages.yml`, `vite.config.js`, `index.html`, `admin.html`, `src/lib/sanitize.js`, `src/components/showcase.js`, `src/components/polaroid-scatter.js`, `STATE.md`, `CHANGELOG.md`.

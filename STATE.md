@@ -32,7 +32,7 @@
 - `src/admin/admin-main.js`, `src/admin/admin-ui.js`, `src/admin/profile-editor.js`, `src/admin/showcase-crud.js`, `src/admin/timeline-crud.js`, `src/admin/polaroid-crud.js`, `src/admin/moderation.js`
 - `src/main.js`
 - `supabase/schema.sql`, `supabase/seed.sql`
-- `.github/workflows/supabase-keepalive.yml`
+- `.github/workflows/supabase-keepalive.yml`, `.github/workflows/deploy-pages.yml`
 
 ## Completed Milestones
 - [x] Phase 0: Reference video breakdown, UX/motion conflict audit, WCAG AA contrast audit, & alignment sign-off
@@ -43,10 +43,11 @@
 - [x] Motion Engine & Two-Block Layout Overhaul (2026-11-24): Installed `gsap` + `lenis`, built `src/lib/motion-engine.js`, refactored `#about` into Blok A + Blok B with strict `4:5` Spotlight lock and Core Stack kinetic marquee, fixed `.skip-link` visibility leak (`:focus-visible` only), added Hero scroll-scrubbing, 3D folder fanning, sliding Showcase tab pill + card pop-in + spring dialogs, Polaroid center explosion + hover straighten/lift, 3D Find Me ID card tilt, and Guestbook new comment pop-in; verified across `1280px`, `375px`, and `/admin`.
 - [x] Repo Structure & Audit Cleanup (2026-11-24): Fixed misplaced `workflows/supabase-keepalive.yml` -> `.github/workflows/supabase-keepalive.yml` (with dual JWT / `sb_publishable` header support), tightened `safeUrl` validation, prevented null append in Find Me list, preserved `scrollTarget` + unique row IDs in `profile-editor.js`, cleaned Showcase modal metadata separator, and verified `vite build` + headless browser audit.
 - [x] Supabase Live Activation, Deployment Routing & Push (2026-11-24): Configured local `.env` & GitHub repository secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`), added Section 10 explicit PostgreSQL `GRANT`s in `supabase/schema.sql` (verified `200 OK` across public tables + `401` SELECT lock on `contact_messages`), added `vercel.json` and `netlify.toml` for `/admin` production rewrites, pushed to `origin/main`, and verified live keep-alive workflow.
+- [x] GitHub Pages Vite Build & Subpath Support (2026-11-24): Added `VITE_BASE_PATH` support in `vite.config.js`, `%BASE_URL%` prefixes in `index.html` & `admin.html`, base-aware `assetUrl()`/`safeUrl()` in `src/lib/sanitize.js`, and `.github/workflows/deploy-pages.yml` (`actions/deploy-pages@v4`) with GitHub Pages switched from legacy branch serving to `workflow`.
 
 ## Active / Next Action (User Activation Checklist)
-1. Connect GitHub repo `tiosydn5/portfolio-project` to Vercel or Netlify and set `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` in the hosting dashboard Environment Variables.
-2. Optionally run `supabase/seed.sql` in Supabase SQL Editor, or sign in directly at `/admin` on the deployed site to upload photos and manage content.
+1. Visit live GitHub Pages (`https://tiosydn5.github.io/portfolio-project/`) or optionally connect repo to Vercel/Netlify (with `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` env vars).
+2. Sign in at `/admin` (or `/admin.html`) to upload real assets and manage content, or optionally run `supabase/seed.sql` in Supabase SQL Editor.
 
 ## Known Issues / Blockers
-- None. Public tables and `portfolio-media` storage are live and readable (`200 OK`); `.env` stays local/gitignored for VM testing while production hosting requires `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` configured in Vercel/Netlify dashboard.
+- None. GitHub Pages builds via Actions workflow, Vercel/Netlify rewrites are configured, and live Supabase public tables + `portfolio-media` storage return `200 OK`.
