@@ -58,3 +58,9 @@
 - **Schema Hardening**: Added Section 10 in `supabase/schema.sql` (`GRANT USAGE ON SCHEMA public`, `GRANT EXECUTE ON FUNCTION public.is_portfolio_admin()`, least-privilege `REVOKE/GRANT` for `anon`—including `INSERT`-only on `contact_messages`—and `authenticated` CRUD grants).
 - **Environment & Secrets**: Configured local gitignored `.env` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`), configured GitHub repository secrets `SUPABASE_URL` and `SUPABASE_ANON_KEY`, and verified `npm run build` + `vite preview` fallback & `/admin` status.
 - **Files touched**: `supabase/schema.sql`, `STATE.md`, `CHANGELOG.md`.
+
+## 2026-11-24 — [Deployment Routing & Live Verification] Vercel / Netlify Rewrites & Live Database Check
+- **Hosting Rewrites**: Added `vercel.json` and `netlify.toml` so `/admin` and `/admin/` rewrite cleanly to `/admin.html` in production on either Vercel or Netlify.
+- **Live Verification**: Confirmed `200 OK` REST reads on `site_profile`, `showcase_items`, `timeline_entries`, `polaroid_photos`, and `guestbook_comments` plus `401` read lock on `contact_messages` after role grants were executed, verified `npm run build` + Playwright live-connected browser audit, and pushed to `origin/main`.
+- **Files touched**: `vercel.json`, `netlify.toml`, `STATE.md`, `CHANGELOG.md`.
+

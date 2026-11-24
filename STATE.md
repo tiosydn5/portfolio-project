@@ -18,7 +18,7 @@
 - `PRD.md` (Full Specification, Bright Editorial + Motion Engine Architecture, WCAG AA Tokens, & Hardened DB Schema)
 - `STATE.md` (This file)
 - `CHANGELOG.md` (Dated engineering log)
-- `.gitignore`, `.env.example`, `package.json`, `package-lock.json`, `vite.config.js`
+- `.gitignore`, `.env.example`, `package.json`, `package-lock.json`, `vite.config.js`, `vercel.json`, `netlify.toml`
 - `index.html` (Public Portfolio: Bright Editorial Bento Hero Board, 2-Block `#about` Bento, Kinetic Bridge, Showcase + Sliding Tabs + Spring Modal, Periwinkle Polaroid Scatter + Lightbox, Bright Contact + 3D Find Me Tilt + Guestbook)
 - `admin.html` (Private `/admin` Operate-mode CMS with Auth Gate, Navigation Rail, 5 Modules, & Confirmation Dialog)
 - `public/favicon.svg`
@@ -42,13 +42,11 @@
 - [x] Visual Overhaul (2026-11-24): Bright Editorial Cyber-Tech Bento (Blue Edition) palette, `contrast-check.py` WCAG AA verification, clean copy free of dev milestone labels, mobile bottom dock pill calibration.
 - [x] Motion Engine & Two-Block Layout Overhaul (2026-11-24): Installed `gsap` + `lenis`, built `src/lib/motion-engine.js`, refactored `#about` into Blok A + Blok B with strict `4:5` Spotlight lock and Core Stack kinetic marquee, fixed `.skip-link` visibility leak (`:focus-visible` only), added Hero scroll-scrubbing, 3D folder fanning, sliding Showcase tab pill + card pop-in + spring dialogs, Polaroid center explosion + hover straighten/lift, 3D Find Me ID card tilt, and Guestbook new comment pop-in; verified across `1280px`, `375px`, and `/admin`.
 - [x] Repo Structure & Audit Cleanup (2026-11-24): Fixed misplaced `workflows/supabase-keepalive.yml` -> `.github/workflows/supabase-keepalive.yml` (with dual JWT / `sb_publishable` header support), tightened `safeUrl` validation, prevented null append in Find Me list, preserved `scrollTarget` + unique row IDs in `profile-editor.js`, cleaned Showcase modal metadata separator, and verified `vite build` + headless browser audit.
-- [x] Supabase Connection, Secrets & Role Grants (2026-11-24): Configured local gitignored `.env` (`VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` via publishable key) and set GitHub Actions repository secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`) on `tiosydn5/portfolio-project`. Added Section 10 explicit least-privilege PostgreSQL `GRANT` statements in `supabase/schema.sql` after live REST/SDK probing detected PostgreSQL `42501 permission denied` for `anon`.
+- [x] Supabase Live Activation, Deployment Routing & Push (2026-11-24): Configured local `.env` & GitHub repository secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`), added Section 10 explicit PostgreSQL `GRANT`s in `supabase/schema.sql` (verified `200 OK` across public tables + `401` SELECT lock on `contact_messages`), added `vercel.json` and `netlify.toml` for `/admin` production rewrites, pushed to `origin/main`, and verified live keep-alive workflow.
 
 ## Active / Next Action (User Activation Checklist)
-1. Run the Section 10 PostgreSQL `GRANT` statements from `supabase/schema.sql` in the live Supabase SQL Editor so `anon` and `authenticated` roles can pass table-level privilege checks before RLS evaluation.
-2. Push local `main` commits to `origin/main` so `.github/workflows/supabase-keepalive.yml` goes live on GitHub Actions.
-3. Optionally run `supabase/seed.sql` or sign in at `/admin` (`/admin.html`) to upload real assets and manage content, then configure deployment target (Vercel / Netlify / Cloudflare Pages / GitHub Pages).
+1. Connect GitHub repo `tiosydn5/portfolio-project` to Vercel or Netlify and set `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` in the hosting dashboard Environment Variables.
+2. Optionally run `supabase/seed.sql` in Supabase SQL Editor, or sign in directly at `/admin` on the deployed site to upload photos and manage content.
 
 ## Known Issues / Blockers
-- Live Supabase tables on project `brqnldutafuopflizrph` currently return `42501 permission denied` to `anon` until the explicit `GRANT` block in `supabase/schema.sql` is executed in Supabase SQL Editor.
-- Local `main` is ahead of `origin/main` (pending `git push`).
+- None. Public tables and `portfolio-media` storage are live and readable (`200 OK`); `.env` stays local/gitignored for VM testing while production hosting requires `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` configured in Vercel/Netlify dashboard.
