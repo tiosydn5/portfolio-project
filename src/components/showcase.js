@@ -203,7 +203,9 @@ export function initShowcase({ items = [] }) {
 
     if (modalMeta) {
       const catName = CATEGORY_META[item.category]?.label || item.category;
-      modalMeta.textContent = `${catName} · ${item.discipline || 'Showcase'} · ${item.date_label || ''}`;
+      modalMeta.textContent = [catName, item.discipline || 'Showcase', item.date_label]
+        .filter(Boolean)
+        .join(' · ');
     }
 
     if (modalSampleBadge) {

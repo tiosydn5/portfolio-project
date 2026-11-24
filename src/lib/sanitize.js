@@ -14,7 +14,7 @@ export function safeUrl(rawUrl) {
   }
 
   try {
-    const parsed = new URL(trimmed, window.location.origin);
+    const parsed = new URL(trimmed);
     if (
       parsed.protocol === 'https:' ||
       parsed.protocol === 'http:' ||

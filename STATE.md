@@ -25,6 +25,7 @@
 - `public/assets/` (`hero-cutout-placeholder.svg`, `avatar-normal-placeholder.svg`, `avatar-alter-placeholder.svg`)
 - `public/assets/showcase/` (10 Studio SVG thumbnails)
 - `public/assets/polaroid/` (6 Studio Frame SVGs)
+- `reference/1000535039.mp4` (Phase 0 reference choreography video)
 - `src/styles/tokens.css`, `src/styles/base.css`, `src/styles/animations.css`, `src/styles/admin.css`
 - `src/lib/sanitize.js`, `src/lib/supabase.js`, `src/lib/data-fallback.js`, `src/lib/storage-upload.js`, `src/lib/portfolio-api.js`, `src/lib/motion-engine.js`
 - `src/components/navbar.js`, `src/components/hero-parallax.js`, `src/components/spotlight-avatar.js`, `src/components/telemetry-clock.js`, `src/components/bento-about.js`, `src/components/folders-3d.js`, `src/components/showcase.js`, `src/components/polaroid-scatter.js`, `src/components/contact-guestbook.js`
@@ -40,13 +41,14 @@
 - [x] Phase 3: Live Supabase client integration (`portfolio-api.js`, `storage-upload.js`), full Operate-mode `/admin` CMS (Auth Gate + 5 CRUD/Moderation modules), `supabase/seed.sql`, responsive & accessibility verification across `320px–1280px`
 - [x] Visual Overhaul (2026-11-24): Bright Editorial Cyber-Tech Bento (Blue Edition) palette, `contrast-check.py` WCAG AA verification, clean copy free of dev milestone labels, mobile bottom dock pill calibration.
 - [x] Motion Engine & Two-Block Layout Overhaul (2026-11-24): Installed `gsap` + `lenis`, built `src/lib/motion-engine.js`, refactored `#about` into Blok A + Blok B with strict `4:5` Spotlight lock and Core Stack kinetic marquee, fixed `.skip-link` visibility leak (`:focus-visible` only), added Hero scroll-scrubbing, 3D folder fanning, sliding Showcase tab pill + card pop-in + spring dialogs, Polaroid center explosion + hover straighten/lift, 3D Find Me ID card tilt, and Guestbook new comment pop-in; verified across `1280px`, `375px`, and `/admin`.
+- [x] Repo Structure & Audit Cleanup (2026-11-24): Fixed misplaced `workflows/supabase-keepalive.yml` -> `.github/workflows/supabase-keepalive.yml` (with dual JWT / `sb_publishable` header support), tightened `safeUrl` validation, prevented null append in Find Me list, preserved `scrollTarget` + unique row IDs in `profile-editor.js`, cleaned Showcase modal metadata separator, and verified `vite build` + headless browser audit.
 
 ## Active / Next Action (User Activation Checklist)
-1. Create a fresh Supabase project and run `supabase/schema.sql` in SQL Editor (replacing `<ADMIN_EMAIL>` with your admin email).
-2. Optionally run `supabase/seed.sql` to populate initial starter rows.
-3. In Supabase Dashboard -> Authentication -> Providers -> Email: disable open public sign-ups and create your single admin account.
-4. Copy `.env.example` to `.env`, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, restart `npm run dev`, and sign in at `/admin` to upload real photos and manage content.
+1. Supabase SQL schema + admin auth account confirmed ready by owner.
+2. Supply `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` in local `.env` (never committed) and/or hosting environment variables to activate live Supabase reads/writes and `/admin` login.
+3. Configure GitHub Repository Secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`) so `.github/workflows/supabase-keepalive.yml` executes cleanly every 3 days.
+4. Optionally run `supabase/seed.sql` or sign in at `/admin` (`/admin.html`) to upload real assets and manage content, then configure deployment target if hosting statically.
 
 ## Known Issues / Blockers
-- `.env` is intentionally absent in local repo until user supplies Supabase project credentials; live Supabase auth/writes require `.env` configuration.
-- `.git` repository is not initialized locally; project stays purely local for now.
+- `.env` is intentionally absent in the repo until `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are supplied locally / in hosting settings; live Supabase auth/writes require `.env` configuration.
+- GitHub Actions repository secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`) are not yet configured on `tiosydn5/portfolio-project`.

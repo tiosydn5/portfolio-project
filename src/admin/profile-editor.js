@@ -90,13 +90,19 @@ function createSocialRow(social, index, onRemove) {
 
   return {
     el: row,
-    readValue: () => ({
-      id: idInput.value.trim().toLowerCase() || 'link',
-      label: labelInput.value.trim(),
-      handle: handleInput.value.trim(),
-      url: urlInput.value.trim() || null,
-      copyValue: handleInput.value.trim() || null,
-    }),
+    readValue: () => {
+      const handle = handleInput.value.trim();
+      const url = urlInput.value.trim() || null;
+      const scrollTarget = social.scrollTarget || null;
+      return {
+        id: idInput.value.trim().toLowerCase() || 'link',
+        label: labelInput.value.trim(),
+        handle,
+        url,
+        scrollTarget,
+        copyValue: scrollTarget ? null : handle || null,
+      };
+    },
   };
 }
 
@@ -240,9 +246,10 @@ export async function mountProfileEditor(container) {
     const socialsWrap = createEl('div', { className: 'space-y-3 pt-4 border-t border-[rgba(148,163,184,0.16)]' });
     const socialRowsContainer = createEl('div', { className: 'space-y-3' });
     let socialRowControllers = [];
+    let nextSocialIndex = 0;
 
     const addSocialEntry = (socialData = {}) => {
-      const idx = socialRowControllers.length;
+      const idx = nextSocialIndex++;
       const ctrl = createSocialRow(socialData, idx, (targetEl) => {
         socialRowControllers = socialRowControllers.filter((c) => c.el !== targetEl);
         targetEl.remove();

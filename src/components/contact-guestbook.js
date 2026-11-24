@@ -388,7 +388,11 @@ export function initContactGuestbook({
         });
       }
 
-      row.append(left, actionEl);
+      if (actionEl) {
+        row.append(left, actionEl);
+      } else {
+        row.append(left);
+      }
       findMeList.appendChild(row);
     }
   }
