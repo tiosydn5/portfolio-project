@@ -1,26 +1,26 @@
 # STATE.md — Live Project Save-Game
 
 - **Last Updated**: 2026-11-24
-- **Current Phase**: Phase 3 + Bright Editorial Visual Overhaul + GSAP & Lenis Motion Overhaul Complete
-- **Overall Status**: Full Bright Editorial Cyber-Tech Bento (Blue Edition) Portfolio (`/`) powered by `GSAP` (`ScrollTrigger`, `quickTo`, `matchMedia`) + `Lenis` smooth scrolling and Dark Operate-Mode Admin CMS (`/admin`) with live Supabase hydration, storage media uploaders, Auth Gate, full CRUD across all 5 CMS modules, clean offline/preview fallback, `supabase/schema.sql`, `supabase/seed.sql`, and `.github/workflows/supabase-keepalive.yml`.
+- **Current Phase**: Phase 3 + Bright Editorial Public Overhaul + GSAP/Lenis Motion + Bright Bento Studio CMS (`/admin`) Overhaul Complete
+- **Overall Status**: Unified Bright Editorial Cyber-Tech Bento (Blue Edition) Portfolio (`/`) powered by `GSAP` (`ScrollTrigger`, `quickTo`, `matchMedia`) + `Lenis` smooth scrolling and **Bright Bento Studio CMS (`/admin`)** with live Supabase hydration, drag-and-drop storage dropzones, Split Studio live profile preview, content-first Visual Card Grids, Slide-Over Drawers, rotation slider Polaroid preview, modern Inbox/Guestbook moderation, `supabase/schema.sql`, `supabase/seed.sql`, `.github/workflows/supabase-keepalive.yml`, and `.github/workflows/deploy-pages.yml`.
 
 ## Architecture Snapshot
 - **Frontend**: Vite 6 + Multi-Page Vanilla ES Modules (`index.html`, `admin.html`) + Compiled Tailwind CSS v4 + `gsap` + `lenis` (`src/lib/motion-engine.js`)
 - **Backend**: Supabase (`@supabase/supabase-js` wired for Public reads/inserts + Admin Auth/CRUD/Storage; falls back seamlessly to `data-fallback.js` + browser preview keys `portfolio_guestbook_v2` & `portfolio_contact_preview_v2` when `.env` is absent)
 - **Public Visual System**: Bright Editorial Cyber-Tech Bento (Blue Edition) with two spacious Bento Blocks inside `#about` (Blok A Profile Board + locked `4:5` Spotlight + Core Stack Marquee; Blok B Education + Scrollable Experience + full-width 12-col 3D Interactive Folders), spring navbar pill + outlined cyber mascot, scroll-scrubbed Hero & Kinetic Bridge parallax, sliding Showcase tab pill, desktop ScrollTrigger Polaroid scatter explosion, and 3D perspective lanyard tilt on Find Me card.
-- **Admin Visual System**: Preserved Dark Operate-Mode (`--bg-dark-*` tokens, `#B91C1C` admin danger action) with zero regression.
+- **Admin Visual System**: Bright Bento Studio CMS (`#F4F6FA` canvas, `#FFFFFF` Bento cards, `1.5px solid #0F172A` borders, `#2563EB` Cobalt, `#DBEAFE` Sky, `#E0E7FF` Periwinkle, WCAG AA `>= 5.17:1`) with custom monochrome SVG nav icons + live counters, Visual Media Dropzones, tactile Toggle Switches, Segmented Pills, Sticky Save Bar, and GPU-composited Slide-Over Drawers.
 - **Environment Variable Names (never store secret values here)**:
   - App runtime (`.env`): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
-  - GitHub Actions (`supabase-keepalive.yml`): `SUPABASE_URL`, `SUPABASE_ANON_KEY`
+  - GitHub Actions (`supabase-keepalive.yml`, `deploy-pages.yml`): `SUPABASE_URL`, `SUPABASE_ANON_KEY`
 
 ## File Tree
 - `AGENT_RULES.md` (Governance + Anti-AI-Slop + Sync Protocol)
-- `PRD.md` (Full Specification, Bright Editorial + Motion Engine Architecture, WCAG AA Tokens, & Hardened DB Schema)
+- `PRD.md` (Full Specification, Bright Editorial Public + Bright Bento Studio CMS Architecture, WCAG AA Tokens, & Hardened DB Schema)
 - `STATE.md` (This file)
 - `CHANGELOG.md` (Dated engineering log)
 - `.gitignore`, `.env.example`, `package.json`, `package-lock.json`, `vite.config.js`, `vercel.json`, `netlify.toml`
 - `index.html` (Public Portfolio: Bright Editorial Bento Hero Board, 2-Block `#about` Bento, Kinetic Bridge, Showcase + Sliding Tabs + Spring Modal, Periwinkle Polaroid Scatter + Lightbox, Bright Contact + 3D Find Me Tilt + Guestbook)
-- `admin.html` (Private `/admin` Operate-mode CMS with Auth Gate, Navigation Rail, 5 Modules, & Confirmation Dialog)
+- `admin.html` (Bright Bento Studio CMS shell: sticky header with connection pill, centered Bento Login card, icon sidebar with live badge counters, Slide-Over Drawer, floating toast, & confirmation dialog)
 - `public/favicon.svg`
 - `public/assets/` (`hero-cutout-placeholder.svg`, `avatar-normal-placeholder.svg`, `avatar-alter-placeholder.svg`)
 - `public/assets/showcase/` (10 Studio SVG thumbnails)
@@ -38,16 +38,17 @@
 - [x] Phase 0: Reference video breakdown, UX/motion conflict audit, WCAG AA contrast audit, & alignment sign-off
 - [x] Phase 1: Multi-page Vite + Tailwind v4 scaffold, WCAG AA tokens, `supabase/schema.sql` + keep-alive cron, Navbar + Cyber Mascot, 3-Layer Hero Parallax, Bento About Me + Spotlight + Telemetry + 3D Folders
 - [x] Phase 2: Tech Stack update (`Alight Motion`, `CapCut`), Kinetic Bridge (`PORTFOLIO`), 3-Tab Showcase Carousel + Tag Filters + Detail Modal, Polaroid Scatter + Lightbox, Contact Form + `Find Me` ID Badge + XSS-safe Live Guestbook
-- [x] Phase 3: Live Supabase client integration (`portfolio-api.js`, `storage-upload.js`), full Operate-mode `/admin` CMS (Auth Gate + 5 CRUD/Moderation modules), `supabase/seed.sql`, responsive & accessibility verification across `320px–1280px`
+- [x] Phase 3: Live Supabase client integration (`portfolio-api.js`, `storage-upload.js`), full `/admin` CMS (Auth Gate + 5 CRUD/Moderation modules), `supabase/seed.sql`, responsive & accessibility verification across `320px–1280px`
 - [x] Visual Overhaul (2026-11-24): Bright Editorial Cyber-Tech Bento (Blue Edition) palette, `contrast-check.py` WCAG AA verification, clean copy free of dev milestone labels, mobile bottom dock pill calibration.
 - [x] Motion Engine & Two-Block Layout Overhaul (2026-11-24): Installed `gsap` + `lenis`, built `src/lib/motion-engine.js`, refactored `#about` into Blok A + Blok B with strict `4:5` Spotlight lock and Core Stack kinetic marquee, fixed `.skip-link` visibility leak (`:focus-visible` only), added Hero scroll-scrubbing, 3D folder fanning, sliding Showcase tab pill + card pop-in + spring dialogs, Polaroid center explosion + hover straighten/lift, 3D Find Me ID card tilt, and Guestbook new comment pop-in; verified across `1280px`, `375px`, and `/admin`.
 - [x] Repo Structure & Audit Cleanup (2026-11-24): Fixed misplaced `workflows/supabase-keepalive.yml` -> `.github/workflows/supabase-keepalive.yml` (with dual JWT / `sb_publishable` header support), tightened `safeUrl` validation, prevented null append in Find Me list, preserved `scrollTarget` + unique row IDs in `profile-editor.js`, cleaned Showcase modal metadata separator, and verified `vite build` + headless browser audit.
 - [x] Supabase Live Activation, Deployment Routing & Push (2026-11-24): Configured local `.env` & GitHub repository secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`), added Section 10 explicit PostgreSQL `GRANT`s in `supabase/schema.sql` (verified `200 OK` across public tables + `401` SELECT lock on `contact_messages`), added `vercel.json` and `netlify.toml` for `/admin` production rewrites, pushed to `origin/main`, and verified live keep-alive workflow.
 - [x] GitHub Pages Vite Build & Subpath Support (2026-11-24): Added `VITE_BASE_PATH` support in `vite.config.js`, `%BASE_URL%` prefixes in `index.html` & `admin.html`, base-aware `assetUrl()`/`safeUrl()` in `src/lib/sanitize.js`, and `.github/workflows/deploy-pages.yml` (`actions/deploy-pages@v4`) with GitHub Pages switched from legacy branch serving to `workflow`.
+- [x] Bright Bento Studio CMS Overhaul (2026-11-24): Redesigned `admin.html`, `src/styles/admin.css`, and all `src/admin/*` modules into Bright Bento Studio CMS (aligned `#F4F6FA`/`#FFFFFF`/`#2563EB`/`#DBEAFE`/`#E0E7FF` palette, zero DB/AI jargon, monochrome SVG sidebar + live counters, drag-and-drop Visual Media Dropzones, tactile Toggle Switches & Segmented Pills, Split Studio Profile + Real-Time Mini-Preview + Sticky Save Bar, Content-First Showcase Card Grid + Slide-Over Drawer, Visual Timeline Feed + Drawer, Rotated Polaroid Grid + Range Slider Preview Drawer, and Modern Guestbook/Inbox UI) while keeping all Supabase auth/CRUD/Storage/RLS logic intact. Verified `npm run build`, WCAG AA contrast (`>= 5.17:1`), and Playwright audits across `1280px` & `375px`, and deployed via GitHub Pages.
 
 ## Active / Next Action (User Activation Checklist)
-1. Visit live GitHub Pages (`https://tiosydn5.github.io/portfolio-project/`) or optionally connect repo to Vercel/Netlify (with `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` env vars).
-2. Sign in at `/admin` (or `/admin.html`) to upload real assets and manage content, or optionally run `supabase/seed.sql` in Supabase SQL Editor.
+1. Sign in at `/admin` (`https://tiosydn5.github.io/portfolio-project/admin` or `/admin.html`) to upload real assets and manage portfolio content.
+2. Optionally connect repo to Vercel or Netlify (with `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` env vars) if deploying on a custom root domain.
 
 ## Known Issues / Blockers
-- None. GitHub Pages builds via Actions workflow, Vercel/Netlify rewrites are configured, and live Supabase public tables + `portfolio-media` storage return `200 OK`.
+- None. Both `/` and `/admin` Bright Bento Studio CMS are deployed and connected live to Supabase (`200 OK`).

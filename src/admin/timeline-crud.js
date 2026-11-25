@@ -1,116 +1,136 @@
 import { supabase } from '../lib/supabase.js';
 import { createEl } from '../lib/sanitize.js';
 import {
+  closeSlideDrawer,
   confirmAction,
+  createFieldGroup,
+  createSegmentedControl,
+  openSlideDrawer,
   renderEmptyState,
   renderErrorState,
   renderLoadingState,
   showToast,
+  studioIcon,
 } from './admin-ui.js';
 
-export async function mountTimelineCrud(container) {
-  renderLoadingState(container, 'Memuat timeline_entries...');
+export async function mountTimelineCrud(container, { onDataChange } = {}) {
+  renderLoadingState(container, 'Memuat riwayat pendidikan dan pengalaman...');
 
-  let editingId = null;
+  let entries = [];
   let activeType = 'all';
 
-  async function refresh() {
-    const { data, error } = await supabase
-      .from('timeline_entries')
-      .select('*')
-      .order('sort_order', { ascending: true })
-      .order('created_at', { ascending: false });
+  function openTimelineDrawer(editingItem = null) {
+    const form = createEl('form', {
+      className: 'space-y-5',
+      attrs: { id: 'timeline-drawer-form', novalidate: '' },
+    });
 
-    if (error) {
-      renderErrorState(container, `Gagal memuat timeline_entries: ${error.message}`, () => refresh());
-      return;
-    }
+    const typeSeg = createSegmentedControl({
+      ariaLabel: 'Jenis riwayat',
+      value: editingItem?.type || (activeType === 'education' ? 'education' : 'experience'),
+      options: [
+        { value: 'experience', label: 'Experience' },
+        { value: 'education', label: 'Education' },
+      ],
+    });
 
-    const entries = data || [];
-    const editingItem = editingId ? entries.find((e) => e.id === editingId) || null : null;
-
-    const form = createEl('form', { className: 'admin-panel p-6 space-y-5', attrs: { novalidate: '' } });
-
-    const header = createEl(
+    const typeWrap = createEl(
       'div',
-      { className: 'flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[rgba(148,163,184,0.16)]' },
-      createEl('h2', {
-        className: 'font-display text-xl font-bold text-[#F8FAFC]',
-        text: editingItem ? `Sunting Timeline: ${editingItem.role}` : 'Tambah Education / Experience',
-      }),
-      editingItem
-        ? createEl('button', { className: 'admin-btn-secondary text-xs', text: 'Batal Sunting', attrs: { type: 'button' } })
-        : null
+      { className: 'space-y-1.5' },
+      createEl('p', { className: 'text-sm font-semibold text-[#0B0F19]', text: 'Kategori Riwayat' }),
+      typeSeg.el
     );
-    if (editingItem) {
-      header.querySelector('button')?.addEventListener('click', () => {
-        editingId = null;
-        refresh();
-      });
-    }
-
-    const typeSelect = createEl(
-      'select',
-      { className: 'admin-input', attrs: { id: 'tl-type' } },
-      createEl('option', { text: 'Experience', attrs: { value: 'experience' } }),
-      createEl('option', { text: 'Education', attrs: { value: 'education' } })
-    );
-    typeSelect.value = editingItem?.type || 'experience';
 
     const orgInput = createEl('input', {
-      className: 'admin-input',
-      attrs: { id: 'tl-org', type: 'text', required: '', placeholder: 'Nama institusi / perusahaan', value: editingItem?.organization || '' },
+      className: 'studio-input',
+      attrs: {
+        id: 'tl-org',
+        type: 'text',
+        required: '',
+        placeholder: 'Nama perusahaan, studio, atau institusi',
+        value: editingItem?.organization || '',
+      },
     });
 
     const roleInput = createEl('input', {
-      className: 'admin-input',
-      attrs: { id: 'tl-role', type: 'text', required: '', placeholder: 'Peran / program studi', value: editingItem?.role || '' },
+      className: 'studio-input',
+      attrs: {
+        id: 'tl-role',
+        type: 'text',
+        required: '',
+        placeholder: 'Peran kerja atau program studi',
+        value: editingItem?.role || '',
+      },
     });
 
     const periodInput = createEl('input', {
-      className: 'admin-input font-mono-tabular',
-      attrs: { id: 'tl-period', type: 'text', required: '', placeholder: '2024 - Sekarang', value: editingItem?.period || '' },
+      className: 'studio-input font-mono-tabular',
+      attrs: {
+        id: 'tl-period',
+        type: 'text',
+        required: '',
+        placeholder: '2024 - Sekarang',
+        value: editingItem?.period || '',
+      },
     });
 
     const sortInput = createEl('input', {
-      className: 'admin-input font-mono-tabular',
-      attrs: { id: 'tl-sort', type: 'number', value: String(editingItem?.sort_order ?? 0) },
+      className: 'studio-input font-mono-tabular',
+      attrs: {
+        id: 'tl-sort',
+        type: 'number',
+        value: String(editingItem?.sort_order ?? 0),
+      },
     });
 
     const descInput = createEl('textarea', {
-      className: 'admin-input resize-y',
-      attrs: { id: 'tl-desc', rows: 3, placeholder: 'Ringkasan aktivitas atau fokus studi...' },
+      className: 'studio-input resize-y',
+      attrs: {
+        id: 'tl-desc',
+        rows: '3',
+        placeholder: 'Ringkasan aktivitas, pencapaian, atau fokus utama...',
+      },
     });
     descInput.value = editingItem?.description || '';
 
-    const wrap = (id, label, el) =>
-      createEl(
-        'div',
-        { className: 'space-y-1.5' },
-        createEl('label', { className: 'block text-sm font-medium text-[#F8FAFC]', text: label, attrs: { for: id } }),
-        el
-      );
-
-    const grid = createEl(
+    const periodGrid = createEl(
       'div',
       { className: 'grid grid-cols-1 sm:grid-cols-2 gap-4' },
-      wrap('tl-type', 'Tipe', typeSelect),
-      wrap('tl-period', 'Periode', periodInput),
-      wrap('tl-org', 'Organisasi / Institusi', orgInput),
-      wrap('tl-role', 'Peran / Gelar', roleInput),
-      wrap('tl-sort', 'Urutan (sort_order)', sortInput)
+      createFieldGroup('tl-period', 'Periode', periodInput),
+      createFieldGroup('tl-sort', 'Prioritas Tampil', sortInput, 'Angka kecil tampil lebih atas.')
     );
 
-    const submitBtn = createEl('button', {
-      className: 'admin-btn-primary',
-      text: editingItem ? 'Simpan Perubahan' : 'Tambah Timeline',
-      attrs: { type: 'submit' },
+    form.append(
+      typeWrap,
+      createFieldGroup('tl-role', 'Peran / Program Studi', roleInput),
+      createFieldGroup('tl-org', 'Institusi / Organisasi', orgInput),
+      periodGrid,
+      createFieldGroup('tl-desc', 'Ringkasan Aktivitas', descInput)
+    );
+
+    const cancelBtn = createEl('button', {
+      className: 'studio-btn-secondary text-sm',
+      text: 'Batal',
+      attrs: { type: 'button' },
     });
+    cancelBtn.addEventListener('click', closeSlideDrawer);
+
+    const submitBtn = createEl(
+      'button',
+      {
+        className: 'studio-btn-primary text-sm',
+        attrs: { type: 'submit', form: 'timeline-drawer-form' },
+      },
+      studioIcon('check', 'w-4 h-4'),
+      createEl('span', { text: editingItem ? 'Simpan Perubahan' : 'Simpan Riwayat' })
+    );
+
+    const footerEl = createEl('div', { className: 'flex items-center gap-2.5' }, cancelBtn, submitBtn);
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const payload = {
-        type: typeSelect.value,
+        type: typeSeg.getValue(),
         organization: orgInput.value.trim(),
         role: roleInput.value.trim(),
         period: periodInput.value.trim(),
@@ -119,7 +139,7 @@ export async function mountTimelineCrud(container) {
       };
 
       if (payload.organization.length < 2 || payload.role.length < 2 || payload.period.length < 2) {
-        showToast('Organisasi, peran, dan periode wajib diisi.', 'error');
+        showToast('Peran, institusi, dan periode wajib diisi.', 'error');
         return;
       }
 
@@ -133,107 +153,228 @@ export async function mountTimelineCrud(container) {
             .update(payload)
             .eq('id', editingItem.id);
           if (upErr) throw upErr;
-          showToast('Entri timeline diperbarui.', 'success');
-          editingId = null;
+          showToast('Riwayat berhasil diperbarui.', 'success');
         } else {
           const { error: insErr } = await supabase.from('timeline_entries').insert(payload);
           if (insErr) throw insErr;
-          showToast('Entri timeline ditambahkan.', 'success');
+          showToast('Riwayat baru berhasil ditambahkan.', 'success');
         }
-        await refresh();
+        closeSlideDrawer();
+        await fetchAndRender();
+        if (typeof onDataChange === 'function') onDataChange();
       } catch (err) {
-        showToast(err?.message || 'Gagal menyimpan timeline.', 'error');
-      } finally {
+        showToast(err?.message || 'Gagal menyimpan riwayat.', 'error');
         submitBtn.disabled = false;
-        submitBtn.textContent = editingItem ? 'Simpan Perubahan' : 'Tambah Timeline';
+        submitBtn.replaceChildren(
+          studioIcon('check', 'w-4 h-4'),
+          createEl('span', { text: editingItem ? 'Simpan Perubahan' : 'Simpan Riwayat' })
+        );
       }
     });
 
-    form.append(header, grid, wrap('tl-desc', 'Deskripsi', descInput), submitBtn);
-
-    const filterRow = createEl('div', { className: 'flex flex-wrap gap-2' });
-    for (const [key, label] of [
-      ['all', `Semua (${entries.length})`],
-      ['education', 'Education'],
-      ['experience', 'Experience'],
-    ]) {
-      const btn = createEl('button', {
-        className: activeType === key ? 'admin-btn-primary text-xs px-3.5' : 'admin-btn-secondary text-xs px-3.5',
-        text: label,
-        attrs: { type: 'button', 'aria-pressed': String(activeType === key) },
-      });
-      btn.addEventListener('click', () => {
-        activeType = key;
-        refresh();
-      });
-      filterRow.appendChild(btn);
-    }
-
-    const filtered = activeType === 'all' ? entries : entries.filter((e) => e.type === activeType);
-    const listWrap = createEl('div');
-
-    if (filtered.length === 0) {
-      renderEmptyState(listWrap, 'Belum ada entri timeline pada filter ini.');
-    } else {
-      const box = createEl('div', { className: 'admin-panel px-5' });
-      for (const entry of filtered) {
-        const row = createEl('div', {
-          className: 'admin-row py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3',
-        });
-
-        const left = createEl(
-          'div',
-          { className: 'space-y-1 min-w-0' },
-          createEl(
-            'div',
-            { className: 'flex flex-wrap items-center gap-2' },
-            createEl('span', {
-              className: 'font-mono-tabular text-xs px-2 py-0.5 rounded bg-[#151B28] text-[#60A5FA]',
-              text: entry.type.toUpperCase(),
-            }),
-            createEl('span', { className: 'font-mono-tabular text-xs text-[#7B8CA4]', text: entry.period })
-          ),
-          createEl('h3', { className: 'font-display text-base font-bold text-[#F8FAFC]', text: entry.role }),
-          createEl('p', { className: 'text-sm text-[#94A3B8]', text: entry.organization })
-        );
-
-        const editBtn = createEl('button', {
-          className: 'admin-btn-secondary text-xs px-3',
-          text: 'Edit',
-          attrs: { type: 'button' },
-        });
-        editBtn.addEventListener('click', () => {
-          editingId = entry.id;
-          refresh();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        const delBtn = createEl('button', {
-          className: 'admin-btn-danger text-xs px-3',
-          text: 'Hapus',
-          attrs: { type: 'button' },
-        });
-        delBtn.addEventListener('click', async () => {
-          const ok = await confirmAction({
-            title: 'Hapus Entri Timeline',
-            message: `Yakin ingin menghapus "${entry.role}" (${entry.organization})?`,
-          });
-          if (!ok) return;
-          const { error: delErr } = await supabase.from('timeline_entries').delete().eq('id', entry.id);
-          if (delErr) showToast(delErr.message, 'error');
-          else showToast('Entri timeline dihapus.', 'success');
-          if (editingId === entry.id) editingId = null;
-          await refresh();
-        });
-
-        row.append(left, createEl('div', { className: 'flex items-center gap-2 shrink-0' }, editBtn, delBtn));
-        box.appendChild(row);
-      }
-      listWrap.appendChild(box);
-    }
-
-    container.replaceChildren(form, filterRow, listWrap);
+    openSlideDrawer({
+      title: editingItem ? 'Sunting Riwayat' : 'Tambah Riwayat Baru',
+      subtitle: editingItem
+        ? `Perbarui entri "${editingItem.role}".`
+        : 'Tambahkan pengalaman kerja atau pendidikan ke linimasa publik.',
+      contentEl: form,
+      footerEl,
+    });
   }
 
-  await refresh();
+  function renderView() {
+    const addBtn = createEl(
+      'button',
+      { className: 'studio-btn-primary text-sm shrink-0', attrs: { type: 'button' } },
+      studioIcon('plus', 'w-4 h-4'),
+      createEl('span', { text: 'Tambah Riwayat' })
+    );
+    addBtn.addEventListener('click', () => openTimelineDrawer(null));
+
+    const filterSeg = createSegmentedControl({
+      ariaLabel: 'Filter jenis riwayat',
+      value: activeType,
+      options: [
+        { value: 'all', label: 'Semua', badge: entries.length },
+        {
+          value: 'experience',
+          label: 'Experience',
+          badge: entries.filter((e) => e.type === 'experience').length,
+        },
+        {
+          value: 'education',
+          label: 'Education',
+          badge: entries.filter((e) => e.type === 'education').length,
+        },
+      ],
+      onChange: (nextVal) => {
+        activeType = nextVal;
+        renderFeed();
+      },
+    });
+
+    const toolbarCard = createEl(
+      'div',
+      { className: 'studio-card p-5 sm:p-6 space-y-4' },
+      createEl(
+        'div',
+        { className: 'flex flex-col sm:flex-row sm:items-center justify-between gap-4' },
+        createEl(
+          'div',
+          { className: 'space-y-1' },
+          createEl('h2', {
+            className: 'font-display text-2xl font-bold text-[#0B0F19]',
+            text: 'Riwayat Pendidikan & Pengalaman',
+          }),
+          createEl('p', {
+            className: 'text-sm text-[#475569]',
+            text: 'Susun perjalanan akademik dan pengalaman profesional secara kronologis.',
+          })
+        ),
+        addBtn
+      ),
+      createEl(
+        'div',
+        { className: 'pt-4 border-t border-[rgba(15,23,42,0.12)]' },
+        filterSeg.el
+      )
+    );
+
+    const feedMount = createEl('div', { className: 'space-y-3' });
+
+    function renderFeed() {
+      const filtered =
+        activeType === 'all' ? entries : entries.filter((e) => e.type === activeType);
+
+      if (filtered.length === 0) {
+        renderEmptyState(
+          feedMount,
+          'Belum ada riwayat pada kategori ini. Tambahkan entri baru agar profil lebih lengkap.',
+          {
+            title: 'Riwayat masih kosong',
+            actionLabel: 'Tambah Riwayat',
+            onAction: () => openTimelineDrawer(null),
+          }
+        );
+        return;
+      }
+
+      const list = createEl('div', { className: 'space-y-3' });
+
+      for (const entry of filtered) {
+        const isEdu = entry.type === 'education';
+
+        const editBtn = createEl(
+          'button',
+          { className: 'studio-btn-secondary text-xs min-h-[40px] px-3.5', attrs: { type: 'button' } },
+          studioIcon('edit', 'w-3.5 h-3.5'),
+          createEl('span', { text: 'Sunting' })
+        );
+        editBtn.addEventListener('click', () => openTimelineDrawer(entry));
+
+        const delBtn = createEl(
+          'button',
+          {
+            className: 'studio-icon-btn studio-icon-btn-danger w-10 h-10 min-w-[40px] min-h-[40px]',
+            attrs: { type: 'button', 'aria-label': `Hapus ${entry.role}` },
+          },
+          studioIcon('trash', 'w-4 h-4')
+        );
+        delBtn.addEventListener('click', async () => {
+          const ok = await confirmAction({
+            title: 'Hapus Riwayat',
+            message: `Yakin ingin menghapus "${entry.role}" di ${entry.organization}?`,
+          });
+          if (!ok) return;
+          delBtn.disabled = true;
+          const { error: delErr } = await supabase
+            .from('timeline_entries')
+            .delete()
+            .eq('id', entry.id);
+          if (delErr) showToast(delErr.message, 'error');
+          else showToast('Riwayat berhasil dihapus.', 'success');
+          await fetchAndRender();
+          if (typeof onDataChange === 'function') onDataChange();
+        });
+
+        const leftPeriod = createEl(
+          'div',
+          { className: 'sm:w-44 shrink-0 space-y-2' },
+          createEl('span', {
+            className: isEdu ? 'studio-pill studio-pill-periwinkle' : 'studio-pill studio-pill-sky',
+            text: isEdu ? 'Education' : 'Experience',
+          }),
+          createEl('p', {
+            className: 'font-mono-tabular text-sm font-semibold text-[#1D4ED8]',
+            text: entry.period,
+          })
+        );
+
+        const rightDetail = createEl(
+          'div',
+          {
+            className:
+              'flex-1 min-w-0 sm:pl-5 sm:border-l sm:border-[rgba(15,23,42,0.12)] space-y-1.5',
+          },
+          createEl('h3', {
+            className: 'font-display text-lg font-bold text-[#0B0F19] leading-snug',
+            text: entry.role,
+          }),
+          createEl('p', {
+            className: 'text-sm font-semibold text-[#334155]',
+            text: entry.organization,
+          }),
+          entry.description
+            ? createEl('p', {
+                className: 'text-sm text-[#475569] leading-relaxed pt-0.5',
+                text: entry.description,
+              })
+            : null
+        );
+
+        const actions = createEl(
+          'div',
+          { className: 'flex items-center gap-2 shrink-0 self-start sm:self-center' },
+          editBtn,
+          delBtn
+        );
+
+        const card = createEl(
+          'article',
+          {
+            className:
+              'studio-card studio-card-hover p-5 sm:p-6 flex flex-col sm:flex-row sm:items-start justify-between gap-4',
+          },
+          leftPeriod,
+          rightDetail,
+          actions
+        );
+
+        list.appendChild(card);
+      }
+
+      feedMount.replaceChildren(list);
+    }
+
+    renderFeed();
+    container.replaceChildren(toolbarCard, feedMount);
+  }
+
+  async function fetchAndRender() {
+    const { data, error } = await supabase
+      .from('timeline_entries')
+      .select('*')
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      renderErrorState(container, `Gagal memuat riwayat: ${error.message}`, () => fetchAndRender());
+      return;
+    }
+
+    entries = data || [];
+    renderView();
+  }
+
+  await fetchAndRender();
 }

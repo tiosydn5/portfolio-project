@@ -38,12 +38,12 @@ Adopt the *interaction choreography* from the attached reference video, translat
 
 ### Surface Modes & Dials
 - **Public Portfolio (`/`)**: Surface Mode = `Experience` (Bright Editorial Canvas + Color-Blocked Blue Bento) | Variance: `8/10` | Motion: `8/10` | Density: `5/10`.
-- **Admin CMS (`/admin`)**: Surface Mode = `Operate` (High-Contrast Dark CMS) | Variance: `2/10` | Motion: `2/10` | Density: `7/10`.
+- **Admin CMS (`/admin`)**: Surface Mode = `Bright Bento Studio CMS` (Aligned Bright Editorial Canvas `#F4F6FA`, Crisp White Bento `#FFFFFF`, Cobalt Blue `#2563EB`, Sky `#DBEAFE`, Periwinkle `#E0E7FF`, `#0F172A` precision borders) | Variance: `4/10` | Motion: `4/10` | Density: `6/10`.
 
 ### Semantic CSS Tokens (`:root`)
 
     :root {
-      /* Legacy Dark Cyber Surface (Preserved for /admin Operate Mode) */
+      /* Legacy Dark Surface Tokens (Retained for Obsidian Hero / Spotlight Accents) */
       --bg-dark-canvas: #07090E;
       --bg-dark-bento: #0E121B;
       --bg-dark-elevated: #151B28;
@@ -54,7 +54,7 @@ Adopt the *interaction choreography* from the attached reference video, translat
       --text-dark-secondary: #94A3B8;
       --text-dark-muted: #7B8CA4;
 
-      /* Bright Editorial Cyber-Tech Bento (Blue Edition) */
+      /* Bright Editorial Cyber-Tech Bento (Blue Edition — Shared by `/` and `/admin`) */
       --bg-canvas: #F4F6FA;
       --bg-card-white: #FFFFFF;
       --bg-card-sky: #DBEAFE;
@@ -91,22 +91,24 @@ Adopt the *interaction choreography* from the attached reference video, translat
   - Pastel Sky Blue `#DBEAFE` & Periwinkle `#E0E7FF`: ink `#0B0F19` (`>= 15.54:1`), muted `#334155` (`>= 8.40:1`), Cobalt text `#1D4ED8` (`>= 5.44:1`), success `#065F46` (`6.30:1` on Sky), error `#B91C1C` (`5.25:1`).
   - Electric Cobalt `#2563EB` tile: ALL direct text uses pure white `#FFFFFF` (`5.17:1`, or `6.70:1` on hover `#1D4ED8`). Status indicator inside Cobalt tiles sits on a `#FFFFFF` pill with `#0B0F19` text (`19.15:1`).
   - Obsidian Anchor `#0B0F19` tiles (max 2): `#F8FAFC` / `#FFFFFF` (`>= 18.30:1`), `#CBD5E1` (`12.90:1`), `#60A5FA` (`7.53:1`).
-  - `/admin` Operate Mode preserves `--bg-dark-*` tokens cleanly without regression.
+  - `/admin` Bright Bento Studio CMS shares the verified Bright Editorial token system (`>= 5.17:1` across all interactive controls, pills, switches, and alerts).
 
 ### Typography
 - **Display / Headings**: `Space Grotesk` (700, tight tracking `-0.03em`)
 - **Body / UI**: `Poppins` (400, 500, 600; body `16px`, line-height `1.6`)
 - **Telemetry / Code / Counters**: `JetBrains Mono` (400, 500; `font-variant-numeric: tabular-nums`)
 
-## 4. Admin CMS Specification (`/admin`)
-Accessible via `/admin` (separate Vite entry point `admin.html`, hidden from main public navbar or accessible via subtle footer link).
-- **Auth**: Supabase Email/Password login. Public sign-ups disabled in Supabase dashboard.
+## 4. Admin CMS Specification (`/admin` — "Bright Bento Studio CMS")
+Accessible via `/admin` (separate Vite entry point `admin.html`, linked subtly in footer).
+- **Shell & Navigation**: Clean sticky editorial header (Supabase live connection dot, admin email badge, `Lihat Web Publik` external link, `Keluar`), monochrome inline SVG navigation rail with live badge counters per module, floating toast notifications, and reusable GPU-composited Slide-Over Drawer (`Escape`/backdrop/focus-trap).
+- **Auth Gate**: Centered Bright Bento login card on `#F4F6FA` canvas using Supabase Email/Password auth (public sign-ups disabled in Supabase dashboard); workspace stays strictly hidden & unmounted until authenticated.
+- **Studio Controls**: Drag-and-drop Visual Media Dropzones (with live preview, replace/remove, collapsible manual URL fallback), tactile Toggle Switches (`role="switch"`), Segmented Pill Controls, and Sticky Save Bar.
 - **Modules**:
-  1. **Profile & Hero Config**: Edit display name, headline, bio, availability status, upload Hero cutout, Normal portrait, Alter-Ego portrait, and social links.
-  2. **Showcase Manager (CRUD + Image Upload)**: Create, edit, reorder (`sort_order`), toggle publish (`is_published`), and delete items across `Projects`, `Certificates`, and `Awards`.
-  3. **Timeline Manager**: CRUD for `Education` and `Experience` entries.
-  4. **Polaroid Gallery Manager**: Upload/reorder/delete scatter gallery photos + captions.
-  5. **Guestbook & Inbox Moderation**: View contact messages; approve, hide (`is_visible`), or permanently delete guestbook comments.
+  1. **Profil & Hero (Split Studio + Live Preview)**: Left column Bento sub-cards (`Identitas & Bio`, `Media & Portraits` 3-dropzone grid, `Tautan Sosial`) paired with a sticky right-column Real-Time Live Mini-Preview card and Sticky Save Bar.
+  2. **Karya & Showcase (Content-First Grid + Slide-Over Drawer)**: Segmented category tabs, quick search, `+ Tambah Karya`, Visual Card Grid with inline quick `Tayang`/`Unggulan` toggles, and Slide-Over Drawer for Create/Edit.
+  3. **Riwayat (Visual Timeline Feed + Slide-Over Drawer)**: Segmented `Semua`/`Experience`/`Education` switcher, crisp visual timeline cards (monospace period left, details right), and Slide-Over Drawer for Create/Edit.
+  4. **Galeri Polaroid (Visual Photo Grid + Rotation Slider)**: Periwinkle studio board showing rotated mini Polaroid cards (`rotation_deg`) straightening on hover, plus Slide-Over Drawer with interactive `-25°..+25°` range slider and live tilt preview.
+  5. **Buku Tamu & Pesan Masuk (Modern Inbox UI)**: Split segmented tabs for Guestbook comments (author initials avatar, instant `Tampil di Publik` toggle, `textContent` XSS safety) and Contact Inbox (Cobalt unread dot, `Balas Email`, `Tandai Dibaca`, delete confirmation).
 
 ## 5. Supabase Database Schema & Security
 Run via SQL migration in `/supabase/schema.sql`:

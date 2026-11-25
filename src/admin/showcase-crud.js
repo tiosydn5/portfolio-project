@@ -1,82 +1,98 @@
 import { supabase } from '../lib/supabase.js';
-import { createEl, safeUrl } from '../lib/sanitize.js';
+import { assetUrl, createEl, safeUrl } from '../lib/sanitize.js';
 import {
+  closeSlideDrawer,
   confirmAction,
-  createMediaUploadField,
+  createFieldGroup,
+  createMediaDropzone,
+  createSegmentedControl,
+  createToggleSwitch,
+  openSlideDrawer,
   renderEmptyState,
   renderErrorState,
   renderLoadingState,
   showToast,
+  studioIcon,
 } from './admin-ui.js';
 
-export async function mountShowcaseCrud(container) {
-  renderLoadingState(container, 'Memuat showcase_items...');
+const CATEGORY_LABELS = {
+  project: 'Project',
+  certificate: 'Certificate',
+  award: 'Award',
+};
 
+export async function mountShowcaseCrud(container, { onDataChange } = {}) {
+  renderLoadingState(container, 'Memuat daftar karya & pencapaian...');
+
+  let allItems = [];
   let activeFilter = 'all';
-  let editingId = null;
+  let searchQuery = '';
 
-  async function refresh() {
-    const { data, error } = await supabase
-      .from('showcase_items')
-      .select('*')
-      .order('sort_order', { ascending: true })
-      .order('created_at', { ascending: false });
+  function openShowcaseDrawer(editingItem = null) {
+    const form = createEl('form', {
+      className: 'space-y-5',
+      attrs: { id: 'showcase-drawer-form', novalidate: '' },
+    });
 
-    if (error) {
-      renderErrorState(container, `Gagal memuat showcase_items: ${error.message}`, () => refresh());
-      return;
-    }
+    const categorySeg = createSegmentedControl({
+      ariaLabel: 'Kategori karya',
+      value: editingItem?.category || 'project',
+      options: [
+        { value: 'project', label: 'Project' },
+        { value: 'certificate', label: 'Certificate' },
+        { value: 'award', label: 'Award' },
+      ],
+    });
 
-    const items = data || [];
-    const editingItem = editingId ? items.find((i) => i.id === editingId) || null : null;
-
-    // Form Panel (Create / Edit)
-    const formPanel = createEl('form', { className: 'admin-panel p-6 space-y-5', attrs: { novalidate: '' } });
-
-    const formHeader = createEl(
+    const catWrap = createEl(
       'div',
-      { className: 'flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[rgba(148,163,184,0.16)]' },
-      createEl('h2', {
-        className: 'font-display text-xl font-bold text-[#F8FAFC]',
-        text: editingItem ? `Sunting Item: ${editingItem.title}` : 'Tambah Showcase Item',
-      }),
-      editingItem
-        ? createEl('button', {
-            className: 'admin-btn-secondary text-xs',
-            text: 'Batal Sunting',
-            attrs: { type: 'button' },
-          })
-        : null
+      { className: 'space-y-1.5' },
+      createEl('p', { className: 'text-sm font-semibold text-[#0B0F19]', text: 'Kategori' }),
+      categorySeg.el
     );
 
-    if (editingItem) {
-      formHeader.querySelector('button')?.addEventListener('click', () => {
-        editingId = null;
-        refresh();
-      });
-    }
-
-    const catSelect = createEl(
-      'select',
-      { className: 'admin-input', attrs: { id: 'sc-category' } },
-      createEl('option', { text: 'Project', attrs: { value: 'project' } }),
-      createEl('option', { text: 'Certificate', attrs: { value: 'certificate' } }),
-      createEl('option', { text: 'Award', attrs: { value: 'award' } })
-    );
-    catSelect.value = editingItem?.category || 'project';
+    const thumbDropzone = createMediaDropzone({
+      id: 'sc-thumbnail',
+      label: 'Gambar Sampul',
+      hint: 'Rasio 16:10 · JPG, PNG, WebP, atau AVIF (Maks. 5 MB)',
+      initialUrl: editingItem?.thumbnail_url || '',
+      folder: 'showcase',
+      aspectClass: 'aspect-[16/10]',
+    });
 
     const titleInput = createEl('input', {
-      className: 'admin-input',
-      attrs: { id: 'sc-title', type: 'text', required: '', placeholder: 'Judul karya atau sertifikat', value: editingItem?.title || '' },
+      className: 'studio-input',
+      attrs: {
+        id: 'sc-title',
+        type: 'text',
+        required: '',
+        placeholder: 'Contoh: Sistem Desain Cobalt',
+        value: editingItem?.title || '',
+      },
     });
 
     const subtitleInput = createEl('input', {
-      className: 'admin-input',
-      attrs: { id: 'sc-subtitle', type: 'text', placeholder: 'Ringkasan 1 baris', value: editingItem?.subtitle || '' },
+      className: 'studio-input',
+      attrs: {
+        id: 'sc-subtitle',
+        type: 'text',
+        placeholder: 'Ringkasan singkat 1 baris',
+        value: editingItem?.subtitle || '',
+      },
     });
 
+    const descInput = createEl('textarea', {
+      className: 'studio-input resize-y',
+      attrs: {
+        id: 'sc-desc',
+        rows: '3',
+        placeholder: 'Jelaskan detail karya, peran, atau pencapaian...',
+      },
+    });
+    descInput.value = editingItem?.description || '';
+
     const tagsInput = createEl('input', {
-      className: 'admin-input',
+      className: 'studio-input',
       attrs: {
         id: 'sc-tags',
         type: 'text',
@@ -86,95 +102,111 @@ export async function mountShowcaseCrud(container) {
     });
 
     const dateInput = createEl('input', {
-      className: 'admin-input font-mono-tabular',
-      attrs: { id: 'sc-date', type: 'text', placeholder: '2026', value: editingItem?.date_label || '' },
+      className: 'studio-input font-mono-tabular',
+      attrs: {
+        id: 'sc-date',
+        type: 'text',
+        placeholder: '2026',
+        value: editingItem?.date_label || '',
+      },
     });
 
     const sortInput = createEl('input', {
-      className: 'admin-input font-mono-tabular',
-      attrs: { id: 'sc-sort', type: 'number', value: String(editingItem?.sort_order ?? 0) },
+      className: 'studio-input font-mono-tabular',
+      attrs: {
+        id: 'sc-sort',
+        type: 'number',
+        value: String(editingItem?.sort_order ?? 0),
+      },
     });
 
     const liveUrlInput = createEl('input', {
-      className: 'admin-input font-mono-tabular text-sm',
-      attrs: { id: 'sc-live-url', type: 'url', placeholder: 'https://demo-url.com', value: editingItem?.live_url || '' },
+      className: 'studio-input font-mono-tabular text-sm',
+      attrs: {
+        id: 'sc-live-url',
+        type: 'url',
+        placeholder: 'https://...',
+        value: editingItem?.live_url || '',
+      },
     });
 
     const repoUrlInput = createEl('input', {
-      className: 'admin-input font-mono-tabular text-sm',
-      attrs: { id: 'sc-repo-url', type: 'url', placeholder: 'https://github.com/...', value: editingItem?.repo_url || '' },
+      className: 'studio-input font-mono-tabular text-sm',
+      attrs: {
+        id: 'sc-repo-url',
+        type: 'url',
+        placeholder: 'https://github.com/...',
+        value: editingItem?.repo_url || '',
+      },
     });
 
-    const descInput = createEl('textarea', {
-      className: 'admin-input resize-y',
-      attrs: { id: 'sc-desc', rows: 3, placeholder: 'Deskripsi studi kasus atau detail kredensial...' },
-    });
-    descInput.value = editingItem?.description || '';
-
-    const publishedCheck = createEl('input', {
-      className: 'w-5 h-5 accent-[#2563EB]',
-      attrs: { id: 'sc-published', type: 'checkbox' },
-    });
-    publishedCheck.checked = editingItem ? Boolean(editingItem.is_published) : true;
-
-    const featuredCheck = createEl('input', {
-      className: 'w-5 h-5 accent-[#2563EB]',
-      attrs: { id: 'sc-featured', type: 'checkbox' },
-    });
-    featuredCheck.checked = Boolean(editingItem?.is_featured);
-
-    const thumbField = createMediaUploadField({
-      id: 'sc-thumbnail',
-      label: 'Thumbnail Image URL',
-      initialUrl: editingItem?.thumbnail_url || '',
-      folder: 'showcase',
+    const publishedSwitch = createToggleSwitch({
+      id: 'sc-published',
+      label: 'Tayang di halaman publik',
+      description: 'Nonaktifkan jika ingin menyimpan sebagai draf.',
+      checked: editingItem ? Boolean(editingItem.is_published) : true,
     });
 
-    const fieldWrap = (id, label, control) =>
-      createEl(
-        'div',
-        { className: 'space-y-1.5' },
-        createEl('label', { className: 'block text-sm font-medium text-[#F8FAFC]', text: label, attrs: { for: id } }),
-        control
-      );
+    const featuredSwitch = createToggleSwitch({
+      id: 'sc-featured',
+      label: 'Tandai sebagai unggulan',
+      description: 'Menyorot item pilihan di koleksi showcase.',
+      checked: Boolean(editingItem?.is_featured),
+    });
 
-    const grid = createEl(
+    const metaGrid = createEl(
       'div',
       { className: 'grid grid-cols-1 sm:grid-cols-2 gap-4' },
-      fieldWrap('sc-category', 'Kategori', catSelect),
-      fieldWrap('sc-title', 'Judul', titleInput),
-      fieldWrap('sc-subtitle', 'Subjudul', subtitleInput),
-      fieldWrap('sc-tags', 'Tech / Discipline Tags (pisahkan koma)', tagsInput),
-      fieldWrap('sc-date', 'Label Tahun / Tanggal', dateInput),
-      fieldWrap('sc-sort', 'Urutan (sort_order)', sortInput),
-      fieldWrap('sc-live-url', 'Live Demo URL (opsional)', liveUrlInput),
-      fieldWrap('sc-repo-url', 'Repository URL (opsional)', repoUrlInput)
+      createFieldGroup('sc-date', 'Tahun / Tanggal', dateInput),
+      createFieldGroup('sc-sort', 'Prioritas Tampil', sortInput, 'Angka lebih kecil tampil lebih awal.')
     );
 
-    const flagsRow = createEl(
+    const linksGrid = createEl(
       'div',
-      { className: 'flex flex-wrap gap-6' },
-      createEl(
-        'label',
-        { className: 'flex items-center gap-2.5 min-h-[44px] text-sm text-[#F8FAFC]', attrs: { for: 'sc-published' } },
-        publishedCheck,
-        'Published (tampil di publik)'
-      ),
-      createEl(
-        'label',
-        { className: 'flex items-center gap-2.5 min-h-[44px] text-sm text-[#F8FAFC]', attrs: { for: 'sc-featured' } },
-        featuredCheck,
-        'Featured'
-      )
+      { className: 'grid grid-cols-1 sm:grid-cols-2 gap-4' },
+      createFieldGroup('sc-live-url', 'Tautan Live Demo (opsional)', liveUrlInput),
+      createFieldGroup('sc-repo-url', 'Tautan Repository (opsional)', repoUrlInput)
     );
 
-    const submitBtn = createEl('button', {
-      className: 'admin-btn-primary',
-      text: editingItem ? 'Simpan Perubahan' : 'Tambah Showcase',
-      attrs: { type: 'submit' },
-    });
+    const switchesBox = createEl(
+      'div',
+      { className: 'pt-4 border-t border-[rgba(15,23,42,0.12)] space-y-3' },
+      publishedSwitch.el,
+      featuredSwitch.el
+    );
 
-    formPanel.addEventListener('submit', async (event) => {
+    form.append(
+      catWrap,
+      thumbDropzone.el,
+      createFieldGroup('sc-title', 'Judul Karya / Pencapaian', titleInput),
+      createFieldGroup('sc-subtitle', 'Ringkasan Singkat', subtitleInput),
+      createFieldGroup('sc-desc', 'Deskripsi Detail', descInput),
+      createFieldGroup('sc-tags', 'Label / Teknologi', tagsInput, 'Pisahkan dengan tanda koma.'),
+      metaGrid,
+      linksGrid,
+      switchesBox
+    );
+
+    const cancelBtn = createEl('button', {
+      className: 'studio-btn-secondary text-sm',
+      text: 'Batal',
+      attrs: { type: 'button' },
+    });
+    cancelBtn.addEventListener('click', closeSlideDrawer);
+
+    const submitBtn = createEl(
+      'button',
+      {
+        className: 'studio-btn-primary text-sm',
+        attrs: { type: 'submit', form: 'showcase-drawer-form' },
+      },
+      studioIcon('check', 'w-4 h-4'),
+      createEl('span', { text: editingItem ? 'Simpan Perubahan' : 'Simpan Karya' })
+    );
+
+    const footerEl = createEl('div', { className: 'flex items-center gap-2.5' }, cancelBtn, submitBtn);
+
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const title = titleInput.value.trim();
       if (title.length < 2) {
@@ -186,12 +218,12 @@ export async function mountShowcaseCrud(container) {
       const rawLive = liveUrlInput.value.trim();
       const rawRepo = repoUrlInput.value.trim();
       if (rawLive && !safeUrl(rawLive)) {
-        showToast('Live Demo URL tidak valid (gunakan https://).', 'error');
+        showToast('Tautan Live Demo tidak valid (gunakan https://).', 'error');
         liveUrlInput.focus();
         return;
       }
       if (rawRepo && !safeUrl(rawRepo)) {
-        showToast('Repository URL tidak valid (gunakan https://).', 'error');
+        showToast('Tautan Repository tidak valid (gunakan https://).', 'error');
         repoUrlInput.focus();
         return;
       }
@@ -202,18 +234,18 @@ export async function mountShowcaseCrud(container) {
         .filter(Boolean);
 
       const payload = {
-        category: catSelect.value,
+        category: categorySeg.getValue(),
         title,
         subtitle: subtitleInput.value.trim(),
         description: descInput.value.trim(),
         tech_tags: techTags,
-        thumbnail_url: thumbField.getValue(),
+        thumbnail_url: thumbDropzone.getValue(),
         live_url: rawLive || null,
         repo_url: rawRepo || null,
         date_label: dateInput.value.trim(),
         sort_order: Number.parseInt(sortInput.value || '0', 10) || 0,
-        is_published: publishedCheck.checked,
-        is_featured: featuredCheck.checked,
+        is_published: publishedSwitch.getValue(),
+        is_featured: featuredSwitch.getValue(),
       };
 
       submitBtn.disabled = true;
@@ -226,152 +258,372 @@ export async function mountShowcaseCrud(container) {
             .update(payload)
             .eq('id', editingItem.id);
           if (upErr) throw upErr;
-          showToast(`Item "${title}" diperbarui.`, 'success');
-          editingId = null;
+          showToast(`"${title}" berhasil diperbarui.`, 'success');
         } else {
           const { error: insErr } = await supabase.from('showcase_items').insert(payload);
           if (insErr) throw insErr;
-          showToast(`Item "${title}" ditambahkan.`, 'success');
+          showToast(`"${title}" berhasil ditambahkan.`, 'success');
         }
-        await refresh();
+        closeSlideDrawer();
+        await fetchAndRender();
+        if (typeof onDataChange === 'function') onDataChange();
       } catch (err) {
-        showToast(err?.message || 'Gagal menyimpan item showcase.', 'error');
-      } finally {
+        showToast(err?.message || 'Gagal menyimpan karya.', 'error');
         submitBtn.disabled = false;
-        submitBtn.textContent = editingItem ? 'Simpan Perubahan' : 'Tambah Showcase';
+        submitBtn.replaceChildren(
+          studioIcon('check', 'w-4 h-4'),
+          createEl('span', { text: editingItem ? 'Simpan Perubahan' : 'Simpan Karya' })
+        );
       }
     });
 
-    formPanel.append(formHeader, grid, fieldWrap('sc-desc', 'Deskripsi Detail', descInput), thumbField.el, flagsRow, submitBtn);
+    openSlideDrawer({
+      title: editingItem ? 'Sunting Karya' : 'Tambah Karya Baru',
+      subtitle: editingItem
+        ? `Perbarui detail "${editingItem.title}".`
+        : 'Tambahkan proyek, sertifikat, atau penghargaan ke koleksi publik.',
+      contentEl: form,
+      footerEl,
+    });
+  }
 
-    // Filter + List Panel
-    const filterBar = createEl('div', { className: 'flex flex-wrap items-center justify-between gap-3' });
-    const filterButtonsWrap = createEl('div', { className: 'flex flex-wrap gap-2' });
+  function renderView() {
+    const query = searchQuery.trim().toLowerCase();
+    const byCategory =
+      activeFilter === 'all'
+        ? allItems
+        : allItems.filter((item) => item.category === activeFilter);
 
-    for (const [key, label] of [
-      ['all', `Semua (${items.length})`],
-      ['project', 'Projects'],
-      ['certificate', 'Certificates'],
-      ['award', 'Awards'],
-    ]) {
-      const btn = createEl('button', {
-        className: activeFilter === key ? 'admin-btn-primary text-xs px-3.5' : 'admin-btn-secondary text-xs px-3.5',
-        text: label,
-        attrs: { type: 'button', 'aria-pressed': String(activeFilter === key) },
-      });
-      btn.addEventListener('click', () => {
-        activeFilter = key;
-        refresh();
-      });
-      filterButtonsWrap.appendChild(btn);
-    }
-    filterBar.appendChild(filterButtonsWrap);
-
-    const visibleItems =
-      activeFilter === 'all' ? items : items.filter((item) => item.category === activeFilter);
-
-    const listContainer = createEl('div', { className: 'space-y-3' });
-    if (visibleItems.length === 0) {
-      renderEmptyState(listContainer, 'Belum ada item showcase pada kategori ini. Gunakan formulir di atas untuk menambahkan.');
-    } else {
-      const tableBox = createEl('div', { className: 'admin-panel divide-y-0 px-5' });
-      for (const item of visibleItems) {
-        const row = createEl('div', {
-          className: 'admin-row py-4 flex flex-col md:flex-row md:items-center justify-between gap-4',
+    const visibleItems = !query
+      ? byCategory
+      : byCategory.filter((item) => {
+          const haystack = [
+            item.title,
+            item.subtitle,
+            item.date_label,
+            ...(item.tech_tags || []),
+          ]
+            .join(' ')
+            .toLowerCase();
+          return haystack.includes(query);
         });
 
-        const info = createEl(
+    const addBtn = createEl(
+      'button',
+      { className: 'studio-btn-primary text-sm shrink-0', attrs: { type: 'button' } },
+      studioIcon('plus', 'w-4 h-4'),
+      createEl('span', { text: 'Tambah Karya' })
+    );
+    addBtn.addEventListener('click', () => openShowcaseDrawer(null));
+
+    const filterSeg = createSegmentedControl({
+      ariaLabel: 'Filter kategori showcase',
+      value: activeFilter,
+      options: [
+        { value: 'all', label: 'Semua', badge: allItems.length },
+        {
+          value: 'project',
+          label: 'Projects',
+          badge: allItems.filter((i) => i.category === 'project').length,
+        },
+        {
+          value: 'certificate',
+          label: 'Certificates',
+          badge: allItems.filter((i) => i.category === 'certificate').length,
+        },
+        {
+          value: 'award',
+          label: 'Awards',
+          badge: allItems.filter((i) => i.category === 'award').length,
+        },
+      ],
+      onChange: (nextVal) => {
+        activeFilter = nextVal;
+        renderGridOnly();
+      },
+    });
+
+    const searchInput = createEl('input', {
+      className: 'studio-input pl-10 min-h-[44px] py-2 text-sm',
+      attrs: {
+        id: 'showcase-search-input',
+        type: 'search',
+        placeholder: 'Cari judul, tag, atau ringkasan...',
+        value: searchQuery,
+        'aria-label': 'Cari karya showcase',
+      },
+    });
+
+    const searchWrap = createEl(
+      'div',
+      { className: 'relative w-full sm:w-72 shrink-0' },
+      createEl(
+        'span',
+        {
+          className:
+            'absolute left-3.5 top-1/2 -translate-y-1/2 text-[#475569] pointer-events-none',
+        },
+        studioIcon('search', 'w-4 h-4')
+      ),
+      searchInput
+    );
+
+    const toolbarCard = createEl(
+      'div',
+      { className: 'studio-card p-5 sm:p-6 space-y-4' },
+      createEl(
+        'div',
+        { className: 'flex flex-col sm:flex-row sm:items-center justify-between gap-4' },
+        createEl(
           'div',
-          { className: 'flex items-start gap-3 min-w-0' },
-          item.thumbnail_url && safeUrl(item.thumbnail_url)
-            ? createEl('img', {
-                className: 'w-16 h-12 rounded-lg object-cover bg-[#151B28] border border-[rgba(148,163,184,0.2)] shrink-0',
-                attrs: { src: safeUrl(item.thumbnail_url), alt: item.title, width: '64', height: '48' },
-              })
-            : null,
+          { className: 'space-y-1' },
+          createEl('h2', {
+            className: 'font-display text-2xl font-bold text-[#0B0F19]',
+            text: 'Karya & Showcase',
+          }),
+          createEl('p', {
+            className: 'text-sm text-[#475569]',
+            text: 'Kelola proyek, sertifikat, dan penghargaan yang tampil di halaman publik.',
+          })
+        ),
+        addBtn
+      ),
+      createEl(
+        'div',
+        {
+          className:
+            'pt-4 border-t border-[rgba(15,23,42,0.12)] flex flex-col xl:flex-row xl:items-center justify-between gap-3',
+        },
+        filterSeg.el,
+        searchWrap
+      )
+    );
+
+    const gridMount = createEl('div', { className: 'space-y-4' });
+
+    function renderGridOnly() {
+      const q = searchQuery.trim().toLowerCase();
+      const catList =
+        activeFilter === 'all'
+          ? allItems
+          : allItems.filter((item) => item.category === activeFilter);
+      const filtered = !q
+        ? catList
+        : catList.filter((item) =>
+            [item.title, item.subtitle, item.date_label, ...(item.tech_tags || [])]
+              .join(' ')
+              .toLowerCase()
+              .includes(q)
+          );
+
+      if (filtered.length === 0) {
+        renderEmptyState(
+          gridMount,
+          q
+            ? `Tidak ada karya yang cocok dengan pencarian "${searchQuery}".`
+            : 'Belum ada karya di kategori ini. Tambahkan item baru agar langsung tampil di portfolio.',
+          {
+            title: q ? 'Pencarian tidak ditemukan' : 'Koleksi masih kosong',
+            actionLabel: q ? null : 'Tambah Karya',
+            onAction: q ? null : () => openShowcaseDrawer(null),
+          }
+        );
+        return;
+      }
+
+      const grid = createEl('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-4' });
+
+      for (const item of filtered) {
+        const card = createEl('article', {
+          className: 'studio-card studio-card-hover overflow-hidden flex flex-col justify-between',
+        });
+
+        const thumbSrc =
+          safeUrl(item.thumbnail_url) || assetUrl('/assets/showcase/project-atelier.svg');
+
+        const thumbHeader = createEl(
+          'div',
+          { className: 'relative bg-[#DBEAFE] border-b-[1.5px] border-[#0F172A] aspect-[16/10] overflow-hidden' },
+          createEl('img', {
+            className: 'w-full h-full object-cover block',
+            attrs: {
+              src: thumbSrc,
+              alt: item.title,
+              loading: 'lazy',
+            },
+          }),
           createEl(
             'div',
-            { className: 'min-w-0 space-y-1' },
-            createEl(
-              'div',
-              { className: 'flex flex-wrap items-center gap-2' },
-              createEl('span', {
-                className: 'font-mono-tabular text-xs px-2 py-0.5 rounded bg-[#151B28] text-[#60A5FA]',
-                text: item.category.toUpperCase(),
-              }),
-              createEl('span', {
-                className: item.is_published
-                  ? 'font-mono-tabular text-xs text-[#34D399]'
-                  : 'font-mono-tabular text-xs text-[#FBBF24]',
-                text: item.is_published ? 'PUBLISHED' : 'DRAFT',
-              }),
-              createEl('span', {
-                className: 'font-mono-tabular text-xs text-[#7B8CA4]',
-                text: `Order: ${item.sort_order}`,
-              })
-            ),
-            createEl('h3', { className: 'font-display text-base font-bold text-[#F8FAFC]', text: item.title }),
-            createEl('p', { className: 'text-sm text-[#94A3B8] truncate', text: item.subtitle || '' })
+            { className: 'absolute top-3 left-3 flex flex-wrap items-center gap-1.5' },
+            createEl('span', {
+              className: 'studio-pill studio-pill-sky',
+              text: CATEGORY_LABELS[item.category] || item.category,
+            }),
+            item.date_label
+              ? createEl('span', {
+                  className: 'studio-pill',
+                  text: item.date_label,
+                })
+              : null
           )
         );
 
-        const actions = createEl('div', { className: 'flex flex-wrap items-center gap-2 shrink-0' });
+        const tagsRow = createEl('div', { className: 'flex flex-wrap gap-1.5' });
+        for (const tag of (item.tech_tags || []).slice(0, 4)) {
+          tagsRow.appendChild(
+            createEl('span', {
+              className:
+                'font-mono-tabular text-xs font-medium px-2.5 py-0.5 rounded-lg bg-[#F4F6FA] border border-[rgba(15,23,42,0.2)] text-[#0B0F19]',
+              text: tag,
+            })
+          );
+        }
 
-        const togglePubBtn = createEl('button', {
-          className: 'admin-btn-secondary text-xs px-3',
-          text: item.is_published ? 'Unpublish' : 'Publish',
-          attrs: { type: 'button' },
-        });
-        togglePubBtn.addEventListener('click', async () => {
-          togglePubBtn.disabled = true;
-          const { error: togErr } = await supabase
-            .from('showcase_items')
-            .update({ is_published: !item.is_published })
-            .eq('id', item.id);
-          if (togErr) showToast(togErr.message, 'error');
-          else showToast(`Status publish "${item.title}" diubah.`, 'success');
-          await refresh();
+        const body = createEl(
+          'div',
+          { className: 'p-5 space-y-3 flex-1' },
+          createEl(
+            'div',
+            { className: 'space-y-1' },
+            createEl('h3', {
+              className: 'font-display text-lg font-bold text-[#0B0F19] leading-snug',
+              text: item.title,
+            }),
+            item.subtitle
+              ? createEl('p', {
+                  className: 'text-sm text-[#475569] line-clamp-2',
+                  text: item.subtitle,
+                })
+              : null
+          ),
+          tagsRow.childElementCount > 0 ? tagsRow : null
+        );
+
+        // Quick inline switches + Edit/Delete actions
+        const pubToggle = createToggleSwitch({
+          label: item.is_published ? 'Tayang' : 'Draf',
+          checked: Boolean(item.is_published),
+          compact: true,
+          onChange: async (nextVal) => {
+            pubToggle.setDisabled(true);
+            const { error: togErr } = await supabase
+              .from('showcase_items')
+              .update({ is_published: nextVal })
+              .eq('id', item.id);
+            if (togErr) {
+              showToast(togErr.message, 'error');
+              pubToggle.setValue(!nextVal);
+            } else {
+              item.is_published = nextVal;
+              showToast(
+                nextVal ? `"${item.title}" ditayangkan.` : `"${item.title}" disimpan sebagai draf.`,
+                'success'
+              );
+              if (typeof onDataChange === 'function') onDataChange();
+            }
+            pubToggle.setDisabled(false);
+            renderGridOnly();
+          },
         });
 
-        const editBtn = createEl('button', {
-          className: 'admin-btn-secondary text-xs px-3',
-          text: 'Edit',
-          attrs: { type: 'button' },
-        });
-        editBtn.addEventListener('click', () => {
-          editingId = item.id;
-          refresh();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+        const featToggle = createToggleSwitch({
+          label: 'Unggulan',
+          checked: Boolean(item.is_featured),
+          compact: true,
+          onChange: async (nextVal) => {
+            featToggle.setDisabled(true);
+            const { error: featErr } = await supabase
+              .from('showcase_items')
+              .update({ is_featured: nextVal })
+              .eq('id', item.id);
+            if (featErr) {
+              showToast(featErr.message, 'error');
+              featToggle.setValue(!nextVal);
+            } else {
+              item.is_featured = nextVal;
+              showToast(
+                nextVal ? `"${item.title}" ditandai unggulan.` : `Tanda unggulan dilepas.`,
+                'success'
+              );
+            }
+            featToggle.setDisabled(false);
+          },
         });
 
-        const delBtn = createEl('button', {
-          className: 'admin-btn-danger text-xs px-3',
-          text: 'Hapus',
-          attrs: { type: 'button' },
-        });
+        const editBtn = createEl(
+          'button',
+          { className: 'studio-btn-secondary text-xs min-h-[40px] px-3.5', attrs: { type: 'button' } },
+          studioIcon('edit', 'w-3.5 h-3.5'),
+          createEl('span', { text: 'Sunting' })
+        );
+        editBtn.addEventListener('click', () => openShowcaseDrawer(item));
+
+        const delBtn = createEl(
+          'button',
+          {
+            className: 'studio-icon-btn studio-icon-btn-danger w-10 h-10 min-w-[40px] min-h-[40px]',
+            attrs: { type: 'button', 'aria-label': `Hapus ${item.title}` },
+          },
+          studioIcon('trash', 'w-4 h-4')
+        );
         delBtn.addEventListener('click', async () => {
           const confirmed = await confirmAction({
-            title: 'Hapus Showcase Item',
+            title: 'Hapus Karya',
             message: `Yakin ingin menghapus "${item.title}" secara permanen?`,
           });
           if (!confirmed) return;
           delBtn.disabled = true;
-          const { error: delErr } = await supabase.from('showcase_items').delete().eq('id', item.id);
+          const { error: delErr } = await supabase
+            .from('showcase_items')
+            .delete()
+            .eq('id', item.id);
           if (delErr) showToast(delErr.message, 'error');
-          else showToast(`"${item.title}" dihapus.`, 'success');
-          if (editingId === item.id) editingId = null;
-          await refresh();
+          else showToast(`"${item.title}" berhasil dihapus.`, 'success');
+          await fetchAndRender();
+          if (typeof onDataChange === 'function') onDataChange();
         });
 
-        actions.append(togglePubBtn, editBtn, delBtn);
-        row.append(info, actions);
-        tableBox.appendChild(row);
+        const footer = createEl(
+          'div',
+          {
+            className:
+              'px-5 py-3.5 bg-[#F8FAFC] border-t border-[rgba(15,23,42,0.12)] flex flex-wrap items-center justify-between gap-3',
+          },
+          createEl('div', { className: 'flex flex-wrap items-center gap-4' }, pubToggle.el, featToggle.el),
+          createEl('div', { className: 'flex items-center gap-2' }, editBtn, delBtn)
+        );
+
+        card.append(thumbHeader, body, footer);
+        grid.appendChild(card);
       }
-      listContainer.appendChild(tableBox);
+
+      gridMount.replaceChildren(grid);
     }
 
-    container.replaceChildren(formPanel, filterBar, listContainer);
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value;
+      renderGridOnly();
+    });
+
+    renderGridOnly();
+    container.replaceChildren(toolbarCard, gridMount);
   }
 
-  await refresh();
+  async function fetchAndRender() {
+    const { data, error } = await supabase
+      .from('showcase_items')
+      .select('*')
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      renderErrorState(container, `Gagal memuat karya: ${error.message}`, () => fetchAndRender());
+      return;
+    }
+
+    allItems = data || [];
+    renderView();
+  }
+
+  await fetchAndRender();
 }

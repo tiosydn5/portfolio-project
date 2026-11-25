@@ -3,41 +3,93 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin CMS | Satrio Portfolio</title>
+    <title>Studio CMS | Satrio Portfolio</title>
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Poppins:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap"
       media="print"
       onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap"
+      />
+    </noscript>
   </head>
   <body>
-    <header class="border-b border-[rgba(148,163,184,0.16)] bg-[#0E121B]">
-      <div class="max-w-6xl mx-auto px-4 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
-        <div class="min-w-0">
-          <p class="font-mono-tabular text-xs text-[#60A5FA]">OPERATE MODE · PRIVATE CMS</p>
-          <h1 class="font-display text-xl sm:text-2xl font-bold text-[#F8FAFC]">
-            Portfolio Admin CMS
-          </h1>
+    <a href="#admin-main" class="studio-skip-link">Langsung ke konten studio</a>
+
+    <!-- Clean Editorial Studio Header -->
+    <header class="studio-header">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="studio-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+              <rect x="3" y="3" width="8" height="8" rx="2" />
+              <rect x="13" y="3" width="8" height="5" rx="2" />
+              <rect x="13" y="10" width="8" height="11" rx="2" />
+              <rect x="3" y="13" width="8" height="8" rx="2" />
+            </svg>
+          </span>
+          <div class="min-w-0">
+            <h1 class="font-display text-lg sm:text-xl font-bold text-[#0B0F19] leading-tight truncate">
+              <span class="sm:hidden">Studio</span>
+              <span class="hidden sm:inline">Studio Portfolio</span>
+            </h1>
+            <p class="text-xs text-[#475569] hidden sm:block leading-tight">
+              Kelola profil, karya, galeri, dan pesan masuk
+            </p>
+          </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          <!-- Live Connection Status Pill -->
+          <div
+            id="admin-header-status"
+            class="studio-status-pill px-2.5 sm:px-3"
+            aria-live="polite"
+            title="Status koneksi database"
+          >
+            <span
+              id="admin-header-dot"
+              class="w-2.5 h-2.5 rounded-full bg-[#2563EB] shrink-0"
+              aria-hidden="true"
+            ></span>
+            <span id="admin-header-status-text" class="hidden sm:inline font-mono-tabular text-xs font-medium text-[#0B0F19]">
+              Memeriksa...
+            </span>
+          </div>
+
           <span
             id="admin-user-email"
-            class="font-mono-tabular text-xs px-3 py-1.5 rounded-lg bg-[#151B28] border border-[rgba(148,163,184,0.2)] text-[#94A3B8]"
+            class="hidden md:inline-flex items-center max-w-[210px] truncate font-mono-tabular text-xs font-medium px-3 py-1.5 rounded-full bg-[#E0E7FF] border-[1.5px] border-[#0F172A] text-[#0B0F19]"
             hidden
           ></span>
-          <a href="%BASE_URL%" class="admin-btn-secondary text-sm">
-            Buka Portfolio
+
+          <a
+            href="%BASE_URL%"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="studio-btn-secondary text-sm px-3.5"
+          >
+            <span class="hidden sm:inline">Lihat Web Publik</span>
+            <span class="sm:hidden">Web</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 shrink-0" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
           </a>
+
           <button
             id="admin-logout-btn"
             type="button"
-            class="admin-btn-danger text-sm"
+            class="studio-btn-danger-outline text-sm px-3.5"
             hidden
           >
             Keluar
@@ -46,187 +98,308 @@
       </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-8 py-8 space-y-6">
-      <!-- Auth Gate (Visible when unauthenticated; workspace stays hidden & unmounted) -->
+    <main id="admin-main" tabindex="-1" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <!-- =================================================================== -->
+      <!-- AUTH GATE (Bright Bento Studio Login — Workspace stays strictly hid) -->
+      <!-- =================================================================== -->
       <section
         id="admin-auth-gate"
-        class="max-w-xl mx-auto space-y-6"
-        aria-label="Autentikasi Admin"
+        class="min-h-[calc(100dvh-140px)] flex flex-col items-center justify-center py-6"
+        aria-label="Masuk ke Studio"
       >
-        <div class="admin-panel p-6 flex items-start gap-3">
-          <span
-            id="admin-supabase-dot"
-            class="mt-1.5 w-2.5 h-2.5 rounded-full bg-[#60A5FA] shrink-0"
-            aria-hidden="true"
-          ></span>
-          <div class="space-y-1 min-w-0">
-            <p class="font-mono-tabular text-xs text-[#7B8CA4]">SUPABASE STATUS</p>
-            <p id="admin-supabase-status" class="text-base font-medium text-[#F8FAFC]">
-              Memeriksa konfigurasi koneksi...
-            </p>
-            <p id="admin-supabase-hint" class="text-sm text-[#94A3B8]"></p>
+        <div class="w-full max-w-md space-y-4">
+          <div class="studio-card overflow-hidden">
+            <!-- Soft Sky Accent Header Band -->
+            <div class="bg-[#DBEAFE] border-b-[1.5px] border-[#0F172A] px-6 py-5 flex items-start justify-between gap-4">
+              <div class="space-y-1">
+                <h2 class="font-display text-2xl font-bold text-[#0B0F19]">
+                  Masuk ke Studio
+                </h2>
+                <p class="text-sm text-[#334155]">
+                  Kelola konten portfolio langsung dengan pratinjau real-time.
+                </p>
+              </div>
+              <span class="w-11 h-11 rounded-full bg-[#FFFFFF] border-[1.5px] border-[#0F172A] flex items-center justify-center text-[#1D4ED8] shrink-0" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </span>
+            </div>
+
+            <!-- Connection Status Strip -->
+            <div class="px-6 py-3.5 bg-[#F8FAFC] border-b border-[rgba(15,23,42,0.12)] flex items-start gap-3">
+              <span
+                id="admin-supabase-dot"
+                class="mt-1.5 w-2.5 h-2.5 rounded-full bg-[#2563EB] shrink-0"
+                aria-hidden="true"
+              ></span>
+              <div class="min-w-0">
+                <p id="admin-supabase-status" class="text-sm font-semibold text-[#0B0F19]">
+                  Memeriksa koneksi database...
+                </p>
+                <p id="admin-supabase-hint" class="text-xs text-[#475569] mt-0.5"></p>
+              </div>
+            </div>
+
+            <!-- Login Form -->
+            <form id="admin-login-form" class="p-6 space-y-4" novalidate>
+              <div class="space-y-1.5">
+                <label for="admin-login-email" class="block text-sm font-semibold text-[#0B0F19]">
+                  Email Admin
+                </label>
+                <input
+                  id="admin-login-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                  placeholder="nama@domain.com"
+                  class="studio-input"
+                />
+              </div>
+
+              <div class="space-y-1.5">
+                <label for="admin-login-password" class="block text-sm font-semibold text-[#0B0F19]">
+                  Kata Sandi
+                </label>
+                <input
+                  id="admin-login-password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                  placeholder="Masukkan kata sandi akun admin"
+                  class="studio-input"
+                />
+              </div>
+
+              <p
+                id="admin-login-error"
+                role="alert"
+                class="studio-inline-alert"
+                hidden
+              ></p>
+
+              <button
+                id="admin-login-submit"
+                type="submit"
+                class="studio-btn-primary w-full"
+              >
+                Masuk ke Studio
+              </button>
+            </form>
+          </div>
+
+          <!-- Environment Setup Guide (Only shown when .env is missing) -->
+          <div id="admin-env-guide" class="studio-card studio-card-periwinkle p-5 space-y-2.5" hidden>
+            <h3 class="font-display text-base font-bold text-[#0B0F19]">
+              Koneksi Database Belum Aktif
+            </h3>
+            <ol class="list-decimal list-inside space-y-1.5 text-sm text-[#334155]">
+              <li>Salin <code class="font-mono-tabular text-xs px-1.5 py-0.5 rounded bg-[#FFFFFF] border border-[rgba(15,23,42,0.2)] text-[#1D4ED8]">.env.example</code> menjadi <code class="font-mono-tabular text-xs px-1.5 py-0.5 rounded bg-[#FFFFFF] border border-[rgba(15,23,42,0.2)] text-[#1D4ED8]">.env</code>.</li>
+              <li>Isi <code class="font-mono-tabular text-xs px-1.5 py-0.5 rounded bg-[#FFFFFF] border border-[rgba(15,23,42,0.2)] text-[#1D4ED8]">VITE_SUPABASE_URL</code> dan <code class="font-mono-tabular text-xs px-1.5 py-0.5 rounded bg-[#FFFFFF] border border-[rgba(15,23,42,0.2)] text-[#1D4ED8]">VITE_SUPABASE_ANON_KEY</code>.</li>
+              <li>Muat ulang server Vite agar konfigurasi terbaca.</li>
+            </ol>
           </div>
         </div>
-
-        <div id="admin-env-guide" class="admin-panel p-6 space-y-3" hidden>
-          <h2 class="font-display text-lg font-bold text-[#F8FAFC]">
-            Langkah Aktivasi Supabase
-          </h2>
-          <ol class="list-decimal list-inside space-y-2 text-sm text-[#94A3B8]">
-            <li>Buat proyek Supabase baru dan jalankan <code class="font-mono-tabular text-[#60A5FA]">supabase/schema.sql</code> (ganti <code class="font-mono-tabular text-[#60A5FA]">&lt;ADMIN_EMAIL&gt;</code> dengan email admin).</li>
-            <li>Nonaktifkan public sign-up pada Authentication -> Providers -> Email, lalu buat 1 user admin.</li>
-            <li>Salin <code class="font-mono-tabular text-[#60A5FA]">.env.example</code> menjadi <code class="font-mono-tabular text-[#60A5FA]">.env</code> dan isi <code class="font-mono-tabular text-[#60A5FA]">VITE_SUPABASE_URL</code> serta <code class="font-mono-tabular text-[#60A5FA]">VITE_SUPABASE_ANON_KEY</code>.</li>
-            <li>Jalankan ulang server Vite agar variabel env terbaca.</li>
-          </ol>
-        </div>
-
-        <form id="admin-login-form" class="admin-panel p-6 sm:p-7 space-y-5" novalidate>
-          <div class="pb-3 border-b border-[rgba(148,163,184,0.16)]">
-            <h2 class="font-display text-xl font-bold text-[#F8FAFC]">
-              Masuk Admin CMS
-            </h2>
-            <p class="text-sm text-[#94A3B8] mt-1">
-              Hanya akun email terdaftar pada policy RLS PostgreSQL yang diizinkan mengubah data.
-            </p>
-          </div>
-
-          <div class="space-y-1.5">
-            <label for="admin-login-email" class="block text-sm font-medium text-[#F8FAFC]">
-              Email Admin
-            </label>
-            <input
-              id="admin-login-email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              required
-              placeholder="admin@domain.com"
-              class="admin-input"
-            />
-          </div>
-
-          <div class="space-y-1.5">
-            <label for="admin-login-password" class="block text-sm font-medium text-[#F8FAFC]">
-              Password
-            </label>
-            <input
-              id="admin-login-password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-              placeholder="Masukkan password akun Supabase"
-              class="admin-input"
-            />
-          </div>
-
-          <p
-            id="admin-login-error"
-            role="alert"
-            class="text-sm text-[#FCA5A5]"
-            hidden
-          ></p>
-
-          <button
-            id="admin-login-submit"
-            type="submit"
-            class="admin-btn-primary w-full"
-          >
-            Masuk ke Dashboard
-          </button>
-        </form>
       </section>
 
-      <!-- Authenticated Operate-Mode CMS Workspace (Strictly hidden until logged in) -->
+      <!-- =================================================================== -->
+      <!-- AUTHENTICATED BRIGHT BENTO STUDIO WORKSPACE                         -->
+      <!-- =================================================================== -->
       <section
         id="admin-workspace"
         class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
-        aria-label="Workspace Pengelolaan Konten"
+        aria-label="Ruang Kerja Studio"
         hidden
       >
-        <aside class="lg:col-span-3 admin-panel p-3">
-          <nav
-            id="admin-nav"
-            aria-label="Modul CMS"
-            class="flex lg:flex-col gap-1.5 overflow-x-auto pb-1 lg:pb-0"
-          >
-            <button
-              type="button"
-              class="admin-nav-btn"
-              data-admin-module="profile"
-              aria-current="page"
+        <!-- Sidebar / Responsive Navigation Rail -->
+        <aside class="lg:col-span-3 lg:sticky lg:top-24 space-y-4">
+          <div class="studio-card p-2.5 sm:p-3">
+            <nav
+              id="admin-nav"
+              aria-label="Menu Studio"
+              class="flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0"
             >
-              <span>Profile &amp; Hero</span>
-            </button>
-            <button
-              type="button"
-              class="admin-nav-btn"
-              data-admin-module="showcase"
-            >
-              <span>Showcase Manager</span>
-            </button>
-            <button
-              type="button"
-              class="admin-nav-btn"
-              data-admin-module="timeline"
-            >
-              <span>Timeline Manager</span>
-            </button>
-            <button
-              type="button"
-              class="admin-nav-btn"
-              data-admin-module="polaroid"
-            >
-              <span>Polaroid Gallery</span>
-            </button>
-            <button
-              type="button"
-              class="admin-nav-btn"
-              data-admin-module="moderation"
-            >
-              <span>Guestbook &amp; Inbox</span>
-            </button>
-          </nav>
+              <button
+                type="button"
+                class="studio-nav-btn"
+                data-admin-module="profile"
+                aria-current="page"
+              >
+                <span class="flex items-center gap-2.5 min-w-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" class="w-4 h-4 shrink-0" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  <span class="truncate">Profil &amp; Hero</span>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                class="studio-nav-btn"
+                data-admin-module="showcase"
+              >
+                <span class="flex items-center gap-2.5 min-w-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" class="w-4 h-4 shrink-0" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                  </svg>
+                  <span class="truncate">Karya &amp; Showcase</span>
+                </span>
+                <span class="studio-nav-badge" data-nav-count="showcase">0</span>
+              </button>
+
+              <button
+                type="button"
+                class="studio-nav-btn"
+                data-admin-module="timeline"
+              >
+                <span class="flex items-center gap-2.5 min-w-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" class="w-4 h-4 shrink-0" aria-hidden="true">
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                  </svg>
+                  <span class="truncate">Riwayat</span>
+                </span>
+                <span class="studio-nav-badge" data-nav-count="timeline">0</span>
+              </button>
+
+              <button
+                type="button"
+                class="studio-nav-btn"
+                data-admin-module="polaroid"
+              >
+                <span class="flex items-center gap-2.5 min-w-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" class="w-4 h-4 shrink-0" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                  <span class="truncate">Galeri Polaroid</span>
+                </span>
+                <span class="studio-nav-badge" data-nav-count="polaroid">0</span>
+              </button>
+
+              <button
+                type="button"
+                class="studio-nav-btn"
+                data-admin-module="moderation"
+              >
+                <span class="flex items-center gap-2.5 min-w-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" class="w-4 h-4 shrink-0" aria-hidden="true">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  <span class="truncate">Tamu &amp; Pesan</span>
+                </span>
+                <span class="studio-nav-badge" data-nav-count="moderation">0</span>
+              </button>
+            </nav>
+          </div>
+
+          <!-- Compact Studio Summary Card (Desktop Sidebar) -->
+          <div class="hidden lg:block studio-card studio-card-sky p-4 space-y-2">
+            <p class="font-display text-sm font-bold text-[#0B0F19]">
+              Sinkronisasi Otomatis
+            </p>
+            <p class="text-xs text-[#334155] leading-relaxed">
+              Setiap perubahan yang disimpan langsung tampil di halaman portfolio publik tanpa perlu deploy ulang.
+            </p>
+          </div>
         </aside>
 
-        <div class="lg:col-span-9 space-y-5 min-w-0">
-          <div
-            id="admin-toast"
-            aria-live="polite"
-            class="admin-panel px-4 py-3 text-sm font-medium"
-            hidden
-          ></div>
-
-          <div id="admin-module-mount" class="space-y-6"></div>
+        <!-- Main Module Stage -->
+        <div class="lg:col-span-9 min-w-0 space-y-5 pb-20">
+          <div id="admin-module-mount" class="space-y-5"></div>
         </div>
       </section>
     </main>
 
-    <!-- Accessible Confirmation Dialog (Replaces window.confirm) -->
+    <!-- Floating Toast Feedback -->
+    <div
+      id="admin-toast"
+      role="status"
+      aria-live="polite"
+      class="studio-toast"
+      hidden
+    ></div>
+
+    <!-- Reusable Slide-Over Drawer (Create / Edit Forms) -->
+    <div
+      id="admin-drawer-root"
+      class="studio-drawer-root"
+      aria-hidden="true"
+      hidden
+    >
+      <div id="admin-drawer-backdrop" class="studio-drawer-backdrop"></div>
+      <div
+        id="admin-drawer-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="admin-drawer-title"
+        class="studio-drawer-panel"
+      >
+        <div class="studio-drawer-header">
+          <div class="min-w-0">
+            <h2 id="admin-drawer-title" class="font-display text-xl font-bold text-[#0B0F19] truncate"></h2>
+            <p id="admin-drawer-subtitle" class="text-sm text-[#475569] mt-0.5"></p>
+          </div>
+          <button
+            id="admin-drawer-close"
+            type="button"
+            class="studio-icon-btn shrink-0"
+            aria-label="Tutup panel"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <div id="admin-drawer-body" class="studio-drawer-body"></div>
+        <div id="admin-drawer-footer" class="studio-drawer-footer"></div>
+      </div>
+    </div>
+
+    <!-- Accessible Confirmation Dialog -->
     <dialog
       id="admin-confirm-dialog"
-      class="admin-dialog"
+      class="studio-dialog"
       aria-labelledby="admin-confirm-title"
     >
-      <div class="admin-panel p-6 space-y-4">
-        <div class="space-y-2">
-          <h2 id="admin-confirm-title" class="font-display text-lg font-bold text-[#F8FAFC]">
-            Konfirmasi Penghapusan
-          </h2>
-          <p id="admin-confirm-message" class="text-sm text-[#94A3B8]"></p>
+      <div class="studio-card p-6 space-y-5">
+        <div class="flex items-start gap-3.5">
+          <span class="w-10 h-10 rounded-full bg-[#FEF2F2] border-[1.5px] border-[#B91C1C] flex items-center justify-center text-[#B91C1C] shrink-0" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+              <path d="M10 11v6M14 11v6" />
+            </svg>
+          </span>
+          <div class="space-y-1 min-w-0">
+            <h2 id="admin-confirm-title" class="font-display text-lg font-bold text-[#0B0F19]">
+              Konfirmasi Penghapusan
+            </h2>
+            <p id="admin-confirm-message" class="text-sm text-[#475569] leading-relaxed"></p>
+          </div>
         </div>
-        <div class="flex flex-wrap justify-end gap-3 pt-2">
+        <div class="flex flex-wrap justify-end gap-2.5 pt-1">
           <button
             id="admin-confirm-cancel"
             type="button"
-            class="admin-btn-secondary text-sm"
+            class="studio-btn-secondary text-sm"
           >
             Batal
           </button>
           <button
             id="admin-confirm-ok"
             type="button"
-            class="admin-btn-danger text-sm"
+            class="studio-btn-danger text-sm"
           >
             Hapus Permanen
           </button>

@@ -1,6 +1,6 @@
 import '../styles/admin.css';
 import { isSupabaseConfigured, supabase } from '../lib/supabase.js';
-import { clearToast, showToast } from './admin-ui.js';
+import { clearToast, closeSlideDrawer, showToast } from './admin-ui.js';
 import { mountProfileEditor } from './profile-editor.js';
 import { mountShowcaseCrud } from './showcase-crud.js';
 import { mountTimelineCrud } from './timeline-crud.js';
@@ -16,6 +16,9 @@ const MODULE_LOADERS = {
 };
 
 function initAdminCms() {
+  const headerDot = document.getElementById('admin-header-dot');
+  const headerStatusText = document.getElementById('admin-header-status-text');
+
   const statusEl = document.getElementById('admin-supabase-status');
   const statusHintEl = document.getElementById('admin-supabase-hint');
   const statusDot = document.getElementById('admin-supabase-dot');
@@ -43,8 +46,62 @@ function initAdminCms() {
     loginErrorEl.hidden = !msg;
   }
 
+  function updateNavBadge(key, value, highlight = false) {
+    const badge = document.querySelector(`[data-nav-count="${key}"]`);
+    if (!badge) return;
+    badge.textContent = String(value);
+    badge.classList.toggle('has-unread', Boolean(highlight));
+  }
+
+  async function refreshNavCounts() {
+    if (!supabase || !currentUserId) return;
+
+    const [showcaseRes, timelineRes, polaroidRes, guestbookRes, unreadInboxRes, totalInboxRes] =
+      await Promise.allSettled([
+        supabase.from('showcase_items').select('id', { count: 'exact', head: true }),
+        supabase.from('timeline_entries').select('id', { count: 'exact', head: true }),
+        supabase.from('polaroid_photos').select('id', { count: 'exact', head: true }),
+        supabase.from('guestbook_comments').select('id', { count: 'exact', head: true }),
+        supabase
+          .from('contact_messages')
+          .select('id', { count: 'exact', head: true })
+          .eq('is_read', false),
+        supabase.from('contact_messages').select('id', { count: 'exact', head: true }),
+      ]);
+
+    if (showcaseRes.status === 'fulfilled' && !showcaseRes.value.error) {
+      updateNavBadge('showcase', showcaseRes.value.count ?? 0);
+    }
+    if (timelineRes.status === 'fulfilled' && !timelineRes.value.error) {
+      updateNavBadge('timeline', timelineRes.value.count ?? 0);
+    }
+    if (polaroidRes.status === 'fulfilled' && !polaroidRes.value.error) {
+      updateNavBadge('polaroid', polaroidRes.value.count ?? 0);
+    }
+
+    const unreadCount =
+      unreadInboxRes.status === 'fulfilled' && !unreadInboxRes.value.error
+        ? unreadInboxRes.value.count ?? 0
+        : 0;
+    const gbCount =
+      guestbookRes.status === 'fulfilled' && !guestbookRes.value.error
+        ? guestbookRes.value.count ?? 0
+        : 0;
+    const totalInbox =
+      totalInboxRes.status === 'fulfilled' && !totalInboxRes.value.error
+        ? totalInboxRes.value.count ?? 0
+        : 0;
+
+    if (unreadCount > 0) {
+      updateNavBadge('moderation', `${unreadCount} baru`, true);
+    } else {
+      updateNavBadge('moderation', gbCount + totalInbox, false);
+    }
+  }
+
   async function renderModule(key) {
     if (!moduleMount) return;
+    closeSlideDrawer();
     const loader = MODULE_LOADERS[key] || MODULE_LOADERS.profile;
     activeModule = key;
     clearToast();
@@ -55,7 +112,7 @@ function initAdminCms() {
       else btn.removeAttribute('aria-current');
     }
 
-    await loader(moduleMount);
+    await loader(moduleMount, { onDataChange: refreshNavCounts });
   }
 
   function applySessionState(session) {
@@ -72,6 +129,7 @@ function initAdminCms() {
     }
 
     if (!isAuthenticated) {
+      closeSlideDrawer();
       currentUserId = null;
       if (moduleMount) moduleMount.replaceChildren();
       return;
@@ -79,6 +137,7 @@ function initAdminCms() {
 
     if (currentUserId !== user.id) {
       currentUserId = user.id;
+      refreshNavCounts();
       renderModule(activeModule);
     }
   }
@@ -87,34 +146,50 @@ function initAdminCms() {
   applySessionState(null);
 
   if (!isSupabaseConfigured || !supabase) {
+    if (headerDot) {
+      headerDot.classList.remove('bg-[#10B981]');
+      headerDot.classList.add('bg-[#2563EB]');
+    }
+    if (headerStatusText) {
+      headerStatusText.textContent = 'Belum Terhubung';
+    }
     if (statusDot) {
       statusDot.classList.remove('bg-[#10B981]');
-      statusDot.classList.add('bg-[#60A5FA]');
+      statusDot.classList.add('bg-[#2563EB]');
     }
     if (statusEl) {
-      statusEl.textContent = 'Supabase belum dikonfigurasi (.env tidak ditemukan)';
+      statusEl.textContent = 'Konfigurasi Supabase belum ditemukan';
     }
     if (statusHintEl) {
       statusHintEl.textContent =
-        'Buat file .env dengan VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY untuk mengaktifkan login CMS.';
+        'Lengkapi file .env dengan URL dan Public Key Supabase untuk mengaktifkan studio.';
     }
     if (envGuideEl) envGuideEl.hidden = false;
     if (loginEmailInput) loginEmailInput.disabled = true;
     if (loginPasswordInput) loginPasswordInput.disabled = true;
     if (loginSubmitBtn) {
       loginSubmitBtn.disabled = true;
-      loginSubmitBtn.textContent = 'Lengkapi .env Terlebih Dahulu';
+      loginSubmitBtn.textContent = 'Lengkapi Konfigurasi .env';
     }
     return;
   }
 
+  if (headerDot) {
+    headerDot.classList.remove('bg-[#2563EB]');
+    headerDot.classList.add('bg-[#10B981]');
+  }
+  if (headerStatusText) {
+    headerStatusText.textContent = 'Terhubung';
+  }
   if (statusDot) {
-    statusDot.classList.remove('bg-[#60A5FA]');
+    statusDot.classList.remove('bg-[#2563EB]');
     statusDot.classList.add('bg-[#10B981]');
   }
-  if (statusEl) statusEl.textContent = 'Supabase Terhubung (Menunggu Autentikasi Admin)';
+  if (statusEl) {
+    statusEl.textContent = 'Database terhubung dan siap digunakan';
+  }
   if (statusHintEl) {
-    statusHintEl.textContent = 'Masuk dengan akun admin yang terdaftar pada policy RLS database.';
+    statusHintEl.textContent = 'Masuk menggunakan email dan kata sandi admin terdaftar.';
   }
 
   for (const btn of navButtons) {
@@ -133,7 +208,7 @@ function initAdminCms() {
       const password = loginPasswordInput.value;
 
       if (!email || !password) {
-        setLoginError('Email dan password wajib diisi.');
+        setLoginError('Email dan kata sandi wajib diisi.');
         return;
       }
 
@@ -145,17 +220,17 @@ function initAdminCms() {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) {
-          setLoginError(error.message || 'Gagal masuk. Periksa kembali email dan password.');
+          setLoginError(error.message || 'Gagal masuk. Periksa kembali email dan kata sandi.');
           return;
         }
         loginPasswordInput.value = '';
         applySessionState(data.session);
       } catch (err) {
-        setLoginError(err?.message || 'Terjadi gangguan koneksi saat login.');
+        setLoginError(err?.message || 'Terjadi gangguan koneksi saat mencoba masuk.');
       } finally {
         if (loginSubmitBtn) {
           loginSubmitBtn.disabled = false;
-          loginSubmitBtn.textContent = 'Masuk ke Dashboard';
+          loginSubmitBtn.textContent = 'Masuk ke Studio';
         }
       }
     });
