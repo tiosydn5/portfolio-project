@@ -82,3 +82,13 @@
 - **Verification**: Ran `npm run build`, WCAG AA contrast verification (`>= 5.17:1`), hygiene scan (`0` jargon/emoji/`innerHTML`), and Playwright visual/functional audit across Login + all 5 modules & drawers at `1280px` & `375px` (`0px` horizontal overflow, `0` console/network errors).
 - **Files touched**: `admin.html`, `src/styles/admin.css`, `src/admin/admin-main.js`, `src/admin/admin-ui.js`, `src/admin/profile-editor.js`, `src/admin/showcase-crud.js`, `src/admin/timeline-crud.js`, `src/admin/polaroid-crud.js`, `src/admin/moderation.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-24 — [Copywriting & Display Labels] Showcase Category Mapping & Visual Snapshots Reframe
+- **Category Display Mapping (DB Enums Untouched)**: Mapped UI labels consistently across 3D Folders, Showcase Tabs, fallback data, and `/admin` Showcase Manager without altering `supabase/schema.sql` or backend enum values:
+  - `project` -> `Web & Apps` (`Web apps & AI-assisted builds`)
+  - `certificate` -> `Graphic Design` (`Visual identity, posters & layouts`)
+  - `award` -> `Credentials` (`Certifications, training & milestones`)
+- **Polaroid Section Copy (`Visual Snapshots`)**: Renamed Polaroid Scatter heading/description in `index.html`, empty-state text in `src/components/polaroid-scatter.js` & `src/admin/polaroid-crud.js`, and default sample captions in `src/lib/data-fallback.js` to showcase finished Web & Apps and Graphic Design visual snapshots & UI details rather than creation process sketches.
+- **Verification**: Confirmed zero CSS/layout/animation diffs, ran `npm run build` and headless browser verification on `/` and `/admin`, and pushed to `origin/main`.
+- **Files touched**: `index.html`, `src/lib/portfolio-api.js`, `src/lib/data-fallback.js`, `src/components/showcase.js`, `src/components/polaroid-scatter.js`, `src/admin/showcase-crud.js`, `src/admin/polaroid-crud.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
+
+

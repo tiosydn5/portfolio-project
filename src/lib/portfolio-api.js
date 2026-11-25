@@ -19,9 +19,9 @@ export const SCATTER_SLOTS = [
 ];
 
 const FOLDER_META = [
-  { category: 'project', title: 'Projects', subtitle: 'Web builds & interactive systems', prefix: 'PRJ' },
-  { category: 'certificate', title: 'Certificates', subtitle: 'Technical credentials & courses', prefix: 'CRT' },
-  { category: 'award', title: 'Awards', subtitle: 'Competitions & recognitions', prefix: 'AWD' },
+  { category: 'project', title: 'Web & Apps', subtitle: 'Web apps & AI-assisted builds', prefix: 'WEB' },
+  { category: 'certificate', title: 'Graphic Design', subtitle: 'Visual identity, posters & layouts', prefix: 'GFX' },
+  { category: 'award', title: 'Credentials', subtitle: 'Certifications, training & milestones', prefix: 'CRD' },
 ];
 
 export function buildFoldersFromShowcase(items = [], isLive = false) {

@@ -16,9 +16,9 @@ import {
 } from './admin-ui.js';
 
 const CATEGORY_LABELS = {
-  project: 'Project',
-  certificate: 'Certificate',
-  award: 'Award',
+  project: 'Web & Apps',
+  certificate: 'Graphic Design',
+  award: 'Credentials',
 };
 
 export async function mountShowcaseCrud(container, { onDataChange } = {}) {
@@ -38,9 +38,9 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
       ariaLabel: 'Kategori karya',
       value: editingItem?.category || 'project',
       options: [
-        { value: 'project', label: 'Project' },
-        { value: 'certificate', label: 'Certificate' },
-        { value: 'award', label: 'Award' },
+        { value: 'project', label: 'Web & Apps' },
+        { value: 'certificate', label: 'Graphic Design' },
+        { value: 'award', label: 'Credentials' },
       ],
     });
 
@@ -281,7 +281,7 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
       title: editingItem ? 'Sunting Karya' : 'Tambah Karya Baru',
       subtitle: editingItem
         ? `Perbarui detail "${editingItem.title}".`
-        : 'Tambahkan proyek, sertifikat, atau penghargaan ke koleksi publik.',
+        : 'Tambahkan karya Web & Apps, Graphic Design, atau Credentials ke koleksi publik.',
       contentEl: form,
       footerEl,
     });
@@ -323,17 +323,17 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
         { value: 'all', label: 'Semua', badge: allItems.length },
         {
           value: 'project',
-          label: 'Projects',
+          label: 'Web & Apps',
           badge: allItems.filter((i) => i.category === 'project').length,
         },
         {
           value: 'certificate',
-          label: 'Certificates',
+          label: 'Graphic Design',
           badge: allItems.filter((i) => i.category === 'certificate').length,
         },
         {
           value: 'award',
-          label: 'Awards',
+          label: 'Credentials',
           badge: allItems.filter((i) => i.category === 'award').length,
         },
       ],
@@ -383,7 +383,7 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
           }),
           createEl('p', {
             className: 'text-sm text-[#475569]',
-            text: 'Kelola proyek, sertifikat, dan penghargaan yang tampil di halaman publik.',
+            text: 'Kelola koleksi Web & Apps, Graphic Design, dan Credentials yang tampil di halaman publik.',
           })
         ),
         addBtn

@@ -8,16 +8,16 @@ import { assetUrl, createEl, createSvgIcon, safeUrl } from '../lib/sanitize.js';
 
 const CATEGORY_META = {
   project: {
-    label: 'Projects',
-    emptyMessage: 'Belum ada proyek yang cocok dengan filter ini.',
+    label: 'Web & Apps',
+    emptyMessage: 'Belum ada karya Web & Apps yang cocok dengan filter ini.',
   },
   certificate: {
-    label: 'Certificates',
-    emptyMessage: 'Belum ada sertifikat yang cocok dengan filter ini.',
+    label: 'Graphic Design',
+    emptyMessage: 'Belum ada karya Graphic Design yang cocok dengan filter ini.',
   },
   award: {
-    label: 'Awards',
-    emptyMessage: 'Belum ada penghargaan yang cocok dengan filter ini.',
+    label: 'Credentials',
+    emptyMessage: 'Belum ada entri Credentials yang cocok dengan filter ini.',
   },
 };
 

@@ -78,7 +78,7 @@ export function initPolaroidScatter({ photos = [] }) {
     stage.appendChild(
       createEl('p', {
         className: 'text-base text-[#334155] py-12 text-center w-full',
-        text: 'Belum ada dokumentasi visual yang ditampilkan.',
+        text: 'Belum ada visual snapshot yang ditampilkan.',
       })
     );
     return;

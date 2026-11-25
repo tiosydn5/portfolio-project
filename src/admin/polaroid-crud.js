@@ -78,7 +78,7 @@ export async function mountPolaroidCrud(container, { onDataChange } = {}) {
 
     const mediaDropzone = createMediaDropzone({
       id: 'pl-image-url',
-      label: 'Foto Dokumentasi',
+      label: 'Foto Visual Snapshot',
       hint: 'Rasio 4:3 disarankan · JPG, PNG, WebP, AVIF (Maks. 5 MB)',
       initialUrl,
       folder: 'polaroid',
@@ -324,7 +324,7 @@ export async function mountPolaroidCrud(container, { onDataChange } = {}) {
     if (photos.length === 0) {
       renderEmptyState(
         galleryWrap,
-        'Belum ada foto dokumentasi di galeri Polaroid. Tambahkan foto pertama Anda.',
+        'Belum ada foto di Visual Snapshots. Tambahkan potongan visual karya pertama Anda.',
         {
           title: 'Galeri masih kosong',
           actionLabel: 'Tambah Foto',

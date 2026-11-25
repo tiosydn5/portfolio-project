@@ -22,11 +22,11 @@ Adopt the *interaction choreography* from the attached reference video, translat
    - **Blok B (Journey & Directories, 12-Col)**:
      - **Education (`lg:col-span-5`, Soft Periwinkle `#E0E7FF`)**: Concise timeline cards.
      - **Experience (`lg:col-span-7`, `#FFFFFF`)**: Bounded scrollable timeline with fade masks (`data-lenis-prevent`) and mobile expand toggle.
-     - **Full-Width 3D Archive Directories (`lg:col-span-12`, Soft Sky Blue `#DBEAFE`)**: 3 interactive folders (`Projects`, `Certificates`, `Awards`) tilting front flaps in 3D (`rotateX(-38deg)`) and fanning 3 mini preview cards (`back.out(1.7)`) on hover/focus.
-4. **Kinetic Bridge, 3-Tab Showcase & Polaroid Scatter**:
+     - **Full-Width 3D Archive Directories (`lg:col-span-12`, Soft Sky Blue `#DBEAFE`)**: 3 interactive folders (`Web & Apps` -> DB `project`, `Graphic Design` -> DB `certificate`, `Credentials` -> DB `award`) tilting front flaps in 3D (`rotateX(-38deg)`) and fanning 3 mini preview cards (`back.out(1.7)`) on hover/focus.
+4. **Kinetic Bridge, 3-Tab Showcase & Visual Snapshots (Polaroid Scatter)**:
    - Scroll-scrubbed `PORTFOLIO` kinetic typography sweep + counter-scrolling discipline strip (`scrub: 1`).
-   - **3-Tab Showcase (`Projects`, `Certificates`, `Awards`)**: Sliding `#showcase-tab-pill` indicator (`back.out(1.4)`), tag filters with staggered card pop-in (`power3.out`), hover thumbnail zoom, and spring-animated Detail Modal (`safeUrl`, focus trap, `Escape`, `Lenis` pause/resume).
-   - **Exploding Photo Stack (Polaroid Scatter)** inside a Soft Periwinkle (`#E0E7FF`) Bento frame: desktop center-stack-to-scatter explosion (`ScrollTrigger`, `back.out(1.4)`), hover card straightening & lift (`rotation: 0, scale: 1.07`), toggle button, tablet 3x2 grid, mobile snap-deck, and spring Lightbox.
+   - **3-Tab Showcase (`Web & Apps`, `Graphic Design`, `Credentials`)**: Display labels mapped to unchanged backend enum values (`project`, `certificate`, `award`), sliding `#showcase-tab-pill` indicator (`back.out(1.4)`), tag filters with staggered card pop-in (`power3.out`), hover thumbnail zoom, and spring-animated Detail Modal (`safeUrl`, focus trap, `Escape`, `Lenis` pause/resume).
+   - **Visual Snapshots (Exploding Photo Stack / Polaroid Scatter)** inside a Soft Periwinkle (`#E0E7FF`) Bento frame showcasing finished visual excerpts, UI details, and creative exploration snapshots: desktop center-stack-to-scatter explosion (`ScrollTrigger`, `back.out(1.4)`), hover card straightening & lift (`rotation: 0, scale: 1.07`), toggle button, tablet 3x2 grid, mobile snap-deck, and spring Lightbox.
 5. **Bright Editorial Contact, 3D Find Me ID Badge & Live Guestbook**:
    - **Left Column**: Direct Contact Form (`Crisp White #FFFFFF`) saving to `contact_messages` (or browser preview storage) + **Find Me** card (`Soft Sky Blue #DBEAFE`) featuring 3D perspective lanyard tilt (`gsap.quickTo` on `rotationX`/`rotationY`) and radial glare highlight.
    - **Right Column**: XSS-safe Live Guestbook (`Crisp White #FFFFFF`) rendering comments strictly via `textContent` with slide-down + pop-in animation on new submission.
@@ -113,7 +113,7 @@ Accessible via `/admin` (separate Vite entry point `admin.html`, linked subtly i
 ## 5. Supabase Database Schema & Security
 Run via SQL migration in `/supabase/schema.sql`:
 - **`site_profile`**: `id` (int PK default 1, `CHECK (id = 1)` singleton), `full_name`, `display_name`, `handle`, `tagline`, `bio`, `location_label`, `coordinates_label`, `status_text`, `is_available` (bool), `hero_cutout_url`, `avatar_normal_url`, `avatar_alter_url`, `socials` (jsonb array check), `updated_at` (`BEFORE UPDATE` trigger)
-- **`showcase_items`**: `id` (uuid PK), `category` (text check in `'project'`, `'certificate'`, `'award'`), `title`, `subtitle`, `description`, `tech_tags` (text[]), `thumbnail_url`, `live_url`, `repo_url`, `date_label`, `is_featured` (bool), `is_published` (bool default true), `sort_order` (int default 0), `created_at`
+- **`showcase_items`**: `id` (uuid PK), `category` (text check in `'project'`, `'certificate'`, `'award'` — displayed in UI as `Web & Apps`, `Graphic Design`, `Credentials`), `title`, `subtitle`, `description`, `tech_tags` (text[]), `thumbnail_url`, `live_url`, `repo_url`, `date_label`, `is_featured` (bool), `is_published` (bool default true), `sort_order` (int default 0), `created_at`
 - **`timeline_entries`**: `id` (uuid PK), `type` (text check in `'education'`, `'experience'`), `organization`, `role`, `period`, `description`, `sort_order` (int default 0), `created_at`
 - **`polaroid_photos`**: `id` (uuid PK), `image_url`, `caption`, `rotation_deg` (int check `-25..25`), `sort_order` (int default 0), `created_at`
 - **`guestbook_comments`**: `id` (uuid PK), `author_name` (text not null, trimmed 2..60), `author_role` (text, trimmed <= 40), `message` (text not null, trimmed 3..500), `is_visible` (bool default true), `created_at` (timestamptz default now())
