@@ -101,5 +101,20 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `78 modules`, `0` errors) and Playwright visual/functional audits across `1280x800`, `375x812`, and `320x800` (`0` console/page/network errors, `0px` horizontal overflow, 1-row tabs & exact 44px pill height across all 3 tabs, 1-line `ID · JKT`, zero coordinates in DOM, bot mascot trigger + quick chips + XSS safety + mobile dock clearance verified).
 - **Files touched**: `index.html`, `src/styles/base.css`, `src/components/showcase.js`, `src/components/navbar.js`, `src/components/telemetry-clock.js`, `src/components/portfolio-bot.js`, `src/main.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-25 — [Public Footer Hygiene & Hidden Admin Access] Back-to-Top Pill & Secret Shortcuts
+- **Footer Replacement (`index.html`)**: Removed the visible `/admin CMS` anchor from the public footer and replaced the right-side pill button with `Kembali ke Atas` (`#footer-back-to-top` -> `#home`), preserving exact Bright Bento pill styling (`bg-[#FFFFFF]`, `border-[1.5px] border-[#0F172A]`, `min-h-[44px]`) plus `sm:pb-[88px]` desktop bottom clearance above the fixed `Tanya Bot` trigger.
+- **Hidden Admin Entry Shortcuts (`index.html`, `src/main.js`)**: Wrapped the footer year in `#footer-year-label` (`2026`, zero visual pointer/hint cues) and wired `initFooterShortcut()` so 5 rapid clicks within `1000ms` gaps or `Ctrl + Shift + A` (outside text inputs) navigate to `${BASE_URL}admin` without exposing `/admin` in the public UI; `admin.html`, `src/admin/*`, and `vite.config.js` `/admin` route rewrites remain completely intact.
+- **Verification**: Ran `npm run build` (`vite build` -> `78 modules`, `0` errors) and verified in Playwright across `1280x800` & `375x812`: zero `/admin` links/text in public DOM, smooth scroll to `#home` (`scrollY = 0` on desktop & mobile), non-overlapping desktop footer vs `Tanya Bot` pill, 4-click stay / 5th-click redirect, `Ctrl + Shift + A` redirect, and direct `/admin` URL access (`0` console/page errors, `0px` horizontal overflow).
+- **Files touched**: `index.html`, `src/main.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
+
+## 2026-11-25 — [Admin Auth Security] Progressive Login Lockout & Anti-Enumeration Guard
+- **Anti-Enumeration & Latency Floor (`src/admin/admin-main.js`, `src/admin/login-guard.js`)**: Standardized all failed Supabase `signInWithPassword` responses onto a single generic alert (`"Email atau password tidak sesuai."`), added a minimum `~400ms` failure response delay to curb rapid click/Enter spam, and eliminated any attempt-counter or permanent-lock hints from visible UI.
+- **Persistent Progressive Guard (`src/admin/login-guard.js`)**: Implemented serialized `localStorage` (`studio_auth_guard_v1`) + `IndexedDB` (`studio_auth_guard_db`) mirror persistence with `400ms` IDB timeout safety, reconciling state across refreshes/storage wipes: 1–2x no lock, 3x `1m`, 4x `3m`, 5x `1h`, 6x `2h`, 7x `4h`, 8x `8h`, 9x `12h` (no final-attempt warning), 10x `permanentLock`, automatic 24-hour reset when `< 10` failures, and full state cleanup on login success.
+- **Bright Bento Lockout Feedback (`admin.html`, `src/styles/admin.css`, `src/admin/admin-main.js`)**: Added `#admin-login-lock-box` (Periwinkle cooldown / Crimson danger permanent-lock surface meeting WCAG AA contrast) with live `JetBrains Mono` `tabular-nums` countdown (`MM:SS` for minute tiers, `HH:MM:SS` for hour tiers) and automatic unlock without refresh once cooldown completes.
+- **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright simulations across `1280x800` & `375x812` covering generic anti-enumeration messages, `>= 400ms` response delay, all lockout tiers (`3x`–`10x`), `IndexedDB` restoration after `localStorage` clear, auto-unlock without refresh, 24h auto-reset, login-success reset, `0` console/page errors, `0px` mobile overflow, and full post-test storage cleanup.
+- **Files touched**: `admin.html`, `src/styles/admin.css`, `src/admin/login-guard.js`, `src/admin/admin-main.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
+
+
+
 
 

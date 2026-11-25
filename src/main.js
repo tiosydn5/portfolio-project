@@ -155,8 +155,55 @@ async function bootstrapPortfolio() {
     socials: bundle.socials,
   });
 
+  initFooterShortcut();
   initSectionReveals();
   refreshMotion();
+}
+
+function initFooterShortcut() {
+  const rawBase = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
+  const normalizedBase = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+  const adminUrl = `${normalizedBase}admin`;
+
+  const yearEl = document.getElementById('footer-year-label');
+  if (yearEl) {
+    let clickCount = 0;
+    let resetTimer = 0;
+
+    yearEl.addEventListener('click', () => {
+      clickCount += 1;
+      if (resetTimer) window.clearTimeout(resetTimer);
+
+      if (clickCount >= 5) {
+        clickCount = 0;
+        window.location.assign(adminUrl);
+        return;
+      }
+
+      resetTimer = window.setTimeout(() => {
+        clickCount = 0;
+        resetTimer = 0;
+      }, 1000);
+    });
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.repeat) return;
+    const isKeyA =
+      event.code === 'KeyA' || (typeof event.key === 'string' && event.key.toLowerCase() === 'a');
+    if (!event.ctrlKey || !event.shiftKey || event.altKey || event.metaKey || !isKeyA) {
+      return;
+    }
+
+    const active = document.activeElement;
+    const tag = active?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || active?.isContentEditable) {
+      return;
+    }
+
+    event.preventDefault();
+    window.location.assign(adminUrl);
+  });
 }
 
 bootstrapPortfolio();

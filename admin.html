@@ -181,6 +181,33 @@
                 hidden
               ></p>
 
+              <div
+                id="admin-login-lock-box"
+                role="status"
+                aria-live="polite"
+                class="studio-lock-box"
+                hidden
+              >
+                <div class="flex items-start gap-3">
+                  <span id="admin-login-lock-icon" class="studio-lock-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                      <circle cx="12" cy="12" r="9" />
+                      <polyline points="12 7 12 12 15 14" />
+                    </svg>
+                  </span>
+                  <div class="min-w-0 flex-1 space-y-1">
+                    <p id="admin-login-lock-title" class="text-sm font-bold leading-snug"></p>
+                    <p id="admin-login-lock-desc" class="text-xs leading-relaxed"></p>
+                  </div>
+                </div>
+                <div id="admin-login-timer-row" class="studio-lock-timer-row" hidden>
+                  <span class="text-xs font-medium">Waktu tunggu tersisa</span>
+                  <span id="admin-login-countdown" class="studio-lock-countdown font-mono-tabular">
+                    00:00
+                  </span>
+                </div>
+              </div>
+
               <button
                 id="admin-login-submit"
                 type="submit"

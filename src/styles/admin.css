@@ -387,6 +387,71 @@
     font-weight: 500;
   }
 
+  .studio-lock-box {
+    border-radius: 16px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border-ink);
+    background-color: var(--bg-card-periwinkle);
+    color: var(--text-ink);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .studio-lock-box.is-cooldown {
+    background-color: var(--bg-card-periwinkle);
+    border-color: var(--border-ink);
+    color: var(--text-ink);
+  }
+
+  .studio-lock-box.is-cooldown #admin-login-lock-desc {
+    color: var(--text-ink-pastel);
+  }
+
+  .studio-lock-box.is-permanent {
+    background-color: #FEF2F2;
+    border-color: var(--status-danger-ink);
+    color: var(--status-danger-ink);
+  }
+
+  .studio-lock-box.is-permanent #admin-login-lock-desc {
+    color: var(--text-ink);
+  }
+
+  .studio-lock-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    background-color: #FFFFFF;
+    border: 1.5px solid currentColor;
+    flex-shrink: 0;
+  }
+
+  .studio-lock-timer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(15, 23, 42, 0.14);
+  }
+
+  .studio-lock-countdown {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background-color: #FFFFFF;
+    border: 1.5px solid var(--border-ink);
+    color: var(--accent-fill-hover);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
   /* Segmented Pill Control */
   .studio-segmented {
     display: inline-flex;

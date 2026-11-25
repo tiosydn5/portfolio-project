@@ -100,9 +100,11 @@ Adopt the *interaction choreography* from the attached reference video, translat
 - **Telemetry / Code / Counters**: `JetBrains Mono` (400, 500; `font-variant-numeric: tabular-nums`)
 
 ## 4. Admin CMS Specification (`/admin` — "Bright Bento Studio CMS")
-Accessible via `/admin` (separate Vite entry point `admin.html`, linked subtly in footer).
+Accessible directly via `/admin` (separate Vite entry point `admin.html`) or hidden public shortcuts (`5x` rapid click on the footer year `2026` or `Ctrl + Shift + A` on desktop), with no visible `/admin` link on the public UI (footer right slot holds a `Kembali ke Atas` smooth-scroll pill to `#home`).
 - **Shell & Navigation**: Clean sticky editorial header (Supabase live connection dot, admin email badge, `Lihat Web Publik` external link, `Keluar`), monochrome inline SVG navigation rail with live badge counters per module, floating toast notifications, and reusable GPU-composited Slide-Over Drawer (`Escape`/backdrop/focus-trap).
-- **Auth Gate**: Centered Bright Bento login card on `#F4F6FA` canvas using Supabase Email/Password auth (public sign-ups disabled in Supabase dashboard); workspace stays strictly hidden & unmounted until authenticated.
+- **Auth Gate (`src/admin/login-guard.js` + `admin-main.js`)**: Centered Bright Bento login card on `#F4F6FA` canvas using Supabase Email/Password auth (public sign-ups disabled in Supabase dashboard) protected by client-side **Anti-Enumeration & Progressive Login Lockout**:
+  - Any Supabase auth failure resolves with a single generic alert (`"Email atau password tidak sesuai."`), `~400ms` response floor, and zero attempt counters or permanent-lock warnings.
+  - Consecutive failures persist across `localStorage` + `IndexedDB` mirror sync with progressive cooldowns (3x: 1m, 4x: 3m, 5x: 1h, 6x: 2h, 7x: 4h, 8x: 8h, 9x: 12h, 10x: permanent lock), live `JetBrains Mono` `tabular-nums` countdown with auto-unlock on expiry without refresh, automatic 24-hour reset when `< 10` failures, and full state cleanup on successful login; workspace stays strictly hidden & unmounted until authenticated.
 - **Studio Controls**: Drag-and-drop Visual Media Dropzones (with live preview, replace/remove, collapsible manual URL fallback), tactile Toggle Switches (`role="switch"`), Segmented Pill Controls, and Sticky Save Bar.
 - **Modules**:
   1. **Profil & Hero (Split Studio + Live Preview)**: Left column Bento sub-cards (`Identitas & Bio`, `Media & Portraits` 3-dropzone grid, `Tautan Sosial`) paired with a sticky right-column Real-Time Live Mini-Preview card and Sticky Save Bar.
