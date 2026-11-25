@@ -31,6 +31,7 @@ import { initFolders3D } from './components/folders-3d.js';
 import { initShowcase } from './components/showcase.js';
 import { initPolaroidScatter } from './components/polaroid-scatter.js';
 import { initContactGuestbook } from './components/contact-guestbook.js';
+import { initPortfolioBot } from './components/portfolio-bot.js';
 
 function hydrateProfileFields(profile) {
   const heroDisplayEl = document.getElementById('hero-display-name');
@@ -48,7 +49,6 @@ function hydrateProfileFields(profile) {
   const statusEl = document.getElementById('profile-status-text');
   const availDotEl = document.getElementById('profile-availability-dot');
   const locationEl = document.getElementById('profile-location');
-  const coordsEl = document.getElementById('profile-coordinates');
 
   const findMeFullName = document.getElementById('find-me-fullname');
   const findMeTagline = document.getElementById('find-me-tagline');
@@ -74,7 +74,6 @@ function hydrateProfileFields(profile) {
   if (bioEl) bioEl.textContent = profile.bio;
   if (statusEl) statusEl.textContent = profile.statusText;
   if (locationEl) locationEl.textContent = profile.location;
-  if (coordsEl) coordsEl.textContent = profile.coordinates;
 
   if (availDotEl) {
     availDotEl.classList.toggle('bg-[#10B981]', Boolean(profile.isAvailable));
@@ -145,6 +144,15 @@ async function bootstrapPortfolio() {
     isLive: bundle.guestbookIsLive,
     onSubmitContact: submitContactMessage,
     onSubmitGuestbook: submitGuestbookComment,
+  });
+
+  initPortfolioBot({
+    profile: bundle.profile,
+    showcaseItems: bundle.showcaseItems,
+    education: bundle.education,
+    experience: bundle.experience,
+    techStack: TECH_STACK_ITEMS,
+    socials: bundle.socials,
   });
 
   initSectionReveals();

@@ -5,9 +5,10 @@ A high-craft, interactive personal portfolio combining the **scrollytelling mech
 
 ## 2. Reference Video Mapping (Mechanics ONLY — NOT Visual Theme)
 Adopt the *interaction choreography* from the attached reference video, translated into Bright Editorial Cyber-Tech Bento:
-1. **Floating Pill Navbar + Mascot Indicator**:
+1. **Floating Pill Navbar + Interactive Cyber Mascot (Portfolio Assistant Bot Trigger)**:
    - Centered floating pill (`Home`, `About`, `Portfolio`, `Contact`) with `1.5px solid #0F172A` precision border and frosted white surface.
    - Custom obsidian cyber SVG mascot with white protective keyline sits atop the active Cobalt Blue pill (`#2563EB`) and glides via GSAP (`back.out(1.4)`) with subtle directional tilt (`IntersectionObserver` + `offsetLeft`).
+   - Clicking the mascot (with `"Tanya Satrio Bot"` hover tooltip on desktop) or the desktop-only bottom-right `"Tanya Bot"` FAB toggles the 100% client-side **Interactive Portfolio Assistant Bot** (`src/components/portfolio-bot.js`), reading hydrated live state (`profile`, `showcase`, `timeline`, `techStack`, `socials`) with zero external API keys, bilingual ID/EN intent matching, Quick Prompt chips, typing indicator, quick navigation actions, `Escape` close, and strict `textContent` rendering.
 2. **Bright Editorial Bento Hero Board (3-Layer Scroll-Scrubbed Parallax Focal Stage)**:
    - Framed inside an asymmetric 12-column Bento board on `#F4F6FA`:
      - **Tile H1 (`lg:col-span-8 lg:row-span-2`, Obsidian Anchor `#0B0F19`)**: Choreographed intro reveal (`power4.out` + masked text rise) + scroll-scrubbed 3-Layer Parallax (`hero-coord-grid` depth -> rising & scaling `SATRIO` display typography -> cutout portrait + left/right splitting framing plates via `gsap.timeline({ scrollTrigger: { scrub: 0.8 } })`).
@@ -16,7 +17,7 @@ Adopt the *interaction choreography* from the attached reference video, translat
 3. **About & Capabilities — Two Spacious Bento Blocks**:
    - **Blok A (Profile Board, 12-Col)**:
      - **Identity & Bio (`lg:col-span-5`, `#FFFFFF`)**: Profile card with outlined `PROFILE` pill and magnetic circular shortcut.
-     - **Live WIB Telemetry (`lg:col-span-3`, Electric Cobalt `#2563EB`)**: Real-time WIB clock (`tabular-nums`), Jakarta coordinates with circular Copy Coordinates button, and white Availability status pill.
+     - **Live WIB Telemetry (`lg:col-span-3`, Electric Cobalt `#2563EB`)**: Real-time WIB clock (`tabular-nums`), general base location (`Jakarta, Indonesia` + `Remote Friendly · ID`, with precise lat/long coordinates intentionally omitted for privacy), direct Contact shortcut button, and white Availability status pill.
      - **Dual-Layer Spotlight Portrait (`lg:col-span-4 lg:row-span-2`, Obsidian Anchor `#0B0F19`)**: Stage strictly locked to `aspect-[4/5]` ratio using `gsap.quickTo` lerped cursor spotlight (`clip-path: circle()`) + reveal toggle button.
      - **Core Stack Infinite Kinetic Marquee (`lg:col-span-8`, Soft Sky Blue `#DBEAFE`)**: Seamless horizontal GSAP loop showcasing `HTML5`, `Tailwind CSS`, `JavaScript`, `Vite`, `Supabase`, `Figma`, `Alight Motion`, and `CapCut` as flat editorial pills that pause smoothly (`timeScale: 0`) on hover/focus.
    - **Blok B (Journey & Directories, 12-Col)**:
@@ -25,10 +26,10 @@ Adopt the *interaction choreography* from the attached reference video, translat
      - **Full-Width 3D Archive Directories (`lg:col-span-12`, Soft Sky Blue `#DBEAFE`)**: 3 interactive folders (`Web & Apps` -> DB `project`, `Graphic Design` -> DB `certificate`, `Credentials` -> DB `award`) tilting front flaps in 3D (`rotateX(-38deg)`) and fanning 3 mini preview cards (`back.out(1.7)`) on hover/focus.
 4. **Kinetic Bridge, 3-Tab Showcase & Visual Snapshots (Polaroid Scatter)**:
    - Scroll-scrubbed `PORTFOLIO` kinetic typography sweep + counter-scrolling discipline strip (`scrub: 1`).
-   - **3-Tab Showcase (`Web & Apps`, `Graphic Design`, `Credentials`)**: Display labels mapped to unchanged backend enum values (`project`, `certificate`, `award`), sliding `#showcase-tab-pill` indicator (`back.out(1.4)`), tag filters with staggered card pop-in (`power3.out`), hover thumbnail zoom, and spring-animated Detail Modal (`safeUrl`, focus trap, `Escape`, `Lenis` pause/resume).
+   - **3-Tab Showcase (`Web & Apps`, `Graphic Design`, `Credentials`)**: Display labels mapped to unchanged backend enum values (`project`, `certificate`, `award`), locked strictly to 1 horizontal row (`flex-nowrap`, `whitespace-nowrap`) with exact active-button bounding measurement on sliding `#showcase-tab-pill` (`back.out(1.4)`), tag filters with staggered card pop-in (`power3.out`), hover thumbnail zoom, and spring-animated Detail Modal (`safeUrl`, focus trap, `Escape`, `Lenis` pause/resume).
    - **Visual Snapshots (Exploding Photo Stack / Polaroid Scatter)** inside a Soft Periwinkle (`#E0E7FF`) Bento frame showcasing finished visual excerpts, UI details, and creative exploration snapshots: desktop center-stack-to-scatter explosion (`ScrollTrigger`, `back.out(1.4)`), hover card straightening & lift (`rotation: 0, scale: 1.07`), toggle button, tablet 3x2 grid, mobile snap-deck, and spring Lightbox.
 5. **Bright Editorial Contact, 3D Find Me ID Badge & Live Guestbook**:
-   - **Left Column**: Direct Contact Form (`Crisp White #FFFFFF`) saving to `contact_messages` (or browser preview storage) + **Find Me** card (`Soft Sky Blue #DBEAFE`) featuring 3D perspective lanyard tilt (`gsap.quickTo` on `rotationX`/`rotationY`) and radial glare highlight.
+   - **Left Column**: Direct Contact Form (`Crisp White #FFFFFF`) saving to `contact_messages` (or browser preview storage) + **Find Me** card (`Soft Sky Blue #DBEAFE`) featuring single-line `ID · JKT` badge (`whitespace-nowrap shrink-0`), 3D perspective lanyard tilt (`gsap.quickTo` on `rotationX`/`rotationY`), and radial glare highlight.
    - **Right Column**: XSS-safe Live Guestbook (`Crisp White #FFFFFF`) rendering comments strictly via `textContent` with slide-down + pop-in animation on new submission.
 
 ## 3. Design System — "Bright Editorial Cyber-Tech Bento (Blue Edition)"

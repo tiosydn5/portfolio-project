@@ -35,7 +35,7 @@
       >
         <div id="floating-nav-pill" class="floating-nav-pill">
           <div id="nav-active-pill" class="nav-active-pill" aria-hidden="true"></div>
-          <div id="nav-mascot-track" class="nav-mascot-track" aria-hidden="true"></div>
+          <div id="nav-mascot-track" class="nav-mascot-track"></div>
           <a href="#home" class="nav-link-item" data-target="home" aria-current="location">
             Home
           </a>
@@ -282,17 +282,16 @@
               <div class="space-y-4">
                 <div class="flex items-center justify-between gap-2">
                   <span class="bento-pill bento-pill-cobalt">JAKARTA WIB</span>
-                  <button
-                    id="copy-coords-btn"
-                    type="button"
+                  <a
+                    href="#contact"
                     class="bento-circle-btn bento-circle-white"
-                    aria-label="Salin koordinat Jakarta"
+                    aria-label="Hubungi Satrio"
                   >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4" aria-hidden="true">
-                      <rect x="9" y="9" width="13" height="13" rx="2" />
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      <line x1="7" y1="17" x2="17" y2="7" />
+                      <polyline points="7 7 17 7 17 17" />
                     </svg>
-                  </button>
+                  </a>
                 </div>
 
                 <div>
@@ -310,10 +309,9 @@
                   <p id="profile-location" class="text-base font-semibold text-[#FFFFFF] mt-0.5">
                     Jakarta, Indonesia
                   </p>
-                  <p id="profile-coordinates" class="font-mono-tabular text-xs text-[#FFFFFF] mt-0.5">
-                    6.2088° S, 106.8456° E
+                  <p class="font-mono-tabular text-xs text-[#FFFFFF] mt-1">
+                    Remote Friendly · ID
                   </p>
-                  <p id="telemetry-copy-feedback" aria-live="polite" class="font-mono-tabular text-xs text-[#FFFFFF] mt-1 min-h-[16px]"></p>
                 </div>
               </div>
 
@@ -543,7 +541,7 @@
               id="showcase-tablist"
               role="tablist"
               aria-label="Kategori showcase"
-              class="showcase-tablist"
+              class="showcase-tablist shrink-0 max-w-full"
             >
               <span id="showcase-tab-pill" class="showcase-tab-pill" aria-hidden="true"></span>
               <button
@@ -830,7 +828,7 @@
                       Kanal resmi dan kartu identitas teknis.
                     </p>
                   </div>
-                  <span class="font-mono-tabular text-xs font-semibold px-3 py-1 rounded-full bg-[#FFFFFF] border-[1.5px] border-[#0F172A] text-[#0B0F19]">
+                  <span class="font-mono-tabular text-xs font-semibold px-3 py-1 rounded-full bg-[#FFFFFF] border-[1.5px] border-[#0F172A] text-[#0B0F19] whitespace-nowrap shrink-0">
                     ID · JKT
                   </span>
                 </div>

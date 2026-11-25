@@ -2,7 +2,7 @@ import { gsap, prefersReducedMotion } from '../lib/motion-engine.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-function buildCyberMascot() {
+export function buildCyberMascot() {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', '0 0 38 24');
   svg.setAttribute('fill', 'none');
@@ -131,7 +131,34 @@ export function initNavbar() {
   document.body.classList.add('has-bottom-dock');
 
   if (!mascotTrack.hasChildNodes()) {
-    mascotTrack.appendChild(buildCyberMascot());
+    const mascotBtn = document.createElement('button');
+    mascotBtn.id = 'nav-mascot-trigger';
+    mascotBtn.type = 'button';
+    mascotBtn.className = 'nav-mascot-btn';
+    mascotBtn.setAttribute('aria-label', 'Tanya Satrio Bot');
+    mascotBtn.setAttribute('aria-expanded', 'false');
+    mascotBtn.setAttribute('aria-controls', 'portfolio-bot-panel');
+
+    const tooltip = document.createElement('span');
+    tooltip.className = 'nav-mascot-tooltip';
+    tooltip.setAttribute('aria-hidden', 'true');
+    tooltip.textContent = 'Tanya Satrio Bot';
+
+    const svgEl = buildCyberMascot();
+    mascotBtn.append(svgEl, tooltip);
+
+    mascotBtn.addEventListener('click', () => {
+      if (!prefersReducedMotion()) {
+        gsap.fromTo(
+          svgEl,
+          { y: -6, scale: 1.1 },
+          { y: 0, scale: 1, duration: 0.42, ease: 'back.out(2)', overwrite: 'auto' }
+        );
+      }
+      window.dispatchEvent(new CustomEvent('portfolio-bot:toggle', { detail: { opener: mascotBtn } }));
+    });
+
+    mascotTrack.appendChild(mascotBtn);
   }
 
   const mascotSvg = mascotTrack.querySelector('svg');

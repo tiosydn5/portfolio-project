@@ -91,4 +91,15 @@
 - **Verification**: Confirmed zero CSS/layout/animation diffs, ran `npm run build` and headless browser verification on `/` and `/admin`, and pushed to `origin/main`.
 - **Files touched**: `index.html`, `src/lib/portfolio-api.js`, `src/lib/data-fallback.js`, `src/components/showcase.js`, `src/components/polaroid-scatter.js`, `src/admin/showcase-crud.js`, `src/admin/polaroid-crud.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-25 — [UI/Privacy Fixes & Client-Side Feature] Showcase Tab Fix, Badge Wrap Fix, Telemetry Privacy & Interactive Portfolio Assistant Bot
+- **Showcase Archive Single-Row Tabs (`index.html`, `src/styles/base.css`, `src/components/showcase.js`)**: Locked `.showcase-tablist` to a single horizontal row (`flex-nowrap`, `whitespace-nowrap`, subtle `overflow-x: auto` safety on ultra-narrow screens `<= 320px`) and updated `positionTabPill()` to measure exact `offsetLeft`, `offsetTop`, `offsetWidth`, and `offsetHeight` of the active tab so `#showcase-tab-pill` never stretches vertically across rows.
+- **`Find Me` Badge Single-Line Lock (`index.html`)**: Added `whitespace-nowrap shrink-0` to the `ID · JKT` badge inside `#find-me-card` so it stays on one line across desktop and mobile.
+- **Telemetry Privacy Cleanup (`index.html`, `src/components/telemetry-clock.js`, `src/main.js`)**: Removed public lat/long coordinate readout (`6.2088° S, 106.8456° E`) and copy-coordinates button from the public WIB Telemetry tile, replacing it with `Remote Friendly · ID` and a direct `#contact` shortcut button while leaving Supabase schema and `/admin` untouched.
+- **Interactive Portfolio Assistant Bot (`src/components/portfolio-bot.js`, `src/components/navbar.js`, `src/styles/base.css`, `src/main.js`)**:
+  - Made the Floating Navbar Cyber Mascot clickable (`#nav-mascot-trigger`) with a non-clipping `"Tanya Satrio Bot"` hover tooltip on desktop, paired with a desktop-only (`>= 640px`) bottom-right `"Tanya Bot"` FAB (hidden on mobile so zero collision with the `375px` bottom dock).
+  - Built a 100% client-side Bright Editorial Bento chat panel (GSAP spring open/close, `Escape` close, `data-lenis-prevent`, strict `textContent` anti-XSS rendering, `~350ms` typing indicator, Quick Prompt chips, bilingual ID/EN smart intent matching synced dynamically to hydrated `profile`, `showcaseItems`, `education`, `experience`, `techStack`, and `socials`, plus quick navigation action buttons).
+- **Verification**: Ran `npm run build` (`vite build` -> `78 modules`, `0` errors) and Playwright visual/functional audits across `1280x800`, `375x812`, and `320x800` (`0` console/page/network errors, `0px` horizontal overflow, 1-row tabs & exact 44px pill height across all 3 tabs, 1-line `ID · JKT`, zero coordinates in DOM, bot mascot trigger + quick chips + XSS safety + mobile dock clearance verified).
+- **Files touched**: `index.html`, `src/styles/base.css`, `src/components/showcase.js`, `src/components/navbar.js`, `src/components/telemetry-clock.js`, `src/components/portfolio-bot.js`, `src/main.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
+
+
 

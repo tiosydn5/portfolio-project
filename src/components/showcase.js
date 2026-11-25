@@ -132,18 +132,22 @@ export function initShowcase({ items = [] }) {
   function positionTabPill(targetBtn, animate = true) {
     if (!tabPill || !targetBtn) return;
     const width = targetBtn.offsetWidth;
-    if (width === 0) return;
+    const height = targetBtn.offsetHeight;
+    if (width === 0 || height === 0) return;
     const left = targetBtn.offsetLeft;
+    const top = targetBtn.offsetTop;
 
     tabPill.style.width = `${width}px`;
+    tabPill.style.height = `${height}px`;
 
     if (!animate || prefersReducedMotion()) {
-      gsap.set(tabPill, { x: left });
+      gsap.set(tabPill, { x: left, y: top });
       return;
     }
 
     gsap.to(tabPill, {
       x: left,
+      y: top,
       duration: 0.46,
       ease: 'back.out(1.4)',
       overwrite: 'auto',
