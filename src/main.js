@@ -119,10 +119,12 @@ async function bootstrapPortfolio() {
   hydrateProfileFields(bundle.profile);
 
   const sourceBadge = document.getElementById('showcase-source-badge');
+  const hasRealShowcase = bundle.showcaseItems.some((item) => !item.isSample);
   if (sourceBadge) {
-    sourceBadge.textContent = bundle.showcaseIsLive
-      ? `ARCHIVE · ${bundle.showcaseItems.length} KARYA`
-      : `ARCHIVE · ${bundle.showcaseItems.length} PRATINJAU`;
+    sourceBadge.textContent =
+      bundle.showcaseIsLive || hasRealShowcase
+        ? `ARCHIVE · ${bundle.showcaseItems.length} KARYA`
+        : `ARCHIVE · ${bundle.showcaseItems.length} PRATINJAU`;
   }
 
   initBentoAbout({

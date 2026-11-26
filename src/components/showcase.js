@@ -402,11 +402,11 @@ export function initShowcase({ items = [] }) {
       });
 
       const thumbWrap = createEl('div', {
-        className: 'relative bg-[#DBEAFE] border-b-[1.5px] border-[#0F172A] overflow-hidden',
+        className: 'relative bg-[#0B0F19] border-b-[1.5px] border-[#0F172A] overflow-hidden',
       });
 
       const img = createEl('img', {
-        className: 'showcase-thumb-img w-full h-auto aspect-[16/10] object-cover block',
+        className: 'showcase-thumb-img w-full h-auto aspect-[16/10] object-contain p-2 block',
         attrs: {
           src: safeUrl(item.thumbnail_url) || assetUrl('/assets/showcase/project-atelier.svg'),
           alt: `Thumbnail ${item.title}`,

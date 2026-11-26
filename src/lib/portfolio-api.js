@@ -27,7 +27,9 @@ const FOLDER_META = [
 export function buildFoldersFromShowcase(items = [], isLive = false) {
   return FOLDER_META.map((meta) => {
     const group = items.filter((item) => item.category === meta.category);
-    const countLabel = isLive ? `${group.length} karya` : `${group.length} arsip`;
+    const hasRealWork = group.some((item) => !item.isSample);
+    const countLabel =
+      isLive || hasRealWork ? `${group.length} karya` : `${group.length} pratinjau`;
 
     const sheets = [0, 1, 2].map((idx) => {
       const entry = group[idx];

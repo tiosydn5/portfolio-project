@@ -114,6 +114,14 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright simulations across `1280x800` & `375x812` covering generic anti-enumeration messages, `>= 400ms` response delay, all lockout tiers (`3x`–`10x`), `IndexedDB` restoration after `localStorage` clear, auto-unlock without refresh, 24h auto-reset, login-success reset, `0` console/page errors, `0px` mobile overflow, and full post-test storage cleanup.
 - **Files touched**: `admin.html`, `src/styles/admin.css`, `src/admin/login-guard.js`, `src/admin/admin-main.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-26 — [Portfolio Content & Assets] 20 Curated Web Dev & Graphic Design Works + Visual Snapshots
+- **Real Artwork Assets (`public/assets/works/web/*`, `public/assets/works/graphic/*`)**: Copied and organized all 20 works from `web_dev.zip` (`Atelier Engine v4`, `Kronos Ledger ERP`, `Vectra Attendance Portal`) and `Graphic_Design.zip` (`3` Social Media Carousel grids, `7` F&B Promotional Posters/Banners, and `7` Personal Branding, Automotive, Sports, and Editorial Character Posters) using base-aware web-safe paths resolved via `assetUrl()` / `safeUrl()`.
+- **Editorial Copywriting & Structured Filtering (`src/lib/data-fallback.js`, `supabase/seed.sql`, `src/lib/portfolio-api.js`, `src/main.js`)**: Authored bespoke Indonesian titles, subtitles, descriptions, and structured filter tags (`Web Dev`, `SaaS`, `JavaScript`, `Supabase`, `UI/UX`; `Social Media`, `F&B Design`, `Branding`, `Poster`, `Editorial`), marked all 20 real works with `isSample: false` so `"Mode Pratinjau"` does not appear on real items, updated 3D Folder counts (`3 karya`, `17 karya`, `3 pratinjau`) and Showcase header count (`ARCHIVE · 23 KARYA`), refreshed the 6 `Visual Snapshots` (`FALLBACK_POLAROIDS`) with real Web & Graphic artworks, and synchronized `supabase/seed.sql` for optional CMS SQL seeding.
+- **Uncropped Framing (`src/components/showcase.js`, `src/components/polaroid-scatter.js`, `index.html`)**: Updated Showcase thumbnails, Detail Modal image (`max-h-[60vh] object-contain`), and Visual Snapshots cards to `object-contain` on `#0B0F19` framing so tall posters, carousel collages, and mobile UIs render unclipped.
+- **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright checks across `1280x800` & `375x812`: verified all 20 showcase images & 6 Polaroid images load (`0` broken images), `0` console/page/request errors, `0px` horizontal overflow, live filter chips, modal uncropped view, and dynamic Portfolio Assistant Bot summaries.
+- **Files touched**: `index.html`, `src/main.js`, `src/lib/data-fallback.js`, `src/lib/portfolio-api.js`, `src/components/showcase.js`, `src/components/polaroid-scatter.js`, `supabase/seed.sql`, `public/assets/works/**`, `STATE.md`, `CHANGELOG.md`.
+
+
 
 
 

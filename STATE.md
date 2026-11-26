@@ -1,6 +1,6 @@
 # STATE.md — Live Project Save-Game
 
-- **Last Updated**: 2026-11-25
+- **Last Updated**: 2026-11-26
 - **Current Phase**: Phase 3 + Bright Editorial Public Overhaul + GSAP/Lenis Motion + Bright Bento Studio CMS (`/admin`) + Client-Side Portfolio Assistant Bot Complete
 - **Overall Status**: Unified Bright Editorial Cyber-Tech Bento (Blue Edition) Portfolio (`/`) powered by `GSAP` (`ScrollTrigger`, `quickTo`, `matchMedia`) + `Lenis` smooth scrolling, interactive 100% client-side **Portfolio Assistant Bot**, and **Bright Bento Studio CMS (`/admin`)** with live Supabase hydration, drag-and-drop storage dropzones, Split Studio live profile preview, content-first Visual Card Grids, Slide-Over Drawers, rotation slider Polaroid preview, modern Inbox/Guestbook moderation, `supabase/schema.sql`, `supabase/seed.sql`, `.github/workflows/supabase-keepalive.yml`, and `.github/workflows/deploy-pages.yml`.
 
@@ -25,6 +25,7 @@
 - `public/assets/` (`hero-cutout-placeholder.svg`, `avatar-normal-placeholder.svg`, `avatar-alter-placeholder.svg`)
 - `public/assets/showcase/` (10 Studio SVG thumbnails)
 - `public/assets/polaroid/` (6 Studio Frame SVGs)
+- `public/assets/works/` (`web/` 3 web application screenshots + `graphic/` 17 graphic design artworks)
 - `reference/1000535039.mp4` (Phase 0 reference choreography video)
 - `src/styles/tokens.css`, `src/styles/base.css`, `src/styles/animations.css`, `src/styles/admin.css`
 - `src/lib/sanitize.js`, `src/lib/supabase.js`, `src/lib/data-fallback.js`, `src/lib/storage-upload.js`, `src/lib/portfolio-api.js`, `src/lib/motion-engine.js`
@@ -49,10 +50,11 @@
 - [x] Visual/Privacy Fixes & Client-Side Portfolio Assistant Bot (2026-11-25): Fixed Showcase tabs wrapping & sliding pill vertical stretch (`flex-nowrap`, `whitespace-nowrap`, exact `offsetLeft`/`offsetTop`/`offsetWidth`/`offsetHeight` measurement), locked `ID · JKT` badge to a single line (`whitespace-nowrap shrink-0`), removed precise lat/long coordinates from public Telemetry card in favor of `Remote Friendly · ID` for privacy, and added 100% client-side `src/components/portfolio-bot.js` triggered by the clickable navbar Cyber Mascot (`"Tanya Satrio Bot"` tooltip) and desktop-only bottom-right FAB—zero DB schema changes, zero external API keys, strict `textContent` XSS safety, verified via `npm run build` + Playwright (`1280px`, `375px`, `320px`).
 - [x] Public Footer Hygiene & Hidden Admin Access (2026-11-25): Removed the visible `/admin CMS` footer link from `index.html`, replaced it with the `Kembali ke Atas` smooth-scroll pill button targeting `#home` (with `sm:pb-[88px]` desktop clearance above `Tanya Bot`), and wired hidden admin shortcuts (`5x` rapid click on footer `2026` or `Ctrl + Shift + A`) in `src/main.js`; verified `npm run build` + Playwright (`1280px` & `375px`) with `/admin` direct URL route untouched.
 - [x] Admin Progressive Login Lockout & Anti-Enumeration Guard (2026-11-25): Added `src/admin/login-guard.js` with serialized `localStorage` + `IndexedDB` mirror persistence (`studio_auth_guard_v1` / `studio_auth_guard_db`), unified `"Email atau password tidak sesuai."` generic error response with `~400ms` delay floor, progressive schedule (`3x: 1m`, `4x: 3m`, `5x: 1h`, `6x: 2h`, `7x: 4h`, `8x: 8h`, `9x: 12h` with zero threshold warning, `10x: permanentLock`), 24-hour auto-reset when `< 10` failures, reset on auth success, and Bright Bento countdown/permanent-lock UI (`admin.html`, `src/styles/admin.css`, `src/admin/admin-main.js`); verified via `npm run build` and Playwright simulation (`1280px` & `375px`) with browser storage cleaned afterward.
+- [x] Real Portfolio Works Population & Editorial Copywriting (2026-11-26): Added all 20 real portfolio assets from `web_dev.zip` (`Atelier Engine v4`, `Kronos Ledger ERP`, `Vectra Attendance Portal`) and `Graphic_Design.zip` (`17` works across Social Media Carousels, F&B Promotional Posters/Banners, Personal Branding, Automotive, Sports & Anime/Comic Editorial Posters) into `public/assets/works/`, authored accurate Indonesian copywriting and structured taxonomy tags in `src/lib/data-fallback.js` & `supabase/seed.sql`, refreshed `FALLBACK_POLAROIDS` with 6 real Visual Snapshots, updated thumbnail/modal framing (`object-contain` on `#0B0F19`) so varied portrait/landscape works stay uncropped, updated accurate folder/archive counters (`portfolio-api.js`, `main.js`), verified `npm run build` + Playwright (`1280px` & `375px`, `0` broken images, `0` console/page errors, `0px` horizontal overflow), and pushed to `origin/main`.
 
 ## Active / Next Action (User Activation Checklist)
-1. Sign in at `/admin` (direct `/admin` URL, `5x` rapid click on footer `2026`, or `Ctrl + Shift + A`) to upload real assets and manage portfolio content across `Web & Apps`, `Graphic Design`, `Credentials`, and `Visual Snapshots`.
+1. Sign in at `/admin` (direct `/admin` URL, `5x` rapid click on footer `2026`, or `Ctrl + Shift + A`) and optionally run updated `supabase/seed.sql` in SQL Editor if managing the 20 works from Supabase CMS.
 2. Optionally connect repo to Vercel or Netlify (with `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` env vars) if deploying on a custom root domain.
 
 ## Known Issues / Blockers
-- None. Both `/` and `/admin` Bright Bento Studio CMS (with progressive login lockout & anti-enumeration) are verified, pushed to `origin/main`, and deployed to GitHub Pages.
+- None. Both `/` (with all 20 real portfolio works & Visual Snapshots) and `/admin` Bright Bento Studio CMS are verified, pushed to `origin/main`, and deployed to GitHub Pages.
