@@ -227,12 +227,13 @@ export function initPolaroidScatter({ photos = [] }) {
     cardBtn.style.setProperty('--stack-z', String(stackZ));
 
     const frame = createEl('div', {
-      className: 'rounded-lg overflow-hidden bg-[#DBEAFE] border-[1.5px] border-[#0F172A]',
+      className:
+        'rounded-lg overflow-hidden bg-[#EEF2F8] border border-[rgba(15,23,42,0.16)] p-2 flex items-center justify-center',
     });
 
     frame.appendChild(
       createEl('img', {
-        className: 'w-full h-auto aspect-[4/3] object-cover block select-none',
+        className: 'w-full h-auto aspect-[4/3] object-contain block select-none rounded-sm',
         attrs: {
           src: safeUrl(photo.image_url) || assetUrl('/assets/polaroid/polaroid-01.svg'),
           alt: photo.caption,

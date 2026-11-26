@@ -128,6 +128,12 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright checks across `1280x800` & `375x812`: all 6 process images load cleanly (`0` broken, `objectFit: cover` on cards, `objectFit: contain` in Lightbox, `0` console/page/request errors, `0px` horizontal overflow).
 - **Files touched**: `public/assets/works/process/**`, `src/lib/data-fallback.js`, `src/components/polaroid-scatter.js`, `supabase/seed.sql`, `supabase/update_polaroids.sql`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-26 — [Visual Snapshots / Polaroids] Uncropped Bright Photo-Matting Framing
+- **Polaroid Card Framing (`src/components/polaroid-scatter.js`)**: Switched Polaroid scatter card images from `object-cover` to `object-contain` inside a bright Bright-Bento photo-matting container (`bg-[#EEF2F8]`, `border border-[rgba(15,23,42,0.16)]`, `p-2`) so non-square Canva posters, laptop photos, and code screenshots render 100% uncropped with readable titles and zero black sidebars while Lightbox continues showing full `object-contain` previews.
+- **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright checks across `1280x800` & `375x812`: verified all 6 Polaroid cards use `objectFit: contain` with full uncropped titles, Lightbox opens cleanly, `0` console/page/request errors, `0px` horizontal overflow.
+- **Files touched**: `src/components/polaroid-scatter.js`, `STATE.md`, `CHANGELOG.md`.
+
+
 
 
 
