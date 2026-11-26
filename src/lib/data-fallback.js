@@ -77,13 +77,14 @@ export const FALLBACK_EXPERIENCE = [
 
 export const TECH_STACK_ITEMS = [
   {
-    name: 'HTML5',
+    name: 'HTML & CSS',
     category: 'Web',
     icon: {
       viewBox: '0 0 24 24',
       shapes: [
-        { tag: 'polygon', attrs: { points: '4,3 20,3 18.5,18.5 12,21 5.5,18.5' } },
-        { tag: 'polyline', attrs: { points: '16,7 8.5,7 9,11.5 15.5,11.5 15,15.5 12,16.5 9,15.5' } },
+        { tag: 'polyline', attrs: { points: '8,7 3,12 8,17' } },
+        { tag: 'polyline', attrs: { points: '16,7 21,12 16,17' } },
+        { tag: 'line', attrs: { x1: '13.5', y1: '5.5', x2: '10.5', y2: '18.5' } },
       ],
     },
   },
@@ -99,29 +100,6 @@ export const TECH_STACK_ITEMS = [
     },
   },
   {
-    name: 'JavaScript',
-    category: 'Web',
-    icon: {
-      viewBox: '0 0 24 24',
-      shapes: [
-        { tag: 'rect', attrs: { x: '3', y: '3', width: '18', height: '18', rx: '2' } },
-        { tag: 'path', attrs: { d: 'M10 10v6.5c0 1-.8 1.5-1.8 1.5-.8 0-1.4-.3-1.7-.8' } },
-        { tag: 'path', attrs: { d: 'M17.5 11.2c-.4-.7-1.1-1.2-2-1.2-1.1 0-1.9.7-1.9 1.6 0 1 .9 1.4 2.1 1.8 1.3.4 2.1.9 2.1 2.1 0 1.2-1 2-2.4 2-1.1 0-2-.5-2.5-1.4' } },
-      ],
-    },
-  },
-  {
-    name: 'Vite',
-    category: 'Build',
-    icon: {
-      viewBox: '0 0 24 24',
-      shapes: [
-        { tag: 'polygon', attrs: { points: '3,5 12,20 21,5 12,8' } },
-        { tag: 'polyline', attrs: { points: '12,8 10,14 14,12 11.5,18' } },
-      ],
-    },
-  },
-  {
     name: 'Supabase',
     category: 'Backend',
     icon: {
@@ -132,8 +110,31 @@ export const TECH_STACK_ITEMS = [
     },
   },
   {
-    name: 'Figma',
+    name: 'AI Workflow',
+    category: 'AI',
+    icon: {
+      viewBox: '0 0 24 24',
+      shapes: [
+        { tag: 'path', attrs: { d: 'M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z' } },
+        { tag: 'line', attrs: { x1: '18.5', y1: '4.5', x2: '18.5', y2: '7.5' } },
+        { tag: 'line', attrs: { x1: '17', y1: '6', x2: '20', y2: '6' } },
+      ],
+    },
+  },
+  {
+    name: 'Canva',
     category: 'Design',
+    icon: {
+      viewBox: '0 0 24 24',
+      shapes: [
+        { tag: 'circle', attrs: { cx: '12', cy: '12', r: '9' } },
+        { tag: 'path', attrs: { d: 'M15.4 9.2a4.4 4.4 0 1 0 0 5.6' } },
+      ],
+    },
+  },
+  {
+    name: 'Figma',
+    category: 'UI/UX',
     icon: {
       viewBox: '0 0 24 24',
       shapes: [

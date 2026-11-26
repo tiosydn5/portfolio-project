@@ -133,6 +133,13 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright checks across `1280x800` & `375x812`: verified all 6 Polaroid cards use `objectFit: contain` with full uncropped titles, Lightbox opens cleanly, `0` console/page/request errors, `0px` horizontal overflow.
 - **Files touched**: `src/components/polaroid-scatter.js`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-26 — [Core Stack & Portfolio Bot] Daily 8-Tool Stack Alignment
+- **Marquee Stack Update (`src/lib/data-fallback.js`)**: Replaced `TECH_STACK_ITEMS` with the exact 8 daily tools (`HTML & CSS`, `Tailwind CSS`, `Supabase`, `AI Workflow`, `Canva`, `Figma`, `Alight Motion`, `CapCut`), removing unused items (`HTML5`, `JavaScript`, `Vite`) and adding matching monochrome inline SVG glyphs for `HTML & CSS`, `AI Workflow`, and `Canva` without touching layout, marquee speed, or Supabase/Admin logic.
+- **Portfolio Bot Sync (`src/components/portfolio-bot.js`)**: Updated tool-intent keywords (`html`, `css`, `tailwind`, `supabase`, `ai`, `workflow`, `canva`, `figma`, `alight`, `capcut`, `motion`) so both Quick Prompt and free-text queries dynamically list the exact 8 tools.
+- **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright checks (`1280x800` & `375x812`): `8` original + `8` cloned marquee items (`3124px` track vs `713px` viewport, zero loop gap), synced bot replies, `0` console/page errors, `0px` horizontal overflow.
+- **Files touched**: `src/lib/data-fallback.js`, `src/components/portfolio-bot.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
+
+
 
 
 

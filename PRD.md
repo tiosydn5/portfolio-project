@@ -19,7 +19,7 @@ Adopt the *interaction choreography* from the attached reference video, translat
      - **Identity & Bio (`lg:col-span-5`, `#FFFFFF`)**: Profile card with outlined `PROFILE` pill and magnetic circular shortcut.
      - **Live WIB Telemetry (`lg:col-span-3`, Electric Cobalt `#2563EB`)**: Real-time WIB clock (`tabular-nums`), general base location (`Jakarta, Indonesia` + `Remote Friendly · ID`, with precise lat/long coordinates intentionally omitted for privacy), direct Contact shortcut button, and white Availability status pill.
      - **Dual-Layer Spotlight Portrait (`lg:col-span-4 lg:row-span-2`, Obsidian Anchor `#0B0F19`)**: Stage strictly locked to `aspect-[4/5]` ratio using `gsap.quickTo` lerped cursor spotlight (`clip-path: circle()`) + reveal toggle button.
-     - **Core Stack Infinite Kinetic Marquee (`lg:col-span-8`, Soft Sky Blue `#DBEAFE`)**: Seamless horizontal GSAP loop showcasing `HTML5`, `Tailwind CSS`, `JavaScript`, `Vite`, `Supabase`, `Figma`, `Alight Motion`, and `CapCut` as flat editorial pills that pause smoothly (`timeScale: 0`) on hover/focus.
+     - **Core Stack Infinite Kinetic Marquee (`lg:col-span-8`, Soft Sky Blue `#DBEAFE`)**: Seamless horizontal GSAP loop showcasing `HTML & CSS`, `Tailwind CSS`, `Supabase`, `AI Workflow`, `Canva`, `Figma`, `Alight Motion`, and `CapCut` as flat editorial pills that pause smoothly (`timeScale: 0`) on hover/focus.
    - **Blok B (Journey & Directories, 12-Col)**:
      - **Education (`lg:col-span-5`, Soft Periwinkle `#E0E7FF`)**: Concise timeline cards.
      - **Experience (`lg:col-span-7`, `#FFFFFF`)**: Bounded scrollable timeline with fade masks (`data-lenis-prevent`) and mobile expand toggle.
