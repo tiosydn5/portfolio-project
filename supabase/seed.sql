@@ -410,29 +410,29 @@ SELECT
   1
 WHERE NOT EXISTS (SELECT 1 FROM public.showcase_items WHERE title = 'UI/UX Design Concept Recognition');
 
--- 4. Polaroid Gallery (6 visual snapshots matching showcased works)
+-- 4. Polaroid Gallery (6 behind-the-scenes process snapshots — alternating Dev & Design)
 INSERT INTO public.polaroid_photos (image_url, caption, rotation_deg, sort_order)
-SELECT '/assets/works/web/atelier-engine-saas.jpg', 'Atelier Engine v4 · Launchpad & Layar Pelanggan Real-Time', -7, 1
+SELECT '/assets/works/process/01-atelier-live-preview.jpg', 'Live build preview · Atelier SaaS Engine', -7, 1
 WHERE NOT EXISTS (SELECT 1 FROM public.polaroid_photos WHERE sort_order = 1);
 
 INSERT INTO public.polaroid_photos (image_url, caption, rotation_deg, sort_order)
-SELECT '/assets/works/graphic/fnb-iced-coffee-poster.jpg', 'Coffee Time · Poster Minuman & Tipografi Berlapis', 5, 2
+SELECT '/assets/works/process/02-canva-coffee-drink-layers.jpg', 'Layering & komposisi poster · Coffee Drink', 5, 2
 WHERE NOT EXISTS (SELECT 1 FROM public.polaroid_photos WHERE sort_order = 2);
 
 INSERT INTO public.polaroid_photos (image_url, caption, rotation_deg, sort_order)
-SELECT '/assets/works/web/kronos-ledger-erp.jpg', 'Kronos Ledger · Ringkasan Eksekutif & Arus Kas ERP', 8, 3
+SELECT '/assets/works/process/03-vscode-kronos-accounting.png', 'Logic & KPI engine · Kronos Ledger', 8, 3
 WHERE NOT EXISTS (SELECT 1 FROM public.polaroid_photos WHERE sort_order = 3);
 
 INSERT INTO public.polaroid_photos (image_url, caption, rotation_deg, sort_order)
-SELECT '/assets/works/graphic/editorial-bmw-f30-split.jpg', 'BMW F30 Split · Eksplorasi Masking & Dual-Reality', -5, 4
+SELECT '/assets/works/process/04-canva-croffle-layout.jpg', 'Editorial layout & copy · Bahan Dasar', -5, 4
 WHERE NOT EXISTS (SELECT 1 FROM public.polaroid_photos WHERE sort_order = 4);
 
 INSERT INTO public.polaroid_photos (image_url, caption, rotation_deg, sort_order)
-SELECT '/assets/works/web/vectra-attendance-portal.png', 'Vectra Portal · Absensi Karyawan GPS Geofence Mobile', 4, 5
+SELECT '/assets/works/process/05-vscode-absensi-navigation.png', 'Mobile portal navigation · Absensi App', 4, 5
 WHERE NOT EXISTS (SELECT 1 FROM public.polaroid_photos WHERE sort_order = 5);
 
 INSERT INTO public.polaroid_photos (image_url, caption, rotation_deg, sort_order)
-SELECT '/assets/works/graphic/branding-satrio-dual-spread.jpg', 'Personal Branding Spread · Designer & Web Developer', -8, 6
+SELECT '/assets/works/process/06-canva-coffee-time-layers.jpg', 'Typography & visual hierarchy · Coffee Time', -8, 6
 WHERE NOT EXISTS (SELECT 1 FROM public.polaroid_photos WHERE sort_order = 6);
 
 -- 5. Guestbook Starter Welcome Entry

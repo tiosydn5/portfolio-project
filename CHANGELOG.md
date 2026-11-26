@@ -121,6 +121,14 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright checks across `1280x800` & `375x812`: verified all 20 showcase images & 6 Polaroid images load (`0` broken images), `0` console/page/request errors, `0px` horizontal overflow, live filter chips, modal uncropped view, and dynamic Portfolio Assistant Bot summaries.
 - **Files touched**: `index.html`, `src/main.js`, `src/lib/data-fallback.js`, `src/lib/portfolio-api.js`, `src/components/showcase.js`, `src/components/polaroid-scatter.js`, `supabase/seed.sql`, `public/assets/works/**`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-26 — [Visual Snapshots / Polaroids] 6 Behind-the-Scenes Process Photos, Full-Bleed Framing & Standalone SQL Update
+- **Behind-the-Scenes Process Assets (`public/assets/works/process/*`)**: Added 6 curated behind-the-scenes process photos from `process_footage.zip` alternating between Dev & Design (`01-atelier-live-preview.jpg`, `02-canva-coffee-drink-layers.jpg`, `03-vscode-kronos-accounting.png`, `04-canva-croffle-layout.jpg`, `05-vscode-absensi-navigation.png`, `06-canva-coffee-time-layers.jpg`) without touching `showcase_items`, `site_profile`, `timeline_entries`, or guestbook/contact data.
+- **Data & Standalone SQL Sync (`src/lib/data-fallback.js`, `supabase/seed.sql`, `supabase/update_polaroids.sql`)**: Updated `FALLBACK_POLAROIDS` and Section 4 of `supabase/seed.sql` with the 6 alternating captions, and created `supabase/update_polaroids.sql` wrapped in `BEGIN; ... COMMIT;` that strictly replaces only `public.polaroid_photos`.
+- **Full-Bleed Card Framing (`src/components/polaroid-scatter.js`)**: Switched Polaroid scatter card thumbnails from `object-contain` to full-bleed `object-cover` so all 6 frames fill cleanly with zero black sidebars, while keeping the Polaroid Lightbox on `object-contain` for uncropped full inspection.
+- **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright checks across `1280x800` & `375x812`: all 6 process images load cleanly (`0` broken, `objectFit: cover` on cards, `objectFit: contain` in Lightbox, `0` console/page/request errors, `0px` horizontal overflow).
+- **Files touched**: `public/assets/works/process/**`, `src/lib/data-fallback.js`, `src/components/polaroid-scatter.js`, `supabase/seed.sql`, `supabase/update_polaroids.sql`, `STATE.md`, `CHANGELOG.md`.
+
+
 
 
 

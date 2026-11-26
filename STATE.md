@@ -25,14 +25,14 @@
 - `public/assets/` (`hero-cutout-placeholder.svg`, `avatar-normal-placeholder.svg`, `avatar-alter-placeholder.svg`)
 - `public/assets/showcase/` (10 Studio SVG thumbnails)
 - `public/assets/polaroid/` (6 Studio Frame SVGs)
-- `public/assets/works/` (`web/` 3 web application screenshots + `graphic/` 17 graphic design artworks)
+- `public/assets/works/` (`web/` 3 web application screenshots, `graphic/` 17 graphic design artworks, & `process/` 6 behind-the-scenes Polaroid snapshots)
 - `reference/1000535039.mp4` (Phase 0 reference choreography video)
 - `src/styles/tokens.css`, `src/styles/base.css`, `src/styles/animations.css`, `src/styles/admin.css`
 - `src/lib/sanitize.js`, `src/lib/supabase.js`, `src/lib/data-fallback.js`, `src/lib/storage-upload.js`, `src/lib/portfolio-api.js`, `src/lib/motion-engine.js`
 - `src/components/navbar.js`, `src/components/hero-parallax.js`, `src/components/spotlight-avatar.js`, `src/components/telemetry-clock.js`, `src/components/bento-about.js`, `src/components/folders-3d.js`, `src/components/showcase.js`, `src/components/polaroid-scatter.js`, `src/components/contact-guestbook.js`, `src/components/portfolio-bot.js`
 - `src/admin/admin-main.js`, `src/admin/login-guard.js`, `src/admin/admin-ui.js`, `src/admin/profile-editor.js`, `src/admin/showcase-crud.js`, `src/admin/timeline-crud.js`, `src/admin/polaroid-crud.js`, `src/admin/moderation.js`
 - `src/main.js`
-- `supabase/schema.sql`, `supabase/seed.sql`
+- `supabase/schema.sql`, `supabase/seed.sql`, `supabase/update_polaroids.sql`
 - `.github/workflows/supabase-keepalive.yml`, `.github/workflows/deploy-pages.yml`
 
 ## Completed Milestones
@@ -51,10 +51,11 @@
 - [x] Public Footer Hygiene & Hidden Admin Access (2026-11-25): Removed the visible `/admin CMS` footer link from `index.html`, replaced it with the `Kembali ke Atas` smooth-scroll pill button targeting `#home` (with `sm:pb-[88px]` desktop clearance above `Tanya Bot`), and wired hidden admin shortcuts (`5x` rapid click on footer `2026` or `Ctrl + Shift + A`) in `src/main.js`; verified `npm run build` + Playwright (`1280px` & `375px`) with `/admin` direct URL route untouched.
 - [x] Admin Progressive Login Lockout & Anti-Enumeration Guard (2026-11-25): Added `src/admin/login-guard.js` with serialized `localStorage` + `IndexedDB` mirror persistence (`studio_auth_guard_v1` / `studio_auth_guard_db`), unified `"Email atau password tidak sesuai."` generic error response with `~400ms` delay floor, progressive schedule (`3x: 1m`, `4x: 3m`, `5x: 1h`, `6x: 2h`, `7x: 4h`, `8x: 8h`, `9x: 12h` with zero threshold warning, `10x: permanentLock`), 24-hour auto-reset when `< 10` failures, reset on auth success, and Bright Bento countdown/permanent-lock UI (`admin.html`, `src/styles/admin.css`, `src/admin/admin-main.js`); verified via `npm run build` and Playwright simulation (`1280px` & `375px`) with browser storage cleaned afterward.
 - [x] Real Portfolio Works Population & Editorial Copywriting (2026-11-26): Added all 20 real portfolio assets from `web_dev.zip` (`Atelier Engine v4`, `Kronos Ledger ERP`, `Vectra Attendance Portal`) and `Graphic_Design.zip` (`17` works across Social Media Carousels, F&B Promotional Posters/Banners, Personal Branding, Automotive, Sports & Anime/Comic Editorial Posters) into `public/assets/works/`, authored accurate Indonesian copywriting and structured taxonomy tags in `src/lib/data-fallback.js` & `supabase/seed.sql`, refreshed `FALLBACK_POLAROIDS` with 6 real Visual Snapshots, updated thumbnail/modal framing (`object-contain` on `#0B0F19`) so varied portrait/landscape works stay uncropped, updated accurate folder/archive counters (`portfolio-api.js`, `main.js`), verified `npm run build` + Playwright (`1280px` & `375px`, `0` broken images, `0` console/page errors, `0px` horizontal overflow), and pushed to `origin/main`.
+- [x] Behind-the-Scenes Polaroid Snapshots & Full-Bleed Card Framing (2026-11-26): Replaced the 6 Polaroid Visual Snapshots with 6 alternating Dev & Design behind-the-scenes process photos in `public/assets/works/process/`, updated `FALLBACK_POLAROIDS` (`src/lib/data-fallback.js`) and `supabase/seed.sql`, created transactional `supabase/update_polaroids.sql` (`BEGIN; ... COMMIT;`) targeting ONLY `public.polaroid_photos`, switched Polaroid cards in `src/components/polaroid-scatter.js` to full-bleed `object-cover` (keeping Lightbox `object-contain`), verified `npm run build` + Playwright (`1280px` & `375px`), and pushed to `origin/main`.
 
 ## Active / Next Action (User Activation Checklist)
-1. Sign in at `/admin` (direct `/admin` URL, `5x` rapid click on footer `2026`, or `Ctrl + Shift + A`) and optionally run updated `supabase/seed.sql` in SQL Editor if managing the 20 works from Supabase CMS.
+1. Run `supabase/update_polaroids.sql` in Supabase SQL Editor so `/admin` and live Supabase `polaroid_photos` immediately sync to the 6 new behind-the-scenes snapshots (zero impact on `site_profile` or `showcase_items`).
 2. Optionally connect repo to Vercel or Netlify (with `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` env vars) if deploying on a custom root domain.
 
 ## Known Issues / Blockers
-- None. Both `/` (with all 20 real portfolio works & Visual Snapshots) and `/admin` Bright Bento Studio CMS are verified, pushed to `origin/main`, and deployed to GitHub Pages.
+- None. Both `/` (with 20 real Showcase works & 6 behind-the-scenes Polaroids) and `/admin` Bright Bento Studio CMS are verified, pushed to `origin/main`, and deployed to GitHub Pages.
