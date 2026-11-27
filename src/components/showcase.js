@@ -20,6 +20,10 @@ const CATEGORY_META = {
     label: 'Credentials',
     emptyMessage: 'Belum ada entri Credentials yang cocok dengan filter ini.',
   },
+  video: {
+    label: 'Video',
+    emptyMessage: 'Belum ada karya Video yang cocok dengan filter ini.',
+  },
 };
 
 function initKineticBridgeScroll() {
@@ -613,8 +617,21 @@ export function initShowcase({ items = [] }) {
     hasInitializedCards = true;
   }
 
+  const hasVideoItems = items.some((item) => isVideoItem(item));
+  const videoTabBtn = tabButtons.find((btn) => btn.dataset.showcaseTab === 'video');
+  if (videoTabBtn) {
+    videoTabBtn.hidden = !hasVideoItems;
+  }
+
+  function getVisibleTabButtons() {
+    return tabButtons.filter((btn) => !btn.hidden);
+  }
+
   function renderActiveView(animateCards = true) {
-    const categoryItems = items.filter((item) => item.category === activeCategory);
+    const categoryItems =
+      activeCategory === 'video'
+        ? items.filter((item) => isVideoItem(item))
+        : items.filter((item) => item.category === activeCategory);
     renderFilters(categoryItems);
 
     const filtered =
@@ -627,12 +644,14 @@ export function initShowcase({ items = [] }) {
 
   function activateTab(category, shouldFocus = false, animatePill = true) {
     if (!CATEGORY_META[category]) return;
+    if (category === 'video' && !hasVideoItems) return;
     activeCategory = category;
     activeTag = 'ALL';
 
-    let selectedBtn = tabButtons[0];
+    const visibleTabs = getVisibleTabButtons();
+    let selectedBtn = visibleTabs[0] || tabButtons[0];
     for (const btn of tabButtons) {
-      const isSelected = btn.dataset.showcaseTab === category;
+      const isSelected = !btn.hidden && btn.dataset.showcaseTab === category;
       btn.setAttribute('aria-selected', String(isSelected));
       btn.setAttribute('tabindex', isSelected ? '0' : '-1');
       if (isSelected) {
@@ -650,20 +669,24 @@ export function initShowcase({ items = [] }) {
     renderActiveView(animatePill);
   }
 
-  tabButtons.forEach((btn, index) => {
+  tabButtons.forEach((btn) => {
     btn.addEventListener('click', () => activateTab(btn.dataset.showcaseTab, false, true));
 
     btn.addEventListener('keydown', (event) => {
+      const visibleTabs = getVisibleTabButtons();
+      const visibleIdx = visibleTabs.indexOf(btn);
+      if (visibleIdx === -1) return;
+
       let nextIndex = null;
-      if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabButtons.length;
+      if (event.key === 'ArrowRight') nextIndex = (visibleIdx + 1) % visibleTabs.length;
       else if (event.key === 'ArrowLeft')
-        nextIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+        nextIndex = (visibleIdx - 1 + visibleTabs.length) % visibleTabs.length;
       else if (event.key === 'Home') nextIndex = 0;
-      else if (event.key === 'End') nextIndex = tabButtons.length - 1;
+      else if (event.key === 'End') nextIndex = visibleTabs.length - 1;
 
       if (nextIndex !== null) {
         event.preventDefault();
-        activateTab(tabButtons[nextIndex].dataset.showcaseTab, true, true);
+        activateTab(visibleTabs[nextIndex].dataset.showcaseTab, true, true);
       }
     });
   });

@@ -147,6 +147,13 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `80 modules`, `0` errors), 8/8 `parseVideoSource()` unit checks, and Playwright verification across `1280x800` & `375x812` + `/admin` (`375px`): verified MP4 `<video>`, YouTube `<iframe>`, normal image modal, stop-on-close teardown, `0px` horizontal overflow, and `0` console/page errors.
 - **Files touched**: `index.html`, `src/lib/video-utils.js`, `src/lib/storage-upload.js`, `src/lib/portfolio-api.js`, `src/components/showcase.js`, `src/admin/admin-ui.js`, `src/admin/showcase-crud.js`, `supabase/add_video_support.sql`, `supabase/schema.sql`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-27 — [Showcase & Admin CMS] Auto-Hideable `Video` Tab (Zero SQL Changes)
+- **Smart Virtual `Video` Tab (`index.html`, `src/components/showcase.js`)**: Added `#tab-video` (`data-showcase-tab="video"`) to the Showcase tablist that automatically displays whenever at least 1 published showcase item has a valid `video_url` and automatically hides (`hidden = true`) when 0 published video items exist—allowing instant show/hide directly from `/admin` with zero Supabase SQL/enum changes and visible-only keyboard tab navigation.
+- **Admin `Video` Filter Pill (`src/admin/showcase-crud.js`)**: Added a `Video` filter pill with live counter in `/admin` Showcase Manager so all video items can be filtered and toggled (`Tayang`/Draft) in one tap from mobile or desktop.
+- **Verification**: Ran `npm run build` (`vite build` -> `80 modules`, `0` errors) and Playwright verification across `1280x800` & `375x812`: verified `#tab-video` appears and filters cleanly when video items exist, automatically hides when 0 published video items exist, `0px` horizontal overflow, and `0` console/page errors.
+- **Files touched**: `index.html`, `src/components/showcase.js`, `src/admin/showcase-crud.js`, `STATE.md`, `CHANGELOG.md`.
+
+
 
 
 

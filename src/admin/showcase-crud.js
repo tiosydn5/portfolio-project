@@ -368,6 +368,11 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
           label: 'Credentials',
           badge: allItems.filter((i) => i.category === 'award').length,
         },
+        {
+          value: 'video',
+          label: 'Video',
+          badge: allItems.filter((i) => isVideoItem(i)).length,
+        },
       ],
       onChange: (nextVal) => {
         activeFilter = nextVal;
@@ -415,7 +420,7 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
           }),
           createEl('p', {
             className: 'text-sm text-[#475569]',
-            text: 'Kelola koleksi Web & Apps, Graphic Design, dan Credentials yang tampil di halaman publik.',
+            text: 'Kelola koleksi Web & Apps, Graphic Design, Credentials, dan Video. Tab Video tampil otomatis di publik saat ada minimal 1 karya video yang tayang.',
           })
         ),
         addBtn
@@ -438,7 +443,9 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
       const catList =
         activeFilter === 'all'
           ? allItems
-          : allItems.filter((item) => item.category === activeFilter);
+          : activeFilter === 'video'
+            ? allItems.filter((item) => isVideoItem(item))
+            : allItems.filter((item) => item.category === activeFilter);
       const filtered = !q
         ? catList
         : catList.filter((item) =>
