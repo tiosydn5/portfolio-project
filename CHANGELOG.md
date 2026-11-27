@@ -139,6 +139,15 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `79 modules`, `0` errors) and Playwright checks (`1280x800` & `375x812`): `8` original + `8` cloned marquee items (`3124px` track vs `713px` viewport, zero loop gap), synced bot replies, `0` console/page errors, `0px` horizontal overflow.
 - **Files touched**: `src/lib/data-fallback.js`, `src/components/portfolio-bot.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-27 — [Showcase & Admin CMS] Playable Video Support (Direct MP4/WebM/MOV Upload + YouTube / Google Drive Embed)
+- **Safe Video Parser (`src/lib/video-utils.js`)**: Added strict URL parser supporting direct video files (`.mp4`, `.webm`, `.mov`, `.m4v`, Supabase Storage `/videos/`) as well as YouTube (`youtube-nocookie.com/embed/...`), Google Drive (`/file/d/.../preview`), and Vimeo embeds while rejecting unsafe schemes (`javascript:`, `data:`).
+- **Public Showcase Player (`index.html`, `src/components/showcase.js`, `src/lib/portfolio-api.js`)**: Added `video_url` hydration, monochrome `Video` badge + `Putar Video` CTA on cards containing video, HTML5 `<video controls playsinline>` and responsive `16:9` `<iframe>` playback inside `#showcase-modal`, and immediate stop/clear cleanup on modal close so audio never continues in the background.
+- **Mobile-Friendly Admin Upload & Embed (`src/lib/storage-upload.js`, `src/admin/admin-ui.js`, `src/admin/showcase-crud.js`)**: Added `validateVideoFile()` / `uploadPortfolioVideo()` (MP4/WebM/MOV up to 50 MB) and `createVideoField()` in `/admin` Showcase Drawer with gallery upload button, always-visible URL paste input (YouTube/Drive/MP4), live mini-preview, and admin card `Video` badge.
+- **Non-Destructive SQL Migration (`supabase/add_video_support.sql`, `supabase/schema.sql`)**: Added transactional `supabase/add_video_support.sql` (`ALTER TABLE public.showcase_items ADD COLUMN IF NOT EXISTS video_url TEXT;` + `portfolio-media` bucket MIME/50MB update) without touching any existing rows or RLS policies.
+- **Verification**: Ran `npm run build` (`vite build` -> `80 modules`, `0` errors), 8/8 `parseVideoSource()` unit checks, and Playwright verification across `1280x800` & `375x812` + `/admin` (`375px`): verified MP4 `<video>`, YouTube `<iframe>`, normal image modal, stop-on-close teardown, `0px` horizontal overflow, and `0` console/page errors.
+- **Files touched**: `index.html`, `src/lib/video-utils.js`, `src/lib/storage-upload.js`, `src/lib/portfolio-api.js`, `src/components/showcase.js`, `src/admin/admin-ui.js`, `src/admin/showcase-crud.js`, `supabase/add_video_support.sql`, `supabase/schema.sql`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
+
+
 
 
 

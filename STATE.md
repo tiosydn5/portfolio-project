@@ -1,7 +1,7 @@
 # STATE.md — Live Project Save-Game
 
-- **Last Updated**: 2026-11-26
-- **Current Phase**: Phase 3 + Bright Editorial Public Overhaul + GSAP/Lenis Motion + Bright Bento Studio CMS (`/admin`) + Client-Side Portfolio Assistant Bot Complete
+- **Last Updated**: 2026-11-27
+- **Current Phase**: Phase 3 + Bright Editorial Public Overhaul + GSAP/Lenis Motion + Bright Bento Studio CMS (`/admin`) + Client-Side Portfolio Assistant Bot + Showcase Video Player Complete
 - **Overall Status**: Unified Bright Editorial Cyber-Tech Bento (Blue Edition) Portfolio (`/`) powered by `GSAP` (`ScrollTrigger`, `quickTo`, `matchMedia`) + `Lenis` smooth scrolling, interactive 100% client-side **Portfolio Assistant Bot**, and **Bright Bento Studio CMS (`/admin`)** with live Supabase hydration, drag-and-drop storage dropzones, Split Studio live profile preview, content-first Visual Card Grids, Slide-Over Drawers, rotation slider Polaroid preview, modern Inbox/Guestbook moderation, `supabase/schema.sql`, `supabase/seed.sql`, `.github/workflows/supabase-keepalive.yml`, and `.github/workflows/deploy-pages.yml`.
 
 ## Architecture Snapshot
@@ -28,11 +28,11 @@
 - `public/assets/works/` (`web/` 3 web application screenshots, `graphic/` 17 graphic design artworks, & `process/` 6 behind-the-scenes Polaroid snapshots)
 - `reference/1000535039.mp4` (Phase 0 reference choreography video)
 - `src/styles/tokens.css`, `src/styles/base.css`, `src/styles/animations.css`, `src/styles/admin.css`
-- `src/lib/sanitize.js`, `src/lib/supabase.js`, `src/lib/data-fallback.js`, `src/lib/storage-upload.js`, `src/lib/portfolio-api.js`, `src/lib/motion-engine.js`
+- `src/lib/sanitize.js`, `src/lib/supabase.js`, `src/lib/data-fallback.js`, `src/lib/storage-upload.js`, `src/lib/video-utils.js`, `src/lib/portfolio-api.js`, `src/lib/motion-engine.js`
 - `src/components/navbar.js`, `src/components/hero-parallax.js`, `src/components/spotlight-avatar.js`, `src/components/telemetry-clock.js`, `src/components/bento-about.js`, `src/components/folders-3d.js`, `src/components/showcase.js`, `src/components/polaroid-scatter.js`, `src/components/contact-guestbook.js`, `src/components/portfolio-bot.js`
 - `src/admin/admin-main.js`, `src/admin/login-guard.js`, `src/admin/admin-ui.js`, `src/admin/profile-editor.js`, `src/admin/showcase-crud.js`, `src/admin/timeline-crud.js`, `src/admin/polaroid-crud.js`, `src/admin/moderation.js`
 - `src/main.js`
-- `supabase/schema.sql`, `supabase/seed.sql`, `supabase/update_polaroids.sql`
+- `supabase/schema.sql`, `supabase/seed.sql`, `supabase/update_polaroids.sql`, `supabase/add_video_support.sql`
 - `.github/workflows/supabase-keepalive.yml`, `.github/workflows/deploy-pages.yml`
 
 ## Completed Milestones
@@ -53,10 +53,11 @@
 - [x] Real Portfolio Works Population & Editorial Copywriting (2026-11-26): Added all 20 real portfolio assets from `web_dev.zip` (`Atelier Engine v4`, `Kronos Ledger ERP`, `Vectra Attendance Portal`) and `Graphic_Design.zip` (`17` works across Social Media Carousels, F&B Promotional Posters/Banners, Personal Branding, Automotive, Sports & Anime/Comic Editorial Posters) into `public/assets/works/`, authored accurate Indonesian copywriting and structured taxonomy tags in `src/lib/data-fallback.js` & `supabase/seed.sql`, refreshed `FALLBACK_POLAROIDS` with 6 real Visual Snapshots, updated thumbnail/modal framing (`object-contain` on `#0B0F19`) so varied portrait/landscape works stay uncropped, updated accurate folder/archive counters (`portfolio-api.js`, `main.js`), verified `npm run build` + Playwright (`1280px` & `375px`, `0` broken images, `0` console/page errors, `0px` horizontal overflow), and pushed to `origin/main`.
 - [x] Behind-the-Scenes Polaroid Snapshots & Bright Photo-Matting Framing (2026-11-26): Replaced the 6 Polaroid Visual Snapshots with 6 alternating Dev & Design behind-the-scenes process photos in `public/assets/works/process/`, updated `FALLBACK_POLAROIDS` (`src/lib/data-fallback.js`) and `supabase/seed.sql`, created transactional `supabase/update_polaroids.sql` (`BEGIN; ... COMMIT;`) targeting ONLY `public.polaroid_photos`, and refined Polaroid card framing in `src/components/polaroid-scatter.js` to `object-contain` inside a bright `#EEF2F8` photo-matting surface (`border-[rgba(15,23,42,0.16)]`, `p-2`) so all portrait/landscape titles render 100% uncropped without dark bars while keeping Lightbox `object-contain`; verified `npm run build` + Playwright (`1280px` & `375px`) and pushed to `origin/main`.
 - [x] Core Stack & Creative Tools Alignment (2026-11-26): Updated `TECH_STACK_ITEMS` in `src/lib/data-fallback.js` to the exact 8 daily tools (`HTML & CSS`, `Tailwind CSS`, `Supabase`, `AI Workflow`, `Canva`, `Figma`, `Alight Motion`, `CapCut`) with consistent monochrome inline SVG icons and updated `src/components/portfolio-bot.js` tool intent keywords (`canva`, `css`, `ai`, `workflow`); verified `npm run build` + Playwright (`1280px` & `375px`, seamless marquee width `3124px` vs `713px` viewport, synced bot replies, `0` console/page errors, `0px` overflow) and pushed to `origin/main`.
+- [x] Showcase Video Playback & Mobile Admin Upload (2026-11-27): Added `src/lib/video-utils.js` (MP4/WebM/MOV direct + YouTube/Google Drive/Vimeo safe embed parser), `validateVideoFile()`/`uploadPortfolioVideo()` in `src/lib/storage-upload.js`, `createVideoField()` in `src/admin/admin-ui.js` & `src/admin/showcase-crud.js`, monochrome `Video` badge + `Putar Video` CTA + `<video>`/`<iframe>` modal playback with immediate stop-on-close in `index.html` & `src/components/showcase.js`, and non-destructive `supabase/add_video_support.sql`; verified `npm run build` + unit tests + Playwright (`1280px` & `375px`).
 
 ## Active / Next Action (User Activation Checklist)
-1. Run `supabase/update_polaroids.sql` in Supabase SQL Editor so `/admin` and live Supabase `polaroid_photos` immediately sync to the 6 new behind-the-scenes snapshots (zero impact on `site_profile` or `showcase_items`).
-2. Optionally connect repo to Vercel or Netlify (with `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY` env vars) if deploying on a custom root domain.
+1. Run `supabase/add_video_support.sql` once in Supabase SQL Editor to add `showcase_items.video_url` and allow MP4/WebM/MOV uploads up to 50 MB in `portfolio-media` (100% non-destructive).
+2. Vercel auto-deploys from `origin/main` within ~30–60s; then open `/admin` from phone or desktop to upload videos or paste YouTube / Google Drive links.
 
 ## Known Issues / Blockers
-- None. Both `/` (with 20 real Showcase works & 6 behind-the-scenes Polaroids) and `/admin` Bright Bento Studio CMS are verified, pushed to `origin/main`, and deployed to GitHub Pages.
+- None. Both `/` and `/admin` are verified (`0` errors, `0px` overflow) and deployed via Vercel + GitHub Pages.

@@ -5,6 +5,7 @@ import {
   resumeSmoothScroll,
 } from '../lib/motion-engine.js';
 import { assetUrl, createEl, createSvgIcon, safeUrl } from '../lib/sanitize.js';
+import { isVideoItem, parseVideoSource } from '../lib/video-utils.js';
 
 const CATEGORY_META = {
   project: {
@@ -112,6 +113,7 @@ export function initShowcase({ items = [] }) {
   const modalCard = modal?.querySelector('.modal-card-surface');
   const modalCloseBtn = document.getElementById('showcase-modal-close');
   const modalImg = document.getElementById('showcase-modal-img');
+  const modalVideoWrap = document.getElementById('showcase-modal-video-wrap');
   const modalMeta = document.getElementById('showcase-modal-meta');
   const modalSampleBadge = document.getElementById('showcase-modal-sample');
   const modalTitle = document.getElementById('showcase-modal-title');
@@ -128,6 +130,18 @@ export function initShowcase({ items = [] }) {
   let releaseFocusTrap = null;
   let isModalClosing = false;
   let hasInitializedCards = false;
+
+  function stopModalVideo() {
+    if (!modalVideoWrap) return;
+    const activeVideo = modalVideoWrap.querySelector('video');
+    if (activeVideo) {
+      activeVideo.pause();
+      activeVideo.removeAttribute('src');
+      activeVideo.load();
+    }
+    modalVideoWrap.replaceChildren();
+    modalVideoWrap.hidden = true;
+  }
 
   function positionTabPill(targetBtn, animate = true) {
     if (!tabPill || !targetBtn) return;
@@ -156,6 +170,10 @@ export function initShowcase({ items = [] }) {
 
   function finalizeCloseModal() {
     isModalClosing = false;
+    stopModalVideo();
+    if (modalImg) {
+      modalImg.hidden = false;
+    }
     if (modal && modal.open) {
       modal.close();
     }
@@ -200,9 +218,55 @@ export function initShowcase({ items = [] }) {
     lastTriggerEl = triggerEl || document.activeElement;
     pauseSmoothScroll();
 
-    if (modalImg) {
-      modalImg.src =
-        safeUrl(item.thumbnail_url) || assetUrl('/assets/showcase/project-atelier.svg');
+    const thumbHref =
+      safeUrl(item.thumbnail_url) || assetUrl('/assets/showcase/project-atelier.svg');
+    const videoSource = parseVideoSource(item.video_url);
+
+    stopModalVideo();
+
+    if (videoSource && modalVideoWrap) {
+      if (modalImg) modalImg.hidden = true;
+      modalVideoWrap.hidden = false;
+
+      if (videoSource.type === 'direct') {
+        const videoEl = createEl('video', {
+          className: 'w-full max-h-[60vh] rounded-xl bg-[#0B0F19] block mx-auto',
+          attrs: {
+            controls: '',
+            playsinline: '',
+            preload: 'metadata',
+            poster: thumbHref,
+            'aria-label': `Pemutar video ${item.title}`,
+          },
+        });
+        videoEl.appendChild(
+          createEl('source', {
+            attrs: { src: videoSource.src },
+          })
+        );
+        modalVideoWrap.appendChild(videoEl);
+      } else {
+        const embedFrameWrap = createEl('div', {
+          className: 'w-full aspect-video max-h-[60vh] rounded-xl overflow-hidden bg-[#0B0F19]',
+        });
+        const iframeEl = createEl('iframe', {
+          className: 'w-full h-full border-0 block',
+          attrs: {
+            src: videoSource.embedUrl,
+            title: `Video ${item.title}`,
+            allow:
+              'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen',
+            allowfullscreen: '',
+            loading: 'lazy',
+            referrerpolicy: 'strict-origin-when-cross-origin',
+          },
+        });
+        embedFrameWrap.appendChild(iframeEl);
+        modalVideoWrap.appendChild(embedFrameWrap);
+      }
+    } else if (modalImg) {
+      modalImg.hidden = false;
+      modalImg.src = thumbHref;
       modalImg.alt = `Pratinjau visual ${item.title}`;
     }
 
@@ -267,7 +331,24 @@ export function initShowcase({ items = [] }) {
         );
       }
 
-      if (!liveHref && !repoHref) {
+      if (videoSource?.externalUrl && videoSource.externalUrl !== liveHref) {
+        modalLinks.appendChild(
+          createEl('a', {
+            className: 'btn-light-secondary',
+            text:
+              videoSource.type === 'direct'
+                ? 'Buka Video di Tab Baru'
+                : `Tonton di ${videoSource.label}`,
+            attrs: {
+              href: videoSource.externalUrl,
+              target: '_blank',
+              rel: 'noopener noreferrer',
+            },
+          })
+        );
+      }
+
+      if (!liveHref && !repoHref && !videoSource) {
         modalLinks.appendChild(
           createEl('p', {
             className: 'text-sm text-[#475569]',
@@ -396,6 +477,7 @@ export function initShowcase({ items = [] }) {
     const renderedCards = [];
 
     for (const item of filteredItems) {
+      const hasVideo = isVideoItem(item);
       const card = createEl('article', {
         className:
           'showcase-card rounded-[24px] bg-[#FFFFFF] border-[1.5px] border-[#0F172A] hover:border-[#2563EB] overflow-hidden flex flex-col justify-between',
@@ -417,6 +499,25 @@ export function initShowcase({ items = [] }) {
         },
       });
       thumbWrap.appendChild(img);
+
+      if (hasVideo) {
+        const videoBadge = createEl(
+          'span',
+          {
+            className:
+              'absolute top-3 right-3 inline-flex items-center gap-1.5 font-mono-tabular text-xs font-semibold px-2.5 py-1 rounded-full bg-[#0B0F19]/90 text-[#FFFFFF] border border-[#FFFFFF]/30 pointer-events-none',
+          },
+          createSvgIcon({
+            className: 'w-3 h-3',
+            fill: 'currentColor',
+            stroke: 'currentColor',
+            strokeWidth: '1.5',
+            shapes: [{ tag: 'polygon', attrs: { points: '6 4 20 12 6 20 6 4' } }],
+          }),
+          createEl('span', { text: 'Video' })
+        );
+        thumbWrap.appendChild(videoBadge);
+      }
 
       const body = createEl('div', { className: 'p-5 flex-1 flex flex-col justify-between gap-4' });
       const topContent = createEl('div', { className: 'space-y-2.5' });
@@ -464,14 +565,22 @@ export function initShowcase({ items = [] }) {
           className: 'btn-cobalt w-full',
           attrs: { type: 'button' },
         },
-        createEl('span', { text: 'Lihat Detail' }),
-        createSvgIcon({
-          className: 'showcase-action-icon w-4 h-4',
-          shapes: [
-            { tag: 'line', attrs: { x1: '7', y1: '17', x2: '17', y2: '7' } },
-            { tag: 'polyline', attrs: { points: '7 7 17 7 17 17' } },
-          ],
-        })
+        createEl('span', { text: hasVideo ? 'Putar Video' : 'Lihat Detail' }),
+        hasVideo
+          ? createSvgIcon({
+              className: 'showcase-action-icon w-4 h-4',
+              fill: 'currentColor',
+              stroke: 'currentColor',
+              strokeWidth: '1.5',
+              shapes: [{ tag: 'polygon', attrs: { points: '6 4 20 12 6 20 6 4' } }],
+            })
+          : createSvgIcon({
+              className: 'showcase-action-icon w-4 h-4',
+              shapes: [
+                { tag: 'line', attrs: { x1: '7', y1: '17', x2: '17', y2: '7' } },
+                { tag: 'polyline', attrs: { points: '7 7 17 7 17 17' } },
+              ],
+            })
       );
 
       actionBtn.addEventListener('click', () => openModal(item, actionBtn));

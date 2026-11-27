@@ -1,5 +1,11 @@
 import { createEl, createSvgIcon, safeUrl } from '../lib/sanitize.js';
-import { uploadPortfolioMedia, validateRasterFile } from '../lib/storage-upload.js';
+import {
+  uploadPortfolioMedia,
+  uploadPortfolioVideo,
+  validateRasterFile,
+  validateVideoFile,
+} from '../lib/storage-upload.js';
+import { parseVideoSource } from '../lib/video-utils.js';
 
 const ICON_SHAPES = {
   plus: [
@@ -49,6 +55,9 @@ const ICON_SHAPES = {
     { tag: 'rect', attrs: { x: '3', y: '3', width: '18', height: '18', rx: '2' } },
     { tag: 'circle', attrs: { cx: '8.5', cy: '8.5', r: '1.5' } },
     { tag: 'polyline', attrs: { points: '21 15 16 10 5 21' } },
+  ],
+  play: [
+    { tag: 'polygon', attrs: { points: '6 4 20 12 6 20 6 4' } },
   ],
   alert: [
     { tag: 'circle', attrs: { cx: '12', cy: '12', r: '9' } },
@@ -659,6 +668,214 @@ export function createMediaDropzone({
     el: wrapper,
     getValue: () => urlInput.value.trim() || null,
     setValue: (next) => setValue(next, false),
+  };
+}
+
+/**
+ * Mobile-friendly Video Upload & Embed URL field (MP4/WebM/MOV <= 50 MB or YouTube / Google Drive link).
+ */
+export function createVideoField({
+  id,
+  label = 'Video Karya (opsional)',
+  hint = 'Unggah MP4/WebM/MOV (Maks. 50 MB) atau tempel tautan YouTube / Google Drive.',
+  initialUrl = '',
+  folder = 'videos',
+}) {
+  let currentUrl = initialUrl || '';
+
+  const wrapper = createEl('div', { className: 'space-y-2' });
+  const headerRow = createEl(
+    'div',
+    { className: 'flex items-center justify-between gap-2' },
+    createEl('label', {
+      className: 'block text-sm font-semibold text-[#0B0F19]',
+      text: label,
+      attrs: { for: id },
+    }),
+    createEl('span', {
+      className: 'font-mono-tabular text-[11px] font-semibold text-[#475569]',
+      text: 'MP4 · YouTube · Drive',
+    })
+  );
+
+  const fileInput = createEl('input', {
+    className: 'sr-only',
+    attrs: {
+      id: `${id}-file`,
+      type: 'file',
+      accept: 'video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov',
+    },
+  });
+
+  const previewBox = createEl('div', {
+    className:
+      'rounded-2xl border-[1.5px] border-[#0F172A] bg-[#0B0F19] overflow-hidden',
+  });
+  previewBox.hidden = true;
+
+  const previewStage = createEl('div', { className: 'w-full' });
+
+  const previewBar = createEl('div', {
+    className:
+      'px-3 py-2 bg-[#FFFFFF] border-t border-[rgba(15,23,42,0.12)] flex items-center justify-between gap-2',
+  });
+  const previewSourcePill = createEl('span', {
+    className: 'studio-pill studio-pill-sky',
+    text: 'Video',
+  });
+  const clearBtn = createEl(
+    'button',
+    {
+      className: 'studio-btn-danger-outline text-xs min-h-[36px] px-3',
+      attrs: { type: 'button', 'aria-label': 'Hapus tautan video' },
+    },
+    studioIcon('trash', 'w-3.5 h-3.5'),
+    createEl('span', { text: 'Hapus' })
+  );
+  previewBar.append(previewSourcePill, clearBtn);
+  previewBox.append(previewStage, previewBar);
+
+  const uploadBtn = createEl(
+    'button',
+    {
+      className: 'studio-btn-secondary text-xs min-h-[44px] w-full justify-center',
+      attrs: { type: 'button' },
+    },
+    studioIcon('upload', 'w-4 h-4'),
+    createEl('span', { text: 'Unggah Video dari Galeri (MP4 / WebM · Maks. 50 MB)' })
+  );
+  uploadBtn.addEventListener('click', () => fileInput.click());
+
+  const urlInput = createEl('input', {
+    className: 'studio-input font-mono-tabular text-xs min-h-[44px] py-2',
+    attrs: {
+      id,
+      type: 'url',
+      placeholder: 'Atau tempel link YouTube / Google Drive / MP4 (https://...)',
+      value: currentUrl,
+      'aria-label': label,
+    },
+  });
+
+  const hintEl = createEl('p', {
+    className: 'text-xs text-[#475569]',
+    text: hint,
+  });
+
+  const statusText = createEl('p', {
+    className: 'text-xs font-medium text-[#475569]',
+    text: '',
+  });
+  statusText.hidden = true;
+
+  function syncPreview() {
+    previewStage.replaceChildren();
+    const trimmed = currentUrl.trim();
+    if (!trimmed) {
+      previewBox.hidden = true;
+      return;
+    }
+
+    const parsed = parseVideoSource(trimmed);
+    if (!parsed) {
+      previewBox.hidden = true;
+      return;
+    }
+
+    previewBox.hidden = false;
+    previewSourcePill.textContent = `Siap diputar · ${parsed.label}`;
+
+    if (parsed.type === 'direct') {
+      const videoEl = createEl('video', {
+        className: 'w-full max-h-48 bg-[#0B0F19] block mx-auto',
+        attrs: {
+          controls: '',
+          playsinline: '',
+          preload: 'metadata',
+        },
+      });
+      videoEl.appendChild(createEl('source', { attrs: { src: parsed.src } }));
+      previewStage.appendChild(videoEl);
+    } else {
+      const embedWrap = createEl('div', {
+        className: 'w-full aspect-video max-h-48 bg-[#0B0F19]',
+      });
+      embedWrap.appendChild(
+        createEl('iframe', {
+          className: 'w-full h-full border-0 block',
+          attrs: {
+            src: parsed.embedUrl,
+            title: `Pratinjau ${parsed.label}`,
+            loading: 'lazy',
+            referrerpolicy: 'strict-origin-when-cross-origin',
+            allowfullscreen: '',
+          },
+        })
+      );
+      previewStage.appendChild(embedWrap);
+    }
+  }
+
+  function setValue(next) {
+    currentUrl = next || '';
+    urlInput.value = currentUrl;
+    syncPreview();
+  }
+
+  clearBtn.addEventListener('click', () => {
+    setValue('');
+    statusText.hidden = true;
+    statusText.textContent = '';
+  });
+
+  urlInput.addEventListener('input', () => {
+    currentUrl = urlInput.value.trim();
+    syncPreview();
+  });
+
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+
+    const check = validateVideoFile(file);
+    if (!check.ok) {
+      statusText.hidden = false;
+      statusText.textContent = check.error;
+      statusText.className = 'text-xs font-medium text-[#B91C1C]';
+      fileInput.value = '';
+      return;
+    }
+
+    uploadBtn.disabled = true;
+    fileInput.disabled = true;
+    statusText.hidden = false;
+    statusText.textContent = `Mengunggah video ${file.name}...`;
+    statusText.className = 'text-xs font-medium text-[#1D4ED8]';
+
+    try {
+      const { publicUrl } = await uploadPortfolioVideo(file, folder);
+      setValue(publicUrl);
+      statusText.hidden = false;
+      statusText.textContent = 'Video berhasil diunggah dan siap diputar.';
+      statusText.className = 'text-xs font-medium text-[#065F46]';
+    } catch (err) {
+      statusText.hidden = false;
+      statusText.textContent = err?.message || 'Gagal mengunggah video.';
+      statusText.className = 'text-xs font-medium text-[#B91C1C]';
+    } finally {
+      uploadBtn.disabled = false;
+      fileInput.disabled = false;
+      fileInput.value = '';
+    }
+  });
+
+  syncPreview();
+  wrapper.append(headerRow, previewBox, uploadBtn, fileInput, urlInput, hintEl, statusText);
+
+  return {
+    el: wrapper,
+    getValue: () => urlInput.value.trim() || null,
+    setValue,
   };
 }
 

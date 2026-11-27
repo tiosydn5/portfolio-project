@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS public.showcase_items (
   description TEXT DEFAULT '' CHECK (char_length(btrim(COALESCE(description, ''))) <= 2500),
   tech_tags TEXT[] NOT NULL DEFAULT '{}',
   thumbnail_url TEXT,
+  video_url TEXT,
   live_url TEXT,
   repo_url TEXT,
   date_label TEXT DEFAULT '' CHECK (char_length(btrim(COALESCE(date_label, ''))) <= 40),
@@ -255,8 +256,16 @@ VALUES (
   'portfolio-media',
   'portfolio-media',
   true,
-  5242880,
-  ARRAY['image/jpeg', 'image/png', 'image/webp', 'image/avif']
+  52428800,
+  ARRAY[
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/avif',
+    'video/mp4',
+    'video/webm',
+    'video/quicktime'
+  ]
 )
 ON CONFLICT (id) DO UPDATE SET
   public = EXCLUDED.public,

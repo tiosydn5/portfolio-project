@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase.js';
 import { assetUrl, createEl, safeUrl } from '../lib/sanitize.js';
+import { isVideoItem, parseVideoSource } from '../lib/video-utils.js';
 import {
   closeSlideDrawer,
   confirmAction,
@@ -7,6 +8,7 @@ import {
   createMediaDropzone,
   createSegmentedControl,
   createToggleSwitch,
+  createVideoField,
   openSlideDrawer,
   renderEmptyState,
   renderErrorState,
@@ -58,6 +60,14 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
       initialUrl: editingItem?.thumbnail_url || '',
       folder: 'showcase',
       aspectClass: 'aspect-[16/10]',
+    });
+
+    const videoField = createVideoField({
+      id: 'sc-video-url',
+      label: 'Video Karya (opsional)',
+      hint: 'Unggah MP4/WebM/MOV (Maks. 50 MB) atau tempel tautan YouTube / Google Drive.',
+      initialUrl: editingItem?.video_url || '',
+      folder: 'videos',
     });
 
     const titleInput = createEl('input', {
@@ -178,6 +188,7 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
     form.append(
       catWrap,
       thumbDropzone.el,
+      videoField.el,
       createFieldGroup('sc-title', 'Judul Karya / Pencapaian', titleInput),
       createFieldGroup('sc-subtitle', 'Ringkasan Singkat', subtitleInput),
       createFieldGroup('sc-desc', 'Deskripsi Detail', descInput),
@@ -215,8 +226,17 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
         return;
       }
 
+      const rawVideo = videoField.getValue() || '';
       const rawLive = liveUrlInput.value.trim();
       const rawRepo = repoUrlInput.value.trim();
+
+      if (rawVideo && !parseVideoSource(rawVideo)) {
+        showToast(
+          'Tautan video tidak dikenali. Gunakan MP4/WebM/MOV, YouTube, Google Drive, atau Vimeo.',
+          'error'
+        );
+        return;
+      }
       if (rawLive && !safeUrl(rawLive)) {
         showToast('Tautan Live Demo tidak valid (gunakan https://).', 'error');
         liveUrlInput.focus();
@@ -248,6 +268,10 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
         is_featured: featuredSwitch.getValue(),
       };
 
+      if (rawVideo || (editingItem && 'video_url' in editingItem)) {
+        payload.video_url = rawVideo || null;
+      }
+
       submitBtn.disabled = true;
       submitBtn.textContent = 'Menyimpan...';
 
@@ -268,7 +292,15 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
         await fetchAndRender();
         if (typeof onDataChange === 'function') onDataChange();
       } catch (err) {
-        showToast(err?.message || 'Gagal menyimpan karya.', 'error');
+        const msg = err?.message || 'Gagal menyimpan karya.';
+        if (msg.toLowerCase().includes('video_url')) {
+          showToast(
+            'Kolom video_url belum aktif di Supabase. Jalankan SQL supabase/add_video_support.sql sekali di SQL Editor.',
+            'error'
+          );
+        } else {
+          showToast(msg, 'error');
+        }
         submitBtn.disabled = false;
         submitBtn.replaceChildren(
           studioIcon('check', 'w-4 h-4'),
@@ -465,7 +497,18 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
                   text: item.date_label,
                 })
               : null
-          )
+          ),
+          isVideoItem(item)
+            ? createEl(
+                'span',
+                {
+                  className:
+                    'absolute top-3 right-3 inline-flex items-center gap-1 font-mono-tabular text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#0B0F19]/90 text-[#FFFFFF] border border-[#FFFFFF]/30',
+                },
+                studioIcon('play', 'w-3 h-3'),
+                createEl('span', { text: 'Video' })
+              )
+            : null
         );
 
         const tagsRow = createEl('div', { className: 'flex flex-wrap gap-1.5' });

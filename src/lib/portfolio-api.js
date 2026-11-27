@@ -91,6 +91,7 @@ function normalizeShowcase(rows) {
     description: row.description || '',
     tech_tags: Array.isArray(row.tech_tags) ? row.tech_tags : [],
     thumbnail_url: row.thumbnail_url || '/assets/showcase/project-atelier.svg',
+    video_url: row.video_url || null,
     live_url: row.live_url || null,
     repo_url: row.repo_url || null,
     date_label: row.date_label || '',
