@@ -159,6 +159,13 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `80 modules`, `0` errors) and Playwright checks (`1280x800` & `375x812` + `/admin 375px`): confirmed strict isolation (`Web & Apps` = 1 non-video card, `Video` = 2 video cards), MP4 `<video>` + YouTube `<iframe>` playback, modal `Video` metadata, auto-hide on 0 videos, `0px` overflow, and `0` console/page errors.
 - **Files touched**: `src/lib/portfolio-api.js`, `src/components/showcase.js`, `src/admin/showcase-crud.js`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-27 — [Core Stack & Portfolio Bot] Add `Vibe Coding` (9-Item Stack Sync)
+- **Core Stack Marquee (`src/lib/data-fallback.js`)**: Added `Vibe Coding` (`category: 'Web Dev'`) with a consistent monochrome inline terminal SVG icon right after `AI Workflow`, expanding `TECH_STACK_ITEMS` to 9 daily tools (`HTML & CSS`, `Tailwind CSS`, `Supabase`, `AI Workflow`, `Vibe Coding`, `Canva`, `Figma`, `Alight Motion`, `CapCut`) with zero layout, marquee speed, color, or Supabase/Admin changes.
+- **Portfolio Bot Sync (`src/components/portfolio-bot.js`)**: Added `vibe`, `vibe coding`, and `cara kerja` to the Tools & Tech Stack intent keywords (and excluded them from the Web & Apps project-list branch) so queries about tools or web dev workflow return all 9 tools including `Vibe Coding`.
+- **Verification**: Ran `npm run build` (`vite build` -> `80 modules`, `0` errors) and Playwright checks (`1280x800` & `375x812`): verified `9 + 9` seamless marquee pills with inline SVGs, Portfolio Bot replies containing all 9 tools, `0px` horizontal overflow, and `0` console/page errors.
+- **Files touched**: `src/lib/data-fallback.js`, `src/components/portfolio-bot.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
+
+
 
 
 

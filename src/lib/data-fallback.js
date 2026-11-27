@@ -122,6 +122,18 @@ export const TECH_STACK_ITEMS = [
     },
   },
   {
+    name: 'Vibe Coding',
+    category: 'Web Dev',
+    icon: {
+      viewBox: '0 0 24 24',
+      shapes: [
+        { tag: 'rect', attrs: { x: '3', y: '4', width: '18', height: '16', rx: '3' } },
+        { tag: 'polyline', attrs: { points: '7.5,9.5 11,12.5 7.5,15.5' } },
+        { tag: 'line', attrs: { x1: '12.5', y1: '15.5', x2: '16.5', y2: '15.5' } },
+      ],
+    },
+  },
+  {
     name: 'Canva',
     category: 'Design',
     icon: {

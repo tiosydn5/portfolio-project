@@ -166,7 +166,7 @@ function buildBotReply(rawInput, state) {
       'fullstack',
       'dev',
     ]) &&
-    !hasAnyKeyword(q, ['tool', 'tools', 'stack', 'tech', 'skill', 'keahlian'])
+    !hasAnyKeyword(q, ['tool', 'tools', 'stack', 'tech', 'skill', 'keahlian', 'vibe', 'cara kerja'])
   ) {
     return {
       text: summarizeShowcaseList(webItems, 'Web & Apps'),
@@ -193,6 +193,9 @@ function buildBotReply(rawInput, state) {
       'supabase',
       'ai',
       'workflow',
+      'vibe',
+      'vibe coding',
+      'cara kerja',
       'canva',
       'figma',
       'alight',
