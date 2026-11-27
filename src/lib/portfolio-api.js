@@ -1,4 +1,5 @@
 import { isSupabaseConfigured, supabase } from './supabase.js';
+import { isVideoItem } from './video-utils.js';
 import {
   FALLBACK_EDUCATION,
   FALLBACK_EXPERIENCE,
@@ -26,7 +27,7 @@ const FOLDER_META = [
 
 export function buildFoldersFromShowcase(items = [], isLive = false) {
   return FOLDER_META.map((meta) => {
-    const group = items.filter((item) => item.category === meta.category);
+    const group = items.filter((item) => item.category === meta.category && !isVideoItem(item));
     const hasRealWork = group.some((item) => !item.isSample);
     const countLabel =
       isLive || hasRealWork ? `${group.length} karya` : `${group.length} pratinjau`;

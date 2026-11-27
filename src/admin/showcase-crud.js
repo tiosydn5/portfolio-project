@@ -21,6 +21,7 @@ const CATEGORY_LABELS = {
   project: 'Web & Apps',
   certificate: 'Graphic Design',
   award: 'Credentials',
+  video: 'Video',
 };
 
 export async function mountShowcaseCrud(container, { onDataChange } = {}) {
@@ -36,15 +37,38 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
       attrs: { id: 'showcase-drawer-form', novalidate: '' },
     });
 
+    const initialCategory = editingItem
+      ? isVideoItem(editingItem)
+        ? 'video'
+        : editingItem.category || 'project'
+      : 'project';
+
+    const videoField = createVideoField({
+      id: 'sc-video-url',
+      label: 'File atau Tautan Video',
+      hint: 'Unggah MP4/WebM/MOV (Maks. 50 MB) atau tempel tautan YouTube / Google Drive.',
+      initialUrl: editingItem?.video_url || '',
+      folder: 'videos',
+    });
+
+    const syncVideoFieldVisibility = (catValue) => {
+      videoField.el.hidden = catValue !== 'video';
+    };
+
     const categorySeg = createSegmentedControl({
       ariaLabel: 'Kategori karya',
-      value: editingItem?.category || 'project',
+      value: initialCategory,
       options: [
         { value: 'project', label: 'Web & Apps' },
         { value: 'certificate', label: 'Graphic Design' },
         { value: 'award', label: 'Credentials' },
+        { value: 'video', label: 'Video' },
       ],
+      onChange: (nextVal) => {
+        syncVideoFieldVisibility(nextVal);
+      },
     });
+    syncVideoFieldVisibility(initialCategory);
 
     const catWrap = createEl(
       'div',
@@ -60,14 +84,6 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
       initialUrl: editingItem?.thumbnail_url || '',
       folder: 'showcase',
       aspectClass: 'aspect-[16/10]',
-    });
-
-    const videoField = createVideoField({
-      id: 'sc-video-url',
-      label: 'Video Karya (opsional)',
-      hint: 'Unggah MP4/WebM/MOV (Maks. 50 MB) atau tempel tautan YouTube / Google Drive.',
-      initialUrl: editingItem?.video_url || '',
-      folder: 'videos',
     });
 
     const titleInput = createEl('input', {
@@ -226,13 +242,15 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
         return;
       }
 
-      const rawVideo = videoField.getValue() || '';
+      const selectedCategory = categorySeg.getValue();
+      const isVideoCategory = selectedCategory === 'video';
+      const rawVideo = isVideoCategory ? videoField.getValue() || '' : '';
       const rawLive = liveUrlInput.value.trim();
       const rawRepo = repoUrlInput.value.trim();
 
-      if (rawVideo && !parseVideoSource(rawVideo)) {
+      if (isVideoCategory && (!rawVideo || !parseVideoSource(rawVideo))) {
         showToast(
-          'Tautan video tidak dikenali. Gunakan MP4/WebM/MOV, YouTube, Google Drive, atau Vimeo.',
+          'Untuk kategori Video, unggah file MP4/WebM/MOV atau tempel tautan YouTube / Google Drive yang valid.',
           'error'
         );
         return;
@@ -254,7 +272,7 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
         .filter(Boolean);
 
       const payload = {
-        category: categorySeg.getValue(),
+        category: isVideoCategory ? 'project' : selectedCategory,
         title,
         subtitle: subtitleInput.value.trim(),
         description: descInput.value.trim(),
@@ -268,8 +286,10 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
         is_featured: featuredSwitch.getValue(),
       };
 
-      if (rawVideo || (editingItem && 'video_url' in editingItem)) {
-        payload.video_url = rawVideo || null;
+      if (isVideoCategory) {
+        payload.video_url = rawVideo;
+      } else if (editingItem && 'video_url' in editingItem) {
+        payload.video_url = null;
       }
 
       submitBtn.disabled = true;
@@ -313,7 +333,7 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
       title: editingItem ? 'Sunting Karya' : 'Tambah Karya Baru',
       subtitle: editingItem
         ? `Perbarui detail "${editingItem.title}".`
-        : 'Tambahkan karya Web & Apps, Graphic Design, atau Credentials ke koleksi publik.',
+        : 'Tambahkan karya Web & Apps, Graphic Design, Credentials, atau Video ke koleksi publik.',
       contentEl: form,
       footerEl,
     });
@@ -356,17 +376,17 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
         {
           value: 'project',
           label: 'Web & Apps',
-          badge: allItems.filter((i) => i.category === 'project').length,
+          badge: allItems.filter((i) => i.category === 'project' && !isVideoItem(i)).length,
         },
         {
           value: 'certificate',
           label: 'Graphic Design',
-          badge: allItems.filter((i) => i.category === 'certificate').length,
+          badge: allItems.filter((i) => i.category === 'certificate' && !isVideoItem(i)).length,
         },
         {
           value: 'award',
           label: 'Credentials',
-          badge: allItems.filter((i) => i.category === 'award').length,
+          badge: allItems.filter((i) => i.category === 'award' && !isVideoItem(i)).length,
         },
         {
           value: 'video',
@@ -445,7 +465,7 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
           ? allItems
           : activeFilter === 'video'
             ? allItems.filter((item) => isVideoItem(item))
-            : allItems.filter((item) => item.category === activeFilter);
+            : allItems.filter((item) => item.category === activeFilter && !isVideoItem(item));
       const filtered = !q
         ? catList
         : catList.filter((item) =>
@@ -496,7 +516,9 @@ export async function mountShowcaseCrud(container, { onDataChange } = {}) {
             { className: 'absolute top-3 left-3 flex flex-wrap items-center gap-1.5' },
             createEl('span', {
               className: 'studio-pill studio-pill-sky',
-              text: CATEGORY_LABELS[item.category] || item.category,
+              text: isVideoItem(item)
+                ? CATEGORY_LABELS.video
+                : CATEGORY_LABELS[item.category] || item.category,
             }),
             item.date_label
               ? createEl('span', {

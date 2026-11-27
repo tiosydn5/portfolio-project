@@ -153,6 +153,13 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `80 modules`, `0` errors) and Playwright verification across `1280x800` & `375x812`: verified `#tab-video` appears and filters cleanly when video items exist, automatically hides when 0 published video items exist, `0px` horizontal overflow, and `0` console/page errors.
 - **Files touched**: `index.html`, `src/components/showcase.js`, `src/admin/showcase-crud.js`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-27 — [Showcase & Admin CMS] Dedicated `Video` Category Option & Strict Tab Isolation (Zero SQL)
+- **Dedicated `Video` Category in `/admin` (`src/admin/showcase-crud.js`)**: Added `Video` as an explicit 4th option in the `Kategori` segmented control inside the Showcase Create/Edit Drawer, showing the video upload/URL input exclusively when `Video` is selected (and clearing `video_url` if switched to another category) while persisting under the existing Supabase enum with zero SQL schema/constraint changes.
+- **Strict Category Isolation (`src/components/showcase.js`, `src/lib/portfolio-api.js`, `src/admin/showcase-crud.js`)**: Isolated video items exclusively inside the `Video` tab, `/admin` `Video` filter/badge, and modal metadata (`Video · ...`) so they never leak into `Web & Apps`, `Graphic Design`, `Credentials`, or 3D Archive Folder counts; `#tab-video` still auto-hides whenever 0 published videos exist.
+- **Verification**: Ran `npm run build` (`vite build` -> `80 modules`, `0` errors) and Playwright checks (`1280x800` & `375x812` + `/admin 375px`): confirmed strict isolation (`Web & Apps` = 1 non-video card, `Video` = 2 video cards), MP4 `<video>` + YouTube `<iframe>` playback, modal `Video` metadata, auto-hide on 0 videos, `0px` overflow, and `0` console/page errors.
+- **Files touched**: `src/lib/portfolio-api.js`, `src/components/showcase.js`, `src/admin/showcase-crud.js`, `STATE.md`, `CHANGELOG.md`.
+
+
 
 
 

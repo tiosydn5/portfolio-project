@@ -275,7 +275,9 @@ export function initShowcase({ items = [] }) {
     }
 
     if (modalMeta) {
-      const catName = CATEGORY_META[item.category]?.label || item.category;
+      const catName = videoSource
+        ? CATEGORY_META.video.label
+        : CATEGORY_META[item.category]?.label || item.category;
       modalMeta.textContent = [catName, item.discipline || 'Showcase', item.date_label]
         .filter(Boolean)
         .join(' · ');
@@ -631,7 +633,7 @@ export function initShowcase({ items = [] }) {
     const categoryItems =
       activeCategory === 'video'
         ? items.filter((item) => isVideoItem(item))
-        : items.filter((item) => item.category === activeCategory);
+        : items.filter((item) => item.category === activeCategory && !isVideoItem(item));
     renderFilters(categoryItems);
 
     const filtered =
