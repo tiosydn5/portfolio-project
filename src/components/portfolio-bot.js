@@ -1,4 +1,10 @@
-import { gsap, prefersReducedMotion, scrollToSection } from '../lib/motion-engine.js';
+import {
+  gsap,
+  pauseSmoothScroll,
+  prefersReducedMotion,
+  resumeSmoothScroll,
+  scrollToSection,
+} from '../lib/motion-engine.js';
 import { createEl, createSvgIcon } from '../lib/sanitize.js';
 import { buildCyberMascot } from './navbar.js';
 
@@ -610,6 +616,7 @@ export function initPortfolioBot(state = {}) {
     if (isOpen || isAnimating) return;
     isOpen = true;
     lastOpener = openerEl || document.activeElement;
+    pauseSmoothScroll();
     panel.hidden = false;
     syncExpandedAttr(true);
 
@@ -646,6 +653,7 @@ export function initPortfolioBot(state = {}) {
     const finalize = () => {
       panel.hidden = true;
       isAnimating = false;
+      resumeSmoothScroll();
       gsap.set(panel, { clearProps: 'transform,opacity' });
       if (lastOpener && typeof lastOpener.focus === 'function') {
         lastOpener.focus();

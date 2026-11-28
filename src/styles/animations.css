@@ -187,13 +187,15 @@
   color: var(--text-ink);
   box-shadow: 0 12px 24px -16px rgba(15, 23, 42, 0.32);
   will-change: transform;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.28s var(--ease-out-expo),
+    box-shadow 0.34s var(--ease-out-expo);
 }
 
 .polaroid-card:hover,
 .polaroid-card:focus-visible {
   border-color: var(--accent-primary);
-  box-shadow: 0 22px 36px -16px rgba(37, 99, 235, 0.38);
+  box-shadow: 0 24px 40px -18px rgba(37, 99, 235, 0.36);
 }
 
 /* Mobile (< 768px): Horizontal Snap-Scroll Deck */
@@ -228,6 +230,10 @@
     position: static;
     width: 100%;
     transform: rotate(0deg);
+    transition:
+      transform 0.34s var(--ease-out-expo),
+      border-color 0.28s var(--ease-out-expo),
+      box-shadow 0.34s var(--ease-out-expo);
   }
 
   .polaroid-stage.is-scattered .polaroid-card {

@@ -601,16 +601,17 @@ export function initShowcase({ items = [] }) {
     window.requestAnimationFrame(updateCarouselButtons);
 
     if (animateEntrance && hasInitializedCards && renderedCards.length > 0 && !prefersReducedMotion()) {
+      const visibleWave = renderedCards.slice(0, 6);
       gsap.fromTo(
-        renderedCards,
-        { y: 24, scale: 0.94, opacity: 0 },
+        visibleWave,
+        { y: 34, scale: 0.97, opacity: 0 },
         {
           y: 0,
           scale: 1,
           opacity: 1,
-          duration: 0.36,
-          stagger: 0.06,
-          ease: 'power3.out',
+          duration: 0.85,
+          stagger: 0.08,
+          ease: 'expo.out',
           overwrite: 'auto',
           clearProps: 'transform,opacity',
         }

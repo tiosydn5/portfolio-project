@@ -160,6 +160,16 @@ async function bootstrapPortfolio() {
   initFooterShortcut();
   initSectionReveals();
   refreshMotion();
+
+  window.requestAnimationFrame(() => {
+    refreshMotion();
+  });
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      refreshMotion();
+    });
+  }
 }
 
 function initFooterShortcut() {

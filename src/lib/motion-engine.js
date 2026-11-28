@@ -5,6 +5,9 @@ import Lenis from 'lenis';
 gsap.registerPlugin(ScrollTrigger);
 
 let activeLenis = null;
+let scrollLockDepth = 0;
+
+const EXPO_OUT_EASE = (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
 export function prefersReducedMotion() {
   return (
@@ -14,13 +17,15 @@ export function prefersReducedMotion() {
 }
 
 export function pauseSmoothScroll() {
+  scrollLockDepth += 1;
   if (activeLenis) {
     activeLenis.stop();
   }
 }
 
 export function resumeSmoothScroll() {
-  if (activeLenis) {
+  scrollLockDepth = Math.max(0, scrollLockDepth - 1);
+  if (scrollLockDepth === 0 && activeLenis) {
     activeLenis.start();
   }
 }
@@ -31,9 +36,19 @@ export function scrollToSection(target) {
   if (!el) return;
 
   if (activeLenis) {
+    const wasStopped = scrollLockDepth > 0;
+    if (wasStopped) {
+      activeLenis.start();
+    }
     activeLenis.scrollTo(el, {
       offset: window.innerWidth >= 640 ? -92 : -16,
-      duration: 1.0,
+      duration: 1.15,
+      easing: EXPO_OUT_EASE,
+      onComplete: () => {
+        if (scrollLockDepth > 0 && activeLenis) {
+          activeLenis.stop();
+        }
+      },
     });
     return;
   }
@@ -53,12 +68,16 @@ export function initSmoothScroll() {
 
   mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
     const lenis = new Lenis({
-      lerp: 0.11,
+      lerp: 0.08,
       smoothWheel: true,
-      wheelMultiplier: 0.95,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.5,
     });
 
     activeLenis = lenis;
+    if (scrollLockDepth > 0) {
+      lenis.stop();
+    }
     lenis.on('scroll', ScrollTrigger.update);
 
     const onTick = (time) => {
@@ -92,7 +111,8 @@ export function initSmoothScroll() {
       event.preventDefault();
       activeLenis.scrollTo(target, {
         offset: window.innerWidth >= 640 ? -92 : -16,
-        duration: 1.0,
+        duration: 1.15,
+        easing: EXPO_OUT_EASE,
       });
     }
   });
@@ -103,38 +123,71 @@ export function initSectionReveals() {
 
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     const targets = gsap.utils.toArray('[data-bento-reveal]');
-    if (targets.length === 0) return;
+    const timelineItems = gsap.utils.toArray(
+      '#education-list > li, #experience-list > li:not([hidden])'
+    );
+    const allTriggers = [];
 
-    gsap.set(targets, {
-      y: 28,
-      scale: 0.96,
-      opacity: 0,
-      clipPath: 'inset(5% 3% 5% 3% round 26px)',
-    });
+    if (targets.length > 0) {
+      gsap.set(targets, {
+        y: 36,
+        scale: 0.97,
+        opacity: 0,
+        clipPath: 'inset(4% 2% 4% 2% round 26px)',
+      });
 
-    const batchTriggers = ScrollTrigger.batch(targets, {
-      start: 'top 90%',
-      once: true,
-      onEnter: (batch) => {
-        gsap.to(batch, {
-          y: 0,
-          scale: 1,
-          opacity: 1,
-          clipPath: 'inset(0% 0% 0% 0% round 26px)',
-          duration: 0.68,
-          stagger: 0.08,
-          ease: 'power3.out',
-          overwrite: 'auto',
-          clearProps: 'clipPath,transform,opacity',
-        });
-      },
-    });
+      const batchTriggers = ScrollTrigger.batch(targets, {
+        start: 'top 92%',
+        once: true,
+        onEnter: (batch) => {
+          gsap.to(batch, {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            clipPath: 'inset(0% 0% 0% 0% round 26px)',
+            duration: 0.9,
+            stagger: 0.09,
+            ease: 'expo.out',
+            overwrite: 'auto',
+            clearProps: 'clipPath,transform,opacity',
+          });
+        },
+      });
+      allTriggers.push(...batchTriggers);
+    }
+
+    if (timelineItems.length > 0) {
+      gsap.set(timelineItems, {
+        y: 28,
+        scale: 0.98,
+        opacity: 0,
+      });
+
+      const tlBatchTriggers = ScrollTrigger.batch(timelineItems, {
+        start: 'top 94%',
+        once: true,
+        onEnter: (batch) => {
+          gsap.to(batch, {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.85,
+            stagger: 0.08,
+            ease: 'power3.out',
+            overwrite: 'auto',
+            clearProps: 'transform,opacity',
+          });
+        },
+      });
+      allTriggers.push(...tlBatchTriggers);
+    }
 
     return () => {
-      for (const st of batchTriggers) {
+      for (const st of allTriggers) {
         st.kill();
       }
-      gsap.set(targets, { clearProps: 'all' });
+      if (targets.length > 0) gsap.set(targets, { clearProps: 'all' });
+      if (timelineItems.length > 0) gsap.set(timelineItems, { clearProps: 'all' });
     };
   });
 }

@@ -165,6 +165,14 @@
 - **Verification**: Ran `npm run build` (`vite build` -> `80 modules`, `0` errors) and Playwright checks (`1280x800` & `375x812`): verified `9 + 9` seamless marquee pills with inline SVGs, Portfolio Bot replies containing all 9 tools, `0px` horizontal overflow, and `0` console/page errors.
 - **Files touched**: `src/lib/data-fallback.js`, `src/components/portfolio-bot.js`, `PRD.md`, `STATE.md`, `CHANGELOG.md`.
 
+## 2026-11-27 — [Motion & Micro-Interactions] Lenis Calibration, Organic Reveal Rhythm & Snappy Hover Polish
+- **Lenis + GSAP Ticker Tuning (`src/lib/motion-engine.js`, `src/components/portfolio-bot.js`)**: Tuned Lenis to `lerp: 0.08`, `smoothWheel: true`, `wheelMultiplier: 0.9`, `touchMultiplier: 1.5` connected directly to `gsap.ticker` (`lagSmoothing(0)`, zero duplicate `rAF` loops), upgraded `scrollToSection()` and hash navigation to `1.15s` expo-out easing, and added ref-counted `pauseSmoothScroll()` / `resumeSmoothScroll()` locks wired across Showcase Modal, Polaroid Lightbox, and Portfolio Bot.
+- **Organic Reveal Rhythm & Dynamic Refresh (`src/lib/motion-engine.js`, `src/components/showcase.js`, `src/main.js`)**: Refined `[data-bento-reveal]` (`y: 36, scale: 0.97, duration: 0.9, stagger: 0.09, ease: expo.out`), Timeline entries (`y: 28, scale: 0.98, duration: 0.85, stagger: 0.08, ease: power3.out`), and Showcase tab/filter card transitions (`y: 34, scale: 0.97, duration: 0.85, stagger: 0.08, ease: expo.out`) while keeping Polaroid cards free of parallax/scrub; added post-paint `requestAnimationFrame` + `document.fonts.ready` `ScrollTrigger.refresh()` after Supabase hydration.
+- **Snappy GPU Hover Micro-Interactions (`src/styles/base.css`, `src/styles/animations.css`)**: Polished hover lift (`translate3d`) and soft shadow transitions on `.bento-tile`, `.showcase-card`, `.polaroid-card`, and action buttons using `cubic-bezier(0.22, 1, 0.36, 1)` (`var(--ease-out-expo)`) while preserving `prefers-reduced-motion: reduce` fallbacks.
+- **Verification**: Ran `npm run build` (`vite build` -> `80 modules`, `0` errors) and Playwright checks (`1280x800` & `375x812`): verified smooth scroll across all sections, zero elements stuck at `opacity: 0`, smooth Showcase tab transitions, working Polaroid `"Tumpuk Kartu"` toggle, navbar smooth scroll, Portfolio Bot lock/unlock, `0px` horizontal overflow, and `0` console/page errors.
+- **Files touched**: `src/lib/motion-engine.js`, `src/components/portfolio-bot.js`, `src/components/showcase.js`, `src/main.js`, `src/styles/base.css`, `src/styles/animations.css`, `STATE.md`, `CHANGELOG.md`.
+
+
 
 
 
